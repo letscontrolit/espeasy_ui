@@ -1,6 +1,15 @@
 import { h, Component } from 'preact';
 import { Form } from '../components/form';
 
+const logLevelOptions = [
+    { name: 'None', value: 0 },
+    { name: 'Error', value: 1 },
+    { name: 'Info', value: 2 },
+    { name: 'Debug', value: 3 },
+    { name: 'Debug More', value: 4 },
+    { name: 'Debug Dev', value: 9 },
+];
+
 const formConfig = {
     onSave: (vals) => { console.log(vals); },
     groups: {
@@ -43,16 +52,48 @@ const formConfig = {
         log: {
             name: 'Log Settings',
             configs: {
+                ip: { name: 'Syslog IP', type: 'string' },
+                syslog_level: { name: 'Syslog Level', type: 'select', options: logLevelOptions },
+                syslog_facility: { name: 'Syslog Level', type: 'select', options: [
+                    { name: 'Kernel', value: 0 },
+                    { name: 'Kernel', value: 1 },
+                    { name: 'Kernel', value: 3 },
+                    { name: 'Kernel', value: 5 },
+                    { name: 'Local0', value: 16 },
+                    { name: 'Local1', value: 17 },
+                    { name: 'Local2', value: 18 },
+                    { name: 'Local3', value: 19 },
+                    { name: 'Local4', value: 20 },
+                    { name: 'Local5', value: 21 },
+                    { name: 'Local6', value: 22 },
+                    { name: 'Local7', value: 23 },
+                ] },
+                serial_level: { name: 'Serial Level', type: 'select', options: logLevelOptions },
+                web_level: { name: 'Web Level', type: 'select', options: logLevelOptions },
             }
         },
         serial: {
             name: 'Serial Settings',
             configs: {
+                enabled: { name: 'Enable Serial', type: 'checkbox' },
+                baudrate: { name: 'Baud Rate', type: 'number' },
+            }
+        },
+        espnetwork: {
+            name: 'Inter-ESPEasy Network',
+            configs: {
+                enabled: { name: 'Enable', type: 'checkbox' },
+                port: { name: 'Port', type: 'number' },
             }
         },
         experimental: {
             name: 'Experimental Settings',
             configs: {
+                fixed_ip_octet: { name: 'Fixed IP Octet', type: 'number' },
+                wdi2caddress: { name: 'WD I2C Address', type: 'number' },
+                ssdp: { name: 'Use SSDP', type: 'checkbox' },
+                connection_failiure_treshold: { name: 'Connection Failiure Treshold', type: 'number' },
+                i2c_clock_stretch_limit: { name: 'I2C ClockStretchLimit', type: 'number' },
             }
         }
     },

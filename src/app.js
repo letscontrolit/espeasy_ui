@@ -1,7 +1,7 @@
 import { h, render, Component } from 'preact';
 import { Menu } from './components/menu';
 import { Page } from './components/page';
-import { ConfigPage, DevicesPage, ControllersPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage } from './pages';
+import { ConfigPage, DevicesPage, ControllersPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage } from './pages';
 
 import { loadConfig, saveConfig } from './conf/config.dat';
 
@@ -18,9 +18,9 @@ const menus = [
         { title: 'Load', href: 'config/load', component: LoadPage },
         { title: 'Reboot', href: 'config/reboot', component: RebootPage },
     ] },
-    { title: 'Tools', href: 'tools', children: [
+    { title: 'Tools', href: 'tools', component: ToolsPage, children: [
         { title: 'Update', href: 'tools/update', component: UpdatePage },
-        { title: 'Filesystem', href: 'tools/fs' },
+        { title: 'Filesystem', href: 'tools/fs', component: FSPage },
     ] },
 ];
 
