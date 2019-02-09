@@ -17,8 +17,10 @@ const menus = [
         { title: 'Save', href: 'config/save', action: saveConfig },
         { title: 'Load', href: 'config/load', component: LoadPage },
         { title: 'Reboot', href: 'config/reboot', component: RebootPage },
+        { title: 'Factory Reset', href: 'config/factory', component: RebootPage },
     ] },
     { title: 'Tools', href: 'tools', component: ToolsPage, children: [
+        { title: 'Discover', href: 'tools/discover', component: UpdatePage },
         { title: 'Update', href: 'tools/update', component: UpdatePage },
         { title: 'Filesystem', href: 'tools/fs', component: FSPage },
     ] },
