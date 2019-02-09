@@ -1,7 +1,7 @@
 import { h, render, Component } from 'preact';
 import { Menu } from './components/menu';
 import { Page } from './components/page';
-import { ConfigPage, DevicesPage, ControllersPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage } from './pages';
+import { ConfigPage, DevicesPage, ControllersPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage } from './pages';
 
 import { loadConfig, saveConfig } from './conf/config.dat';
 
@@ -17,10 +17,10 @@ const menus = [
         { title: 'Save', href: 'config/save', action: saveConfig },
         { title: 'Load', href: 'config/load', component: LoadPage },
         { title: 'Reboot', href: 'config/reboot', component: RebootPage },
-        { title: 'Factory Reset', href: 'config/factory', component: RebootPage },
+        { title: 'Factory Reset', href: 'config/factory', component: FactoryResetPage },
     ] },
     { title: 'Tools', href: 'tools', component: ToolsPage, children: [
-        { title: 'Discover', href: 'tools/discover', component: UpdatePage },
+        { title: 'Discover', href: 'tools/discover', component: DiscoverPage },
         { title: 'Update', href: 'tools/update', component: UpdatePage },
         { title: 'Filesystem', href: 'tools/fs', component: FSPage },
     ] },

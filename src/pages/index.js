@@ -9,3 +9,4 @@ export * from './update';
 export * from './rules';
 export * from './tools';
 export * from './fs';
+export * from './factory_reset';
