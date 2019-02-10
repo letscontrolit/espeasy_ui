@@ -1,7 +1,7 @@
 import { h, render, Component } from 'preact';
 import { Menu } from './components/menu';
 import { Page } from './components/page';
-import { ConfigPage, DevicesPage, ControllersPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage } from './pages';
+import { ConfigPage, DevicesPage, DevicesEditPage, ControllersPage, ControllerEditPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage } from './pages';
 
 import { loadConfig, saveConfig } from './conf/config.dat';
 
@@ -26,9 +26,12 @@ const menus = [
     ] },
 ];
 
-let allMenus = [];
+let routes = [
+    { title: 'Edit Controller', href:'controllers/edit', component: ControllerEditPage },
+    { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage }
+];
 menus.map(menu => {
-    allMenus = [...allMenus, menu, ...menu.children];
+    routes = [...routes, menu, ...menu.children];
 });
 
 const clearSlashes = path => {
@@ -69,7 +72,7 @@ class App extends Component {
                 current = newFragment;
                 const parts = current.split('/');
                 const menu = menus.find(menu => menu.href === parts[0]);
-                const page = parts.length > 1 ? allMenus.find(menu => menu.href === current) : menu;
+                const page = parts.length > 1 ? routes.find(route => route.href === `${parts[0]}/${parts[1]}`) : menu;
                 if (page) {
                     this.setState({ page, menu });
                 }

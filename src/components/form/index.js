@@ -73,7 +73,7 @@ export class Form extends Component {
                 return (
                     <div class="pure-control-group">
                         <label for={id}>{config.name}</label>
-                        <select id={id} type="password" >
+                        <select id={id} type="password" onChange={config.onChange}>
                             {config.options.map(option => {
                                 const name = option instanceof Object ? option.name : option;
                                 const val = option instanceof Object ? option.value : option;

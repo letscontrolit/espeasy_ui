@@ -9,11 +9,13 @@ export class DevicesPage extends Component {
     render(props) {
         return (
             <div>{devices.map(device => {
+                const editUrl = `#devices/edit/${device.nr}`;
                 return (
                     <div class="device">
                         <span class="info">
                             {(device.enabled) ? (<b>X</b>) : (<b>o</b>)}
                             {device.nr}: {device.name} TYPE:{device.type} GPIO.{device.gpio} PORT:{device.port}
+                            <a href={editUrl}>edit</a>
                         </span>
                         <span class="vars">
                             {device.vars.map(v => {

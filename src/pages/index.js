@@ -11,3 +11,5 @@ export * from './tools';
 export * from './fs';
 export * from './factory_reset';
 export * from './discover';
+export * from './controllers.edit';
+export * from './devices.edit';
