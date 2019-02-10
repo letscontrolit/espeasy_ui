@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 
-export class LoadPage extends Component {
+export class UpdatePage extends Component {
     constructor(props) {
         super(props);
 
@@ -19,7 +19,8 @@ export class LoadPage extends Component {
     }
 
     render(props) {
-        return (<form class="pure-form pure-form-aligned">
+        return (
+        <form class="pure-form pure-form-aligned">
                 <div class="pure-control-group">
                     <label for="file" class="pure-checkbox">
                         Firmware:
@@ -29,6 +30,7 @@ export class LoadPage extends Component {
             <div>
                 <button type="button" onClick={this.saveForm}>upload</button>
             </div>
-        </form>)
+        </form>
+        )
     }
 }
