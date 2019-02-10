@@ -76,7 +76,7 @@ class DataParser {
             }
         } else {
             const res = this.bytes(nr);
-            return String.fromCharCode.apply(null, res);
+            return String.fromCharCode.apply(null, res).replace(/\x00/g, '');
         }
     }
 }
