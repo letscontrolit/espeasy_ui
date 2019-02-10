@@ -11,7 +11,7 @@ export class Page extends Component {
             </div>
 
             <div class="content">
-                <PageComponent />
+                <PageComponent params={props.params} />
             </div>
         </div>
         );

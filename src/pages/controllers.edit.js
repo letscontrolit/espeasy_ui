@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
-const protocols = [
+export const protocols = [
     { name: '- Standalone -', value: 0 },
     { name: 'Domoticz HTTP', value: 1 },
     { name: 'Domoticz MQTT', value: 2 },
@@ -19,7 +19,7 @@ const protocols = [
 ];
 
 const baseFields = { 
-    enabled: { name: 'Enabled', type: 'checkbox' },
+    enabled: { name: 'Enabled', type: 'checkbox', var: 'enabled' },
     dns: { name: 'Locate Controller', type: 'select', options: [{ value: 0, name: 'Use IP Address'}, { value: 1, name: 'Use Hostname' }] },
     IP: { name: 'IP', type: 'string' },
     hostname: { name: 'Hostname', type: 'string' },
@@ -74,7 +74,7 @@ const getFormConfig = (type) => {
             settings: {
                 name: 'Controller Settings',
                 configs: {
-                    protocol: { name: 'Protocol', type: 'select', options: protocols },
+                    protocol: { name: 'Protocol', type: 'select', var: 'protocol', options: protocols },
                     ...additionalFields
                 }
             },
@@ -89,8 +89,9 @@ export class ControllerEditPage extends Component {
     constructor(props) {
         super(props);
 
+        this.config = settings.get(`controllers[${props.params[0]}]`);
         this.state = {
-            protocol: 0,
+            protocol: this.config.protocol,
         }
     }
 
@@ -98,11 +99,10 @@ export class ControllerEditPage extends Component {
         const formConfig = getFormConfig(this.state.protocol);
         formConfig.groups.settings.configs.protocol.onChange = (e) => {
             this.setState({ protocol: e.currentTarget.value });
-            console.log(e.currentTarget.value);
         };
-        const config = settings.get('controllers[0]');
+        
         return (
-            <Form config={formConfig} selected={config} />
+            <Form config={formConfig} selected={this.config} />
         );
     }
 }

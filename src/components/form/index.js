@@ -104,8 +104,13 @@ export class Form extends Component {
             <fieldset name={id}>
                 <label>{group.name}</label>
                 {keys.map(key => {
-                    const val = values ? (values[id] ? values[id][key] : null) : null;
-                    return this.renderConfig(`${id}.${key}`, group.configs[key], val);
+                    const conf = group.configs[key];
+                    let val;
+                    if (values) {
+                        val = conf.var ? values[conf.var] : (values[id] ? values[id][key] : null);
+                    }
+                    
+                    return this.renderConfig(`${id}.${key}`, conf, val);
                 })}
             </fieldset>
         )

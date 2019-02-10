@@ -1,14 +1,31 @@
 import { h, Component } from 'preact';
-
-const devices = [
-    { nr: 1, name: 'Senzor', type: 'DH11', vars: [{ name: 'Temperature', formula: '', value: 21 }, { name: 'Humidity', formula: '', value: 65 }] },
-    { nr: 1, name: 'Humidity', type: 'Linear Regulator', vars: [{ name: 'Output', formula: '', value: 1 }] }
-]
+import { settings } from '../lib/settings';
+import { devices } from './devices.edit';
 
 export class DevicesPage extends Component {
     render(props) {
+        const tasks = settings.get('tasks');
+        if (!tasks) return;
+        const devs = tasks.map(task => {
+            const vars = []; //task.settings.values.map(val => val);
+            return {
+                nr: task.settings.index,
+                name: task.settings.name,
+                type: devices.find(d => d.value === task.device).name,
+                vars
+            };
+        });
+        // const devices = tasks.map(task => {
+        //     return {
+        //         nr: task.settings.index,
+        //         name: task.settings.name,
+        //         type: 'DH11',
+        //         vars: task.settings.values
+        //     }
+        // });
         return (
-            <div>{devices.map(device => {
+            <div>
+            {devs.map(device => {
                 const editUrl = `#devices/edit/${device.nr}`;
                 return (
                     <div class="device">
@@ -24,7 +41,8 @@ export class DevicesPage extends Component {
                         </span>
                     </div>
                     )
-            })}</div>
+            })}
+            </div>
         );
     }
 }

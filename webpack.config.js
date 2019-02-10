@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = {
+    mode: 'development',
     entry: './src/app.js',
     output: {
         path: path.resolve(__dirname, 'build'),

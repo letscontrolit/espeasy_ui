@@ -56,10 +56,11 @@ class App extends Component {
     }
 
     render(props, state) {
+        const params = getFragment().split('/').slice(2);
         return (
             <div id="layout">
                 <Menu menus={menus} open={true} selected={state.menu} />
-                <Page page={state.page} />
+                <Page page={state.page} params={params} />
             </div>
         );
     }

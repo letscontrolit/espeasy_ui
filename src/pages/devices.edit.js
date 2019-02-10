@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
-const devices = [
+export const devices = [
     { name: '- None -', value: 0 },
     { name: 'Environment - DHT11/12/22  SONOFF2301/7021', value: 5 },
     { name: 'Regulator - Level Control', value: 21 },
@@ -10,7 +10,7 @@ const devices = [
 ];
 
 const baseFields = { 
-    enabled: { name: 'Enabled', type: 'checkbox' },
+    enabled: { name: 'Enabled', type: 'checkbox', var: 'enabled' },
     name: { name: 'Name', type: 'string' },
 };
 
@@ -28,7 +28,7 @@ const getFormConfig = (type) => {
             settings: {
                 name: 'Device Settings',
                 configs: {
-                    device: { name: 'Device', type: 'select', options: devices },
+                    device: { name: 'Device', type: 'select', var: 'device', options: devices },
                     ...additionalFields
                 }
             },
@@ -49,20 +49,20 @@ export class DevicesEditPage extends Component {
     constructor(props) {
         super(props);
 
+        this.config = settings.get(`tasks[${props.params[0]}]`);
         this.state = {
-            device: 0,
+            device: this.config.device,
         }
     }
 
-    render() {
+    render(props) {
         const formConfig = getFormConfig(this.state.device);
         formConfig.groups.settings.configs.device.onChange = (e) => {
             this.setState({ device: e.currentTarget.value });
-            console.log(e.currentTarget.value);
         };
-        const config = settings.get('devices[0]');
+        
         return (
-            <Form config={formConfig} selected={config} />
+            <Form config={formConfig} selected={this.config} />
         );
     }
 }

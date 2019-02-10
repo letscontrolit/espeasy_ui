@@ -53,9 +53,9 @@ export const configDatParseConfig = [
     { prop: 'TimeZone', type: 'int16', signed: true},
     { prop: 'MQTTRetainFlag', type: 'byte' },
     { prop: 'hardware.spi.enabled', type: 'byte' },
-    { prop: 'Protocol', type: 'bytes', length: CONTROLLER_MAX },
-    { prop: 'Notification', type: 'bytes', length: NOTIFICATION_MAX },, // till here its verified to be correct, but might be few next lines are still good
-    { prop: 'TaskDeviceNumber', type: 'bytes', length: TASKS_MAX },
+    [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
+    [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].type`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].device`, type:'byte' })),
     { prop: 'OLD_TaskDeviceID', type: 'ints', length: TASKS_MAX }, 
     { prop: 'TaskDevicePin.1', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDevicePin.2', type: 'bytes', length: TASKS_MAX },
@@ -103,9 +103,9 @@ export const configDatParseConfig = [
     { prop: 'TaskDeviceGlobalSync', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceDataFeed', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceTimer', type: 'longs', length: TASKS_MAX },
-    { prop: 'TaskDeviceEnabled', type: 'bytes', length: TASKS_MAX },
-    { prop: 'ControllerEnabled', type: 'bytes', length: NOTIFICATION_MAX },
-    { prop: 'NotificationEnabled', type: 'bytes', length: CONTROLLER_MAX },
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].enabled`, type:'byte' })),
+    [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
+    [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })),
     { prop: 'TaskDeviceID.1', type: 'ints', length: TASKS_MAX },
     { prop: 'TaskDeviceID.2', type: 'ints', length: TASKS_MAX },
     { prop: 'TaskDeviceID.3', type: 'ints', length: TASKS_MAX },
@@ -128,7 +128,7 @@ export const configDatParseConfig = [
     { prop: 'Longitude', type: 'float' },
     { prop: 'VariousBits1', type: 'int32' },
     { prop: 'ResetFactoryDefaultPreference', type: 'int32' },
-];
+].flat();
 
 export const TaskSettings = [
     { prop: 'index', type:'byte' },
@@ -191,35 +191,29 @@ export const SecuritySettings = [
 
 export const loadConfig = () => {
     fetch('config.dat').then(response => response.arrayBuffer()).then(async response => { 
-        const tasks = [...Array(12)].map((x, i) => {
-            return {
-                settings: parseConfig(response, TaskSettings, 1024*4 + 1024 * 2 * i),
-                extra: parseConfig(response, TaskSettings, 1024*5 + 1024 * 2 * i),
-            };
+        const settings = parseConfig(response, configDatParseConfig);
+
+        [...Array(12)].map((x, i) => {
+            settings.tasks[i].settings = parseConfig(response, TaskSettings, 1024*4 + 1024 * 2 * i);
+            settings.tasks[i].extra = parseConfig(response, TaskSettings, 1024*5 + 1024 * 2 * i);
         });
     
-        const controllers = [...Array(3)].map((x, i) => {
-            return {
-                settings: parseConfig(response, ControllerSettings, 1024*28 + 1024 * 2 * i),
-                extra: parseConfig(response, ControllerSettings, 1024*29 + 1024 * 2 * i),
-            };
+        [...Array(3)].map((x, i) => {
+            settings.controllers[i].settings = parseConfig(response, ControllerSettings, 1024*28 + 1024 * 2 * i);
+            settings.controllers[i].extra = parseConfig(response, ControllerSettings, 1024*29 + 1024 * 2 * i);
         });
     
         const notificationResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
-        const notifications = [...Array(3)].map((x, i) => {
-             return parseConfig(notificationResponse, NotificationSettings, 1024 * i);
+        [...Array(3)].map((x, i) => {
+            settings.controllers[i].settings = parseConfig(notificationResponse, NotificationSettings, 1024 * i);
         });
     
         const securityResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
-        const security = [...Array(3)].map((x, i) => {
+        settings.security = [...Array(3)].map((x, i) => {
              return parseConfig(securityResponse, SecuritySettings, 1024 * i);
         });
     
-        const result = {
-            ...parseConfig(response, configDatParseConfig),
-            tasks, controllers, notifications, security
-        };
-        return result;
+        return settings;
     }).then(sets => {
         settings.init(sets);
         console.log(sets);
