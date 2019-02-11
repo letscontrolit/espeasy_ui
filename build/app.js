@@ -18271,6 +18271,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         }));
 
       case 'select':
+        const options = typeof config.options === 'function' ? config.options() : config.options;
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
           class: "pure-control-group"
         }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
@@ -18279,7 +18280,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           id: id,
           type: "password",
           onChange: config.onChange
-        }, config.options.map(option => {
+        }, options.map(option => {
           const name = option instanceof Object ? option.name : option;
           const val = option instanceof Object ? option.value : option;
 
@@ -19014,6 +19015,403 @@ const saveConfig = () => {
 
   ii = (ii + 1) % 3;
 };
+
+/***/ }),
+
+/***/ "./src/devices/1_input_switch.js":
+/*!***************************************!*\
+  !*** ./src/devices/1_input_switch.js ***!
+  \***************************************/
+/*! exports provided: inputSwitch */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inputSwitch", function() { return inputSwitch; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
+}, {
+  value: 1,
+  name: 'Active on LOW'
+}, {
+  value: 2,
+  name: 'Active on HIGH'
+}, {
+  value: 3,
+  name: 'Active on LOW and HIGH'
+}];
+const inputSwitch = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      pullup: {
+        name: 'Internal PullUp',
+        type: 'checkbox',
+        var: 'pin1pullup'
+      },
+      inversed: {
+        name: 'Inversed logic',
+        type: 'checkbox',
+        var: 'pin1inversed'
+      },
+      gpio: {
+        name: 'GPIO',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      switch_type: {
+        name: 'Switch Type',
+        type: 'select',
+        options: [{
+          name: 'switch',
+          value: 0
+        }, {
+          name: 'dimmer',
+          value: 3
+        }],
+        var: 'configs[0]'
+      },
+      switch_button_type: {
+        name: 'Switch Button Type',
+        type: 'select',
+        options: [{
+          name: 'normal',
+          value: 0
+        }, {
+          name: 'active low',
+          value: 1
+        }, {
+          name: 'active high',
+          value: 2
+        }],
+        var: 'configs[2]'
+      },
+      send_boot_state: {
+        name: 'Send Boot State',
+        type: 'checkbox',
+        var: 'configs[3]'
+      }
+    }
+  },
+  advanced: {
+    name: 'Advanced event management',
+    configs: {
+      debounce: {
+        name: 'De-bounce (ms)',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      dblclick: {
+        name: 'Doublclick Event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[4]'
+      },
+      dblclick_interval: {
+        name: 'Doubleclick Max interval (ms)',
+        type: 'number',
+        var: 'configs_float[1]'
+      },
+      longpress: {
+        name: 'Longpress event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[5]'
+      },
+      longpress_interval: {
+        name: 'Longpress min interval (ms)',
+        type: 'number',
+        var: 'configs_float[2]'
+      },
+      safe_button: {
+        name: 'Use safe button',
+        type: 'checkbox',
+        var: 'configs_float[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send: {
+        name: 'Send to Controller',
+        type: 'checkbox'
+      },
+      idx: {
+        name: 'IDX',
+        type: 'number'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/21_level_control.js":
+/*!*****************************************!*\
+  !*** ./src/devices/21_level_control.js ***!
+  \*****************************************/
+/*! exports provided: levelControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "levelControl", function() { return levelControl; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const sensorModel = [{
+  value: 11,
+  name: 'DHT11'
+}, {
+  value: 22,
+  name: 'DHT22'
+}, {
+  value: 12,
+  name: 'DHT12'
+}, {
+  value: 23,
+  name: 'Sonoff am2301'
+}, {
+  value: 70,
+  name: 'Sonoff si7021'
+}];
+const levelControl = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio: {
+        name: 'GPIO Level Low',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      check_task: {
+        name: 'Check Task',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["getTasks"],
+        var: 'configs[0]'
+      },
+      check_value: {
+        name: 'Check Value',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["getTaskValues"],
+        var: 'configs[1]'
+      },
+      level: {
+        name: 'Set Level',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      hysteresis: {
+        name: 'Hysteresis',
+        type: 'number',
+        var: 'configs_float[1]'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/33_dummy_device.js":
+/*!****************************************!*\
+  !*** ./src/devices/33_dummy_device.js ***!
+  \****************************************/
+/*! exports provided: dummyDevice */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dummyDevice", function() { return dummyDevice; });
+const sensorModel = [{
+  value: 1,
+  name: 'SENSOR_TYPE_SINGLE'
+}, {
+  value: 2,
+  name: 'SENSOR_TYPE_TEMP_HUM'
+}, {
+  value: 3,
+  name: 'SENSOR_TYPE_TEMP_BARO'
+}, {
+  value: 4,
+  name: 'SENSOR_TYPE_TEMP_HUM_BARO'
+}, {
+  value: 5,
+  name: 'SENSOR_TYPE_DUAL'
+}, {
+  value: 5,
+  name: 'SENSOR_TYPE_TRIPLE'
+}, {
+  value: 7,
+  name: 'SENSOR_TYPE_QUAD'
+}, {
+  value: 10,
+  name: 'SENSOR_TYPE_SWITCH'
+}, {
+  value: 11,
+  name: 'SENSOR_TYPE_DIMMER'
+}, {
+  value: 20,
+  name: 'SENSOR_TYPE_LONG'
+}, {
+  value: 21,
+  name: 'SENSOR_TYPE_WIND'
+}];
+const dummyDevice = {
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      switch_type: {
+        name: 'Simulate Sensor Type',
+        type: 'select',
+        options: sensorModel,
+        var: 'configs[0]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/5_dht.js":
+/*!******************************!*\
+  !*** ./src/devices/5_dht.js ***!
+  \******************************/
+/*! exports provided: dht */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dht", function() { return dht; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const sensorModel = [{
+  value: 11,
+  name: 'DHT11'
+}, {
+  value: 22,
+  name: 'DHT22'
+}, {
+  value: 12,
+  name: 'DHT12'
+}, {
+  value: 23,
+  name: 'Sonoff am2301'
+}, {
+  value: 70,
+  name: 'Sonoff si7021'
+}];
+const dht = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio: {
+        name: 'GPIO Data',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      switch_type: {
+        name: 'Sensor model',
+        type: 'select',
+        options: sensorModel,
+        var: 'configs[0]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      interval: {
+        name: 'Interval',
+        type: 'number'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/_defs.js":
+/*!******************************!*\
+  !*** ./src/devices/_defs.js ***!
+  \******************************/
+/*! exports provided: pins, getTasks, getTaskValues */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTasks", function() { return getTasks; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTaskValues", function() { return getTaskValues; });
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _pages_config_hardware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pages/config.hardware */ "./src/pages/config.hardware.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pins", function() { return _pages_config_hardware__WEBPACK_IMPORTED_MODULE_1__["pins"]; });
+
+
+
+const getTasks = () => {
+  return _lib_settings__WEBPACK_IMPORTED_MODULE_0__["settings"].get('tasks').filter(task => task.enabled).map(task => ({
+    value: task.settings.index,
+    name: task.settings.name
+  }));
+};
+const getTaskValues = () => {
+  return [1, 2, 3, 4];
+};
+
+/***/ }),
+
+/***/ "./src/devices/index.js":
+/*!******************************!*\
+  !*** ./src/devices/index.js ***!
+  \******************************/
+/*! exports provided: devices */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "devices", function() { return devices; });
+/* harmony import */ var _1_input_switch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./1_input_switch */ "./src/devices/1_input_switch.js");
+/* harmony import */ var _5_dht__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./5_dht */ "./src/devices/5_dht.js");
+/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
+/* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
+
+
+
+
+const devices = [{
+  name: '- None -',
+  value: 0,
+  fields: []
+}, {
+  name: 'Environment - DHT11/12/22  SONOFF2301/7021',
+  value: 5,
+  fields: _5_dht__WEBPACK_IMPORTED_MODULE_1__["dht"]
+}, {
+  name: 'Regulator - Level Control',
+  value: 21,
+  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_4__["levelControl"]
+}, {
+  name: 'Generic - Dummy Device',
+  value: 33,
+  fields: _33_dummy_device__WEBPACK_IMPORTED_MODULE_3__["dummyDevice"]
+}, {
+  name: 'Switch input - Switch',
+  value: 1,
+  fields: _1_input_switch__WEBPACK_IMPORTED_MODULE_0__["inputSwitch"]
+}];
 
 /***/ }),
 
@@ -20109,50 +20507,20 @@ class ControllersPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!***********************************!*\
   !*** ./src/pages/devices.edit.js ***!
   \***********************************/
-/*! exports provided: devices, DevicesEditPage */
+/*! exports provided: DevicesEditPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "devices", function() { return devices; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DevicesEditPage", function() { return DevicesEditPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
-/* harmony import */ var _config_hardware__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config.hardware */ "./src/pages/config.hardware.js");
+/* harmony import */ var _devices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../devices */ "./src/devices/index.js");
 
 
 
 
-const devices = [{
-  name: '- None -',
-  value: 0
-}, {
-  name: 'Environment - DHT11/12/22  SONOFF2301/7021',
-  value: 5
-}, {
-  name: 'Regulator - Level Control',
-  value: 21
-}, {
-  name: 'Generic - Dummy Device',
-  value: 33
-}, {
-  name: 'Switch input - Switch',
-  value: 1
-}];
-const eventTypes = [{
-  value: 0,
-  name: 'Disabled'
-}, {
-  value: 1,
-  name: 'Active on LOW'
-}, {
-  value: 2,
-  name: 'Active on HIGH'
-}, {
-  value: 3,
-  name: 'Active on LOW and HIGH'
-}];
 const baseFields = {
   enabled: {
     name: 'Enabled',
@@ -20164,132 +20532,8 @@ const baseFields = {
     type: 'string'
   }
 };
-const inputSwitch = {
-  sensor: {
-    name: 'Sensor',
-    configs: {
-      pullup: {
-        name: 'Internal PullUp',
-        type: 'checkbox',
-        var: 'pin1pullup'
-      },
-      inversed: {
-        name: 'Inversed logic',
-        type: 'checkbox',
-        var: 'pin1inversed'
-      },
-      gpio: {
-        name: 'GPIO',
-        type: 'select',
-        options: _config_hardware__WEBPACK_IMPORTED_MODULE_3__["pins"],
-        var: 'gpio1'
-      },
-      switch_type: {
-        name: 'Switch Type',
-        type: 'select',
-        options: [{
-          name: 'switch',
-          value: 0
-        }, {
-          name: 'dimmer',
-          value: 3
-        }],
-        var: 'configs[0]'
-      },
-      switch_button_type: {
-        name: 'Switch Button Type',
-        type: 'select',
-        options: [{
-          name: 'normal',
-          value: 0
-        }, {
-          name: 'active low',
-          value: 1
-        }, {
-          name: 'active high',
-          value: 2
-        }],
-        var: 'configs[2]'
-      },
-      send_boot_state: {
-        name: 'Send Boot State',
-        type: 'checkbox',
-        var: 'configs[3]'
-      }
-    }
-  },
-  advanced: {
-    name: 'Advanced event management',
-    configs: {
-      debounce: {
-        name: 'De-bounce (ms)',
-        type: 'number',
-        var: 'configs_float[0]'
-      },
-      dblclick: {
-        name: 'Doublclick Event',
-        type: 'select',
-        options: eventTypes,
-        var: 'configs[4]'
-      },
-      dblclick_interval: {
-        name: 'Doubleclick Max interval (ms)',
-        type: 'number',
-        var: 'configs_float[1]'
-      },
-      longpress: {
-        name: 'Longpress event',
-        type: 'select',
-        options: eventTypes,
-        var: 'configs[5]'
-      },
-      longpress_interval: {
-        name: 'Longpress min interval (ms)',
-        type: 'number',
-        var: 'configs_float[2]'
-      },
-      safe_button: {
-        name: 'Use safe button',
-        type: 'checkbox',
-        var: 'configs_float[3]'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send: {
-        name: 'Send to Controller',
-        type: 'checkbox'
-      },
-      idx: {
-        name: 'IDX',
-        type: 'number'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number'
-      }
-    }
-  }
-};
 
 const getFormConfig = type => {
-  let additionalFields = {};
-  let customFields = {};
-
-  switch (Number(type)) {
-    case 0:
-      break;
-
-    case 1:
-      customFields = inputSwitch;
-
-    default:
-      additionalFields = { ...baseFields
-      };
-  }
-
   return {
     groups: {
       settings: {
@@ -20299,12 +20543,12 @@ const getFormConfig = type => {
             name: 'Device',
             type: 'select',
             var: 'device',
-            options: devices
+            options: _devices__WEBPACK_IMPORTED_MODULE_3__["devices"]
           },
-          ...additionalFields
+          ...baseFields
         }
       },
-      ...inputSwitch,
+      ..._devices__WEBPACK_IMPORTED_MODULE_3__["devices"].find(d => d.value === type).fields,
       values: {
         name: 'Values',
         configs: {}
@@ -20356,7 +20600,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DevicesPage", function() { return DevicesPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
-/* harmony import */ var _devices_edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./devices.edit */ "./src/pages/devices.edit.js");
+/* harmony import */ var _devices__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../devices */ "./src/devices/index.js");
 
 
 
@@ -20366,7 +20610,7 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     if (!tasks) return;
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, tasks.map((task, i) => {
       const editUrl = `#devices/edit/${i}`;
-      const deviceType = _devices_edit__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device).name;
+      const deviceType = _devices__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device).name;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
@@ -20650,7 +20894,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20702,8 +20946,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ControllerEditPage", function() { return _controllers_edit__WEBPACK_IMPORTED_MODULE_13__["ControllerEditPage"]; });
 
 /* harmony import */ var _devices_edit__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./devices.edit */ "./src/pages/devices.edit.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "devices", function() { return _devices_edit__WEBPACK_IMPORTED_MODULE_14__["devices"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DevicesEditPage", function() { return _devices_edit__WEBPACK_IMPORTED_MODULE_14__["DevicesEditPage"]; });
 
 

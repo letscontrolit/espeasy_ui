@@ -71,11 +71,12 @@ export class Form extends Component {
                     </div>
                 ) ;
             case 'select':
+                const options = (typeof config.options === 'function') ? config.options() : config.options;
                 return (
                     <div class="pure-control-group">
                         <label for={id}>{config.name}</label>
                         <select id={id} type="password" onChange={config.onChange}>
-                            {config.options.map(option => {
+                            {options.map(option => {
                                 const name = option instanceof Object ? option.name : option;
                                 const val = option instanceof Object ? option.value : option;
                                 if (val === value) {

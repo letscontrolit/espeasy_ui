@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { settings } from '../lib/settings';
-import { devices } from './devices.edit';
+import { devices } from '../devices';
 
 export class DevicesPage extends Component {
     render(props) {
