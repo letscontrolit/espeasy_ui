@@ -19,37 +19,37 @@ export const configDatParseConfig = [
     { prop: 'config.IP.gw', type: 'bytes', length: 4 }, 
     { prop: 'config.IP.subnet', type: 'bytes', length: 4 },
     { prop: 'config.IP.dns', type: 'bytes', length: 4 },
-    { prop: 'IP_octet', type: 'byte' },
+    { prop: 'config.experimental.ip_octet', type: 'byte' },
     { prop: 'config.general.unitnr', type: 'byte' },
     { prop: 'config.general.unitname', type: 'string', length: 26 },
-    { prop: 'NTPHost', type: 'string', length: 64 },
-    { prop: 'Delay', type: 'int32' },
+    { prop: 'config.ntp.host', type: 'string', length: 64 },
+    { prop: 'config.sleep.sleeptime', type: 'int32' },
     { prop: 'hardware.i2c.sda', type: 'byte' },
     { prop: 'hardware.i2c.scl', type: 'byte' },
     { prop: 'hardware.led.gpio', type: 'byte' },
-    { prop: 'Pin_sd_cs', type: 'byte' },
+    { prop: 'Pin_sd_cs', type: 'byte' }, // TODO
     { prop: 'hardware.gpio', type: 'bytes', length: 17 },
-    { prop: 'Syslog_IP', type: 'bytes', length: 4 },
-    { prop: 'UDPPort', type: 'int32' },
-    { prop: 'SyslogLevel', type: 'byte' },
-    { prop: 'SerialLogLevel', type: 'byte' },
-    { prop: 'WebLogLevel', type: 'byte' },
-    { prop: 'SDLogLevel', type: 'byte' },
-    { prop: 'BaudRate', type: 'int32' },
-    { prop: 'MessageDelay', type: 'int32' },
-    { prop: 'deepSleep', type: 'byte' },
-    { prop: 'CustomCSS', type: 'byte' },
-    { prop: 'DST', type: 'byte' },
-    { prop: 'WDI2CAddress', type: 'byte' },
-    { prop: 'UseRules', type: 'byte' },
-    { prop: 'UseSerial', type: 'byte' },
-    { prop: 'UseSSDP', type: 'byte' },
-    { prop: 'UseNTP', type: 'byte' },
-    { prop: 'WireClockStretchLimit', type: 'int32' },
-    { prop: 'GlobalSync', type: 'byte' },
-    { prop: 'ConnectionFailuresThreshold', type: 'int32' },
-    { prop: 'TimeZone', type: 'int16', signed: true},
-    { prop: 'MQTTRetainFlag', type: 'byte' },
+    { prop: 'config.log.syslog_ip', type: 'bytes', length: 4 },
+    { prop: 'config.espnetwork.port', type: 'int32' },
+    { prop: 'config.log.syslog_level', type: 'byte' },
+    { prop: 'config.log.serial_level', type: 'byte' },
+    { prop: 'config.log.web_level', type: 'byte' },
+    { prop: 'config.log.sd_level', type: 'byte' },
+    { prop: 'config.serial.baudrate', type: 'int32' },
+    { prop: 'MessageDelay', type: 'int32' }, // TODO
+    { prop: 'config.sleep.awaketime', type: 'byte' },
+    { prop: 'CustomCSS', type: 'byte' }, // TODO
+    { prop: 'config.dst.enabled', type: 'byte' },
+    { prop: 'config.experimental.WDI2CAddress', type: 'byte' },
+    { prop: 'config.rules.enabled', type: 'byte' },
+    { prop: 'config.serial.enabled', type: 'byte' },
+    { prop: 'config.ssdp.enabled', type: 'byte' },
+    { prop: 'config.ntp.enabled', type: 'byte' },
+    { prop: 'config.experimental.WireClockStretchLimit', type: 'int32' },
+    { prop: 'GlobalSync', type: 'byte' }, // TODO
+    { prop: 'config.experimental.ConnectionFailuresThreshold', type: 'int32' },
+    { prop: 'TimeZone', type: 'int16', signed: true},// TODO
+    { prop: 'config.mqtt.retain_flag', type: 'byte' },
     { prop: 'hardware.spi.enabled', type: 'byte' },
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].type`, type:'byte' })),
@@ -64,34 +64,34 @@ export const configDatParseConfig = [
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].pin1inversed`, type:'byte' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].configs_float`, type:'floats', length: PLUGIN_CONFIGFLOATVAR_MAX })), 
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].configs_long`, type:'longs', length: PLUGIN_CONFIGFLOATVAR_MAX })),
-    { prop: 'OLD_TaskDeviceSendData', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDeviceGlobalSync', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDeviceDataFeed', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDeviceTimer', type: 'longs', length: TASKS_MAX },
+    { prop: 'OLD_TaskDeviceSendData', type: 'bytes', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceGlobalSync', type: 'bytes', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceDataFeed', type: 'bytes', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceTimer', type: 'longs', length: TASKS_MAX },// TODO
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].enabled`, type:'byte' })),
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })), 
-    { prop: 'TaskDeviceID.1', type: 'longs', length: TASKS_MAX },
-    { prop: 'TaskDeviceID.2', type: 'longs', length: TASKS_MAX },
-    { prop: 'TaskDeviceID.3', type: 'longs', length: TASKS_MAX },
-    { prop: 'TaskDeviceSendData.1', type: 'bytes', length: TASKS_MAX }, 
-    { prop: 'TaskDeviceSendData.2', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDeviceSendData.3', type: 'bytes', length: TASKS_MAX },
+    { prop: 'TaskDeviceID.1', type: 'longs', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceID.2', type: 'longs', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceID.3', type: 'longs', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceSendData.1', type: 'bytes', length: TASKS_MAX }, // TODO
+    { prop: 'TaskDeviceSendData.2', type: 'bytes', length: TASKS_MAX },// TODO
+    { prop: 'TaskDeviceSendData.3', type: 'bytes', length: TASKS_MAX },// TODO
     { prop: 'hardware.led.inverse', type: 'byte' }, 
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
-    { prop: 'UseValueLogger', type: 'byte' },
-    { prop: 'ArduinoOTAEnable', type: 'byte' },
-    { prop: 'DST_Start', type: 'int16' },
-    { prop: 'DST_End', type: 'int16' },
-    { prop: 'UseRTOSMultitasking', type: 'byte' },
+    { prop: 'UseValueLogger', type: 'byte' },// TODO
+    { prop: 'ArduinoOTAEnable', type: 'byte' },// TODO
+    { prop: 'config.dst.DST_Start', type: 'int16' },
+    { prop: 'config.dst.DST_End', type: 'int16' },
+    { prop: 'UseRTOSMultitasking', type: 'byte' },// TODO
     { prop: 'hardware.reset.pin', type: 'byte' }, 
-    { prop: 'SyslogFacility', type: 'byte' }, 
-    { prop: 'StructSize', type: 'int32' },
-    { prop: 'MQTTUseUnitNameAsClientId', type: 'byte' },
-    { prop: 'Latitude', type: 'float' },
-    { prop: 'Longitude', type: 'float' },
-    { prop: 'VariousBits1', type: 'int32' },
-    { prop: 'ResetFactoryDefaultPreference', type: 'int32' },
+    { prop: 'config.log.syslog_facility', type: 'byte' }, 
+    { prop: 'StructSize', type: 'int32' },// TODO
+    { prop: 'config.mqtt.useunitname', type: 'byte' },
+    { prop: 'config.location.lat', type: 'float' },
+    { prop: 'config.location.long', type: 'float' },
+    { prop: 'VariousBits1', type: 'int32' },// TODO
+    { prop: 'ResetFactoryDefaultPreference', type: 'int32' },// TODO
 ].flat();
 
 export const TaskSettings = [

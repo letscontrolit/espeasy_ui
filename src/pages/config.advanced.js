@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { Form } from '../components/form';
+import { settings } from '../lib/settings';
 
 const logLevelOptions = [
     { name: 'None', value: 0 },
@@ -23,7 +24,7 @@ const formConfig = {
         mqtt: {
             name: 'Controller Settings',
             configs: {
-                retainmsg: { name: 'MQTT Retain Msg', type: 'checkbox' },
+                retain_flag: { name: 'MQTT Retain Msg', type: 'checkbox' },
                 interval: { name: 'Message Interval', type: 'number' },
                 useunitname: { name: 'MQTT use unit name as ClientId', type: 'checkbox' },
                 changeclientid: { name: 'MQTT change ClientId at reconnect', type: 'checkbox' },
@@ -52,13 +53,13 @@ const formConfig = {
         log: {
             name: 'Log Settings',
             configs: {
-                ip: { name: 'Syslog IP', type: 'string' },
+                syslog_ip: { name: 'Syslog IP', type: 'string' },
                 syslog_level: { name: 'Syslog Level', type: 'select', options: logLevelOptions },
                 syslog_facility: { name: 'Syslog Level', type: 'select', options: [
                     { name: 'Kernel', value: 0 },
-                    { name: 'Kernel', value: 1 },
-                    { name: 'Kernel', value: 3 },
-                    { name: 'Kernel', value: 5 },
+                    { name: 'User', value: 1 },
+                    { name: 'Daemon', value: 3 },
+                    { name: 'Message', value: 5 },
                     { name: 'Local0', value: 16 },
                     { name: 'Local1', value: 17 },
                     { name: 'Local2', value: 18 },
@@ -89,22 +90,20 @@ const formConfig = {
         experimental: {
             name: 'Experimental Settings',
             configs: {
-                fixed_ip_octet: { name: 'Fixed IP Octet', type: 'number' },
-                wdi2caddress: { name: 'WD I2C Address', type: 'number' },
-                ssdp: { name: 'Use SSDP', type: 'checkbox' },
-                connection_failiure_treshold: { name: 'Connection Failiure Treshold', type: 'number' },
-                i2c_clock_stretch_limit: { name: 'I2C ClockStretchLimit', type: 'number' },
+                ip_octet: { name: 'Fixed IP Octet', type: 'number' },
+                WDI2CAddress: { name: 'WD I2C Address', type: 'number' },
+                ssdp: { name: 'Use SSDP', type: 'checkbox', var: 'ssdp.enabled' },
+                ConnectionFailuresThreshold: { name: 'Connection Failiure Treshold', type: 'number' },
+                WireClockStretchLimit: { name: 'I2C ClockStretchLimit', type: 'number' },
             }
         }
     },
 }
 
-const config = {}
-
 export class ConfigAdvancedPage extends Component {
     render(props) {
         return (
-            <Form config={formConfig} selected={config} />
+            <Form config={formConfig} selected={settings.get('config')} />
         );
     }
 }

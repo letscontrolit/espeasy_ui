@@ -18502,7 +18502,7 @@ const configDatParseConfig = [{
   type: 'bytes',
   length: 4
 }, {
-  prop: 'IP_octet',
+  prop: 'config.experimental.ip_octet',
   type: 'byte'
 }, {
   prop: 'config.general.unitnr',
@@ -18512,11 +18512,11 @@ const configDatParseConfig = [{
   type: 'string',
   length: 26
 }, {
-  prop: 'NTPHost',
+  prop: 'config.ntp.host',
   type: 'string',
   length: 64
 }, {
-  prop: 'Delay',
+  prop: 'config.sleep.sleeptime',
   type: 'int32'
 }, {
   prop: 'hardware.i2c.sda',
@@ -18530,74 +18530,79 @@ const configDatParseConfig = [{
 }, {
   prop: 'Pin_sd_cs',
   type: 'byte'
-}, {
+}, // TODO
+{
   prop: 'hardware.gpio',
   type: 'bytes',
   length: 17
 }, {
-  prop: 'Syslog_IP',
+  prop: 'config.log.syslog_ip',
   type: 'bytes',
   length: 4
 }, {
-  prop: 'UDPPort',
+  prop: 'config.espnetwork.port',
   type: 'int32'
 }, {
-  prop: 'SyslogLevel',
+  prop: 'config.log.syslog_level',
   type: 'byte'
 }, {
-  prop: 'SerialLogLevel',
+  prop: 'config.log.serial_level',
   type: 'byte'
 }, {
-  prop: 'WebLogLevel',
+  prop: 'config.log.web_level',
   type: 'byte'
 }, {
-  prop: 'SDLogLevel',
+  prop: 'config.log.sd_level',
   type: 'byte'
 }, {
-  prop: 'BaudRate',
+  prop: 'config.serial.baudrate',
   type: 'int32'
 }, {
   prop: 'MessageDelay',
   type: 'int32'
-}, {
-  prop: 'deepSleep',
+}, // TODO
+{
+  prop: 'config.sleep.awaketime',
   type: 'byte'
 }, {
   prop: 'CustomCSS',
   type: 'byte'
-}, {
-  prop: 'DST',
+}, // TODO
+{
+  prop: 'config.dst.enabled',
   type: 'byte'
 }, {
-  prop: 'WDI2CAddress',
+  prop: 'config.experimental.WDI2CAddress',
   type: 'byte'
 }, {
-  prop: 'UseRules',
+  prop: 'config.rules.enabled',
   type: 'byte'
 }, {
-  prop: 'UseSerial',
+  prop: 'config.serial.enabled',
   type: 'byte'
 }, {
-  prop: 'UseSSDP',
+  prop: 'config.ssdp.enabled',
   type: 'byte'
 }, {
-  prop: 'UseNTP',
+  prop: 'config.ntp.enabled',
   type: 'byte'
 }, {
-  prop: 'WireClockStretchLimit',
+  prop: 'config.experimental.WireClockStretchLimit',
   type: 'int32'
 }, {
   prop: 'GlobalSync',
   type: 'byte'
-}, {
-  prop: 'ConnectionFailuresThreshold',
+}, // TODO
+{
+  prop: 'config.experimental.ConnectionFailuresThreshold',
   type: 'int32'
 }, {
   prop: 'TimeZone',
   type: 'int16',
   signed: true
-}, {
-  prop: 'MQTTRetainFlag',
+}, // TODO
+{
+  prop: 'config.mqtt.retain_flag',
   type: 'byte'
 }, {
   prop: 'hardware.spi.enabled',
@@ -18649,19 +18654,23 @@ const configDatParseConfig = [{
   prop: 'OLD_TaskDeviceSendData',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceGlobalSync',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceDataFeed',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceTimer',
   type: 'longs',
   length: TASKS_MAX
-}, [...Array(TASKS_MAX)].map((x, i) => ({
+}, // TODO
+[...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].enabled`,
   type: 'byte'
 })), [...Array(CONTROLLER_MAX)].map((x, i) => ({
@@ -18674,27 +18683,33 @@ const configDatParseConfig = [{
   prop: 'TaskDeviceID.1',
   type: 'longs',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceID.2',
   type: 'longs',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceID.3',
   type: 'longs',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceSendData.1',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceSendData.2',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'TaskDeviceSendData.3',
   type: 'bytes',
   length: TASKS_MAX
-}, {
+}, // TODO
+{
   prop: 'hardware.led.inverse',
   type: 'byte'
 }, {
@@ -18703,40 +18718,45 @@ const configDatParseConfig = [{
 }, {
   prop: 'UseValueLogger',
   type: 'byte'
-}, {
+}, // TODO
+{
   prop: 'ArduinoOTAEnable',
   type: 'byte'
-}, {
-  prop: 'DST_Start',
+}, // TODO
+{
+  prop: 'config.dst.DST_Start',
   type: 'int16'
 }, {
-  prop: 'DST_End',
+  prop: 'config.dst.DST_End',
   type: 'int16'
 }, {
   prop: 'UseRTOSMultitasking',
   type: 'byte'
-}, {
+}, // TODO
+{
   prop: 'hardware.reset.pin',
   type: 'byte'
 }, {
-  prop: 'SyslogFacility',
+  prop: 'config.log.syslog_facility',
   type: 'byte'
 }, {
   prop: 'StructSize',
   type: 'int32'
-}, {
-  prop: 'MQTTUseUnitNameAsClientId',
+}, // TODO
+{
+  prop: 'config.mqtt.useunitname',
   type: 'byte'
 }, {
-  prop: 'Latitude',
+  prop: 'config.location.lat',
   type: 'float'
 }, {
-  prop: 'Longitude',
+  prop: 'config.location.long',
   type: 'float'
 }, {
   prop: 'VariousBits1',
   type: 'int32'
-}, {
+}, // TODO
+{
   prop: 'ResetFactoryDefaultPreference',
   type: 'int32'
 }].flat();
@@ -19179,6 +19199,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConfigAdvancedPage", function() { return ConfigAdvancedPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+
 
 
 const logLevelOptions = [{
@@ -19221,7 +19243,7 @@ const formConfig = {
     mqtt: {
       name: 'Controller Settings',
       configs: {
-        retainmsg: {
+        retain_flag: {
           name: 'MQTT Retain Msg',
           type: 'checkbox'
         },
@@ -19277,7 +19299,7 @@ const formConfig = {
     log: {
       name: 'Log Settings',
       configs: {
-        ip: {
+        syslog_ip: {
           name: 'Syslog IP',
           type: 'string'
         },
@@ -19293,13 +19315,13 @@ const formConfig = {
             name: 'Kernel',
             value: 0
           }, {
-            name: 'Kernel',
+            name: 'User',
             value: 1
           }, {
-            name: 'Kernel',
+            name: 'Daemon',
             value: 3
           }, {
-            name: 'Kernel',
+            name: 'Message',
             value: 5
           }, {
             name: 'Local0',
@@ -19368,23 +19390,24 @@ const formConfig = {
     experimental: {
       name: 'Experimental Settings',
       configs: {
-        fixed_ip_octet: {
+        ip_octet: {
           name: 'Fixed IP Octet',
           type: 'number'
         },
-        wdi2caddress: {
+        WDI2CAddress: {
           name: 'WD I2C Address',
           type: 'number'
         },
         ssdp: {
           name: 'Use SSDP',
-          type: 'checkbox'
+          type: 'checkbox',
+          var: 'ssdp.enabled'
         },
-        connection_failiure_treshold: {
+        ConnectionFailuresThreshold: {
           name: 'Connection Failiure Treshold',
           type: 'number'
         },
-        i2c_clock_stretch_limit: {
+        WireClockStretchLimit: {
           name: 'I2C ClockStretchLimit',
           type: 'number'
         }
@@ -19392,12 +19415,11 @@ const formConfig = {
     }
   }
 };
-const config = {};
 class ConfigAdvancedPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render(props) {
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
       config: formConfig,
-      selected: config
+      selected: _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get('config')
     });
   }
 
@@ -19692,15 +19714,18 @@ const formConfig = {
         blocklevel: {
           name: 'IP Block Level',
           type: 'select',
-          options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range']
+          options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'],
+          var: 'security[0].IPblockLevel'
         },
         lowerrange: {
           name: 'Access IP lower range',
-          type: 'string'
+          type: 'string',
+          var: 'security[0].AllowedIPrangeLow'
         },
         upperrange: {
           name: 'Access IP upper range',
-          type: 'string'
+          type: 'string',
+          var: 'security[0].AllowedIPrangeHigh'
         }
       }
     },
@@ -20625,7 +20650,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, ControllersPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

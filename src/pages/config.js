@@ -27,9 +27,9 @@ const formConfig = {
         clientIP: {
             name: 'Client IP Filtering',
             configs: {
-                blocklevel: { name: 'IP Block Level', type: 'select', options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'] },
-                lowerrange: { name: 'Access IP lower range', type: 'string' },
-                upperrange: { name: 'Access IP upper range', type: 'string' },
+                blocklevel: { name: 'IP Block Level', type: 'select', options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'], var: 'security[0].IPblockLevel' },
+                lowerrange: { name: 'Access IP lower range', type: 'string', var: 'security[0].AllowedIPrangeLow' },
+                upperrange: { name: 'Access IP upper range', type: 'string', var: 'security[0].AllowedIPrangeHigh' },
             }
         },
         IP: {
