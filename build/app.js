@@ -18636,27 +18636,19 @@ const configDatParseConfig = [{
   prop: `tasks[${i}].configs_long`,
   type: 'longs',
   length: PLUGIN_CONFIGFLOATVAR_MAX
-})), {
-  prop: 'OLD_TaskDeviceSendData',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceGlobalSync',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceDataFeed',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceTimer',
-  type: 'longs',
-  length: TASKS_MAX
-}, // TODO
-[...Array(TASKS_MAX)].map((x, i) => ({
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].OLD_senddata`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].global_sync`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].data_feed`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].interval`,
+  type: 'long'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].enabled`,
   type: 'byte'
 })), [...Array(CONTROLLER_MAX)].map((x, i) => ({
