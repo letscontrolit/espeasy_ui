@@ -172,8 +172,9 @@ export const loadConfig = () => {
             settings.notifications[i].settings = parseConfig(notificationResponse, NotificationSettings, 1024 * i);
         });
     
-        const securityResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
-        settings.security = [...Array(3)].map((x, i) => {
+        const securityResponse = await fetch('security.dat').then(response => response.arrayBuffer());
+        settings.config.security = [...Array(3)].map((x, i) => {
+            console.log(i);
              return parseConfig(securityResponse, SecuritySettings, 1024 * i);
         });
     

@@ -11,17 +11,17 @@ const formConfig = {
                 unitname: { name: 'Unit Name', type: 'string' },
                 unitnr: { name: 'Unit Number', type: 'number' },
                 appendunit: { name: 'Append Unit Name to Hostname', type: 'checkbox' },
-                password: { name: 'Admin Password', type: 'password' },
+                password: { name: 'Admin Password', type: 'password', var: 'security[0].password' },
             }
         },
         wifi: {
             name: 'WiFi',
             configs: {
-                ssid: { name: 'SSID', type: 'string' },
-                passwd: { name: 'Password', type: 'password' },
-                fallbackssid: { name: 'Fallback SSID', type: 'string' },
-                fallbackpasswd: { name: 'Fallback Password', type: 'password' },
-                wpaapmode: { name: 'WPA AP Mode Key:', type: 'string' },
+                ssid: { name: 'SSID', type: 'string', var: 'security[0].WifiSSID' },
+                passwd: { name: 'Password', type: 'password', var: 'security[0].WifiKey' },
+                fallbackssid: { name: 'Fallback SSID', type: 'string', var: 'security[0].WifiSSID2' },
+                fallbackpasswd: { name: 'Fallback Password', type: 'password', var: 'security[0].WifiKey2' },
+                wpaapmode: { name: 'WPA AP Mode Key:', type: 'string', var: 'security[0].WifiAPKey' },
             }
         },
         clientIP: {
@@ -50,18 +50,6 @@ const formConfig = {
             }
         }
     },
-}
-
-const config = {
-    general: {
-        unitname: 'test',
-        unitnr: 1,
-        appendunit: true,
-        password: 'secret',
-    }, wifi: {
-        ssid: 'MyRouter',
-        passwd: 'secret',
-    }
 }
 
 export class ConfigPage extends Component {

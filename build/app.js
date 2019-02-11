@@ -18934,8 +18934,9 @@ const loadConfig = () => {
     [...Array(3)].map((x, i) => {
       settings.notifications[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(notificationResponse, NotificationSettings, 1024 * i);
     });
-    const securityResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
-    settings.security = [...Array(3)].map((x, i) => {
+    const securityResponse = await fetch('security.dat').then(response => response.arrayBuffer());
+    settings.config.security = [...Array(3)].map((x, i) => {
+      console.log(i);
       return Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(securityResponse, SecuritySettings, 1024 * i);
     });
     return settings;
@@ -19650,7 +19651,8 @@ const formConfig = {
         },
         password: {
           name: 'Admin Password',
-          type: 'password'
+          type: 'password',
+          var: 'security[0].password'
         }
       }
     },
@@ -19659,23 +19661,28 @@ const formConfig = {
       configs: {
         ssid: {
           name: 'SSID',
-          type: 'string'
+          type: 'string',
+          var: 'security[0].WifiSSID'
         },
         passwd: {
           name: 'Password',
-          type: 'password'
+          type: 'password',
+          var: 'security[0].WifiKey'
         },
         fallbackssid: {
           name: 'Fallback SSID',
-          type: 'string'
+          type: 'string',
+          var: 'security[0].WifiSSID2'
         },
         fallbackpasswd: {
           name: 'Fallback Password',
-          type: 'password'
+          type: 'password',
+          var: 'security[0].WifiKey2'
         },
         wpaapmode: {
           name: 'WPA AP Mode Key:',
-          type: 'string'
+          type: 'string',
+          var: 'security[0].WifiAPKey'
         }
       }
     },
@@ -19735,18 +19742,6 @@ const formConfig = {
         }
       }
     }
-  }
-};
-const config = {
-  general: {
-    unitname: 'test',
-    unitnr: 1,
-    appendunit: true,
-    password: 'secret'
-  },
-  wifi: {
-    ssid: 'MyRouter',
-    passwd: 'secret'
   }
 };
 class ConfigPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
@@ -20647,7 +20642,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, ConfigPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
