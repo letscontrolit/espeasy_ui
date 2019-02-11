@@ -41,18 +41,19 @@ export class FactoryResetPage extends Component {
     render(props) {
         formConfig.onSave = (config) => {
             const data = new FormData();
-            data.append('kun', config.keep.unit);
-            data.append('kw', config.keep.wifi);
-            data.append('knet', config.keep.network);
-            data.append('kntp', config.keep.ntp);
-            data.append('klog', config.keep.log);
+            if (config.keep.unit) data.append('kun', 'on');
+            if (config.keep.wifi) data.append('kw', 'on');
+            if (config.keep.network) data.append('knet', 'on');
+            if (config.keep.ntp) data.append('kntp', 'on');
+            if (config.keep.log) data.append('klog', 'on');
             data.append('fdm', config.load.config);
+            data.append('performfactoryreset', 'Factory Reset');
             fetch('/factoryreset', {
                 method: 'POST',
                 body: data 
             }).then(() => {
                 setTimeout(() => {
-                    window.location.href="/";
+                    window.location.href="#devices";
                 }, 5000);
             });
         };

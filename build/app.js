@@ -20549,18 +20549,19 @@ class FactoryResetPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] 
   render(props) {
     formConfig.onSave = config => {
       const data = new FormData();
-      data.append('kun', config.keep.unit);
-      data.append('kw', config.keep.wifi);
-      data.append('knet', config.keep.network);
-      data.append('kntp', config.keep.ntp);
-      data.append('klog', config.keep.log);
+      if (config.keep.unit) data.append('kun', 'on');
+      if (config.keep.wifi) data.append('kw', 'on');
+      if (config.keep.network) data.append('knet', 'on');
+      if (config.keep.ntp) data.append('kntp', 'on');
+      if (config.keep.log) data.append('klog', 'on');
       data.append('fdm', config.load.config);
+      data.append('performfactoryreset', 'Factory Reset');
       fetch('/factoryreset', {
         method: 'POST',
         body: data
       }).then(() => {
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = "#devices";
         }, 5000);
       });
     };
@@ -20642,7 +20643,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, ConfigPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, RulesPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20806,33 +20807,63 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RulesPage", function() { return RulesPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 
+const rules = [{
+  name: 'Rule 1',
+  file: 'rules1.txt',
+  index: 1
+}, {
+  name: 'Rule 2',
+  file: 'rules2.txt',
+  index: 2
+}, {
+  name: 'Rule 3',
+  file: 'rules3.txt',
+  index: 3
+}, {
+  name: 'Rule 4',
+  file: 'rules4.txt',
+  index: 4
+}];
 class RulesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
-      selected: ''
+      selected: rules[0]
     };
 
     this.selectionChanged = e => {
       this.setState({
-        selected: e.currentTarget.value
+        selected: rules[e.currentTarget.value]
       });
     };
-  }
 
-  saveRule() {}
+    this.saveRule = () => {
+      const data = new FormData();
+      data.append('set', this.state.selected.index);
+      data.append('rules', this.text.value);
+      fetch('/rules', {
+        method: 'POST',
+        body: data
+      }).then(res => {
+        console.log('succesfully saved');
+        console.log(res.text());
+      });
+    };
+
+    this.fetch();
+  }
 
   render(props) {
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
       onChange: this.selectionChanged
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
-      value: "Rules1.txt"
+      value: "0"
     }, "Rule 1"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
-      value: "Rules2.txt"
+      value: "1"
     }, "Rule 2"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
-      value: "Rules3.txt"
+      value: "2"
     }, "Rule 3"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
-      value: "Rules4.txt"
+      value: "3"
     }, "Rule 4"))), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("textarea", {
       style: "width: 100%; height: 400px",
       ref: ref => this.text = ref
@@ -20842,15 +20873,13 @@ class RulesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, "Save"))));
   }
 
-  componentDidMount() {
-    this.setState({
-      selected: 'Rules1.txt'
-    });
+  async fetch() {
+    const text = await fetch(this.state.selected.file).then(response => response.text());
+    this.text.value = text;
   }
 
   async componentDidUpdate() {
-    const text = await fetch(this.state.selected).then(response => response.text());
-    this.text.value = text;
+    this.fetch();
   }
 
 }
@@ -20883,14 +20912,18 @@ class ToolsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   fetch() {
     fetch('/logjson').then(response => response.json()).then(response => {
       response.Log.Entries.map(log => {
-        this.log.value += `response.text\n`;
+        this.log.innerText += `${JSON.stringify(log)}\n`;
+
+        if (true) {
+          this.log.scrollTop = this.log.scollHeight;
+        }
       });
     });
   }
 
   render(props) {
-    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("textarea", {
-      style: "width: 100%; height: 200px",
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      style: "width: 100%; height: 200px; overflow-y: scroll;",
       ref: ref => this.log = ref
     }, "loading logs ..."), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "Command: ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
       type: "text",
