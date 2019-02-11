@@ -18240,6 +18240,37 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           value: value
         });
 
+      case 'ip':
+        return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+          id: id,
+          type: "number",
+          min: "0",
+          max: "255",
+          style: "width: 80px",
+          value: value[0]
+        }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+          id: id,
+          type: "number",
+          min: "0",
+          max: "255",
+          style: "width: 80px",
+          value: value[1]
+        }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+          id: id,
+          type: "number",
+          min: "0",
+          max: "255",
+          style: "width: 80px",
+          value: value[2]
+        }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+          id: id,
+          type: "number",
+          min: "0",
+          max: "255",
+          style: "width: 80px",
+          value: value[3]
+        })];
+
       case 'password':
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
@@ -18647,7 +18678,7 @@ const configDatParseConfig = [{
   type: 'byte'
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].interval`,
-  type: 'long'
+  type: 'int32'
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].enabled`,
   type: 'byte'
@@ -19676,7 +19707,7 @@ const formConfig = {
       configs: {
         syslog_ip: {
           name: 'Syslog IP',
-          type: 'string'
+          type: 'ip'
         },
         syslog_level: {
           name: 'Syslog Level',
@@ -20094,12 +20125,12 @@ const formConfig = {
         },
         lowerrange: {
           name: 'Access IP lower range',
-          type: 'string',
+          type: 'ip',
           var: 'security[0].AllowedIPrangeLow'
         },
         upperrange: {
           name: 'Access IP upper range',
-          type: 'string',
+          type: 'ip',
           var: 'security[0].AllowedIPrangeHigh'
         }
       }
@@ -20109,19 +20140,19 @@ const formConfig = {
       configs: {
         ip: {
           name: 'IP',
-          type: 'string'
+          type: 'ip'
         },
         gw: {
           name: 'Gateway',
-          type: 'string'
+          type: 'ip'
         },
         subnet: {
           name: 'Subnet',
-          type: 'string'
+          type: 'ip'
         },
         dns: {
           name: 'DNS',
-          type: 'string'
+          type: 'ip'
         }
       }
     },
@@ -20883,7 +20914,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, ConfigAdvancedPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

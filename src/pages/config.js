@@ -28,17 +28,17 @@ const formConfig = {
             name: 'Client IP Filtering',
             configs: {
                 blocklevel: { name: 'IP Block Level', type: 'select', options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'], var: 'security[0].IPblockLevel' },
-                lowerrange: { name: 'Access IP lower range', type: 'string', var: 'security[0].AllowedIPrangeLow' },
-                upperrange: { name: 'Access IP upper range', type: 'string', var: 'security[0].AllowedIPrangeHigh' },
+                lowerrange: { name: 'Access IP lower range', type: 'ip', var: 'security[0].AllowedIPrangeLow' },
+                upperrange: { name: 'Access IP upper range', type: 'ip', var: 'security[0].AllowedIPrangeHigh' },
             }
         },
         IP: {
             name: 'IP Settings',
             configs: {
-                ip: { name: 'IP', type: 'string' },
-                gw: { name: 'Gateway', type: 'string' },
-                subnet: { name: 'Subnet', type: 'string' },
-                dns: { name: 'DNS', type: 'string' },
+                ip: { name: 'IP', type: 'ip' },
+                gw: { name: 'Gateway', type: 'ip' },
+                subnet: { name: 'Subnet', type: 'ip' },
+                dns: { name: 'DNS', type: 'ip' },
             }
         },
         sleep: {

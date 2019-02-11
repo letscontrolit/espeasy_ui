@@ -53,7 +53,7 @@ const formConfig = {
         log: {
             name: 'Log Settings',
             configs: {
-                syslog_ip: { name: 'Syslog IP', type: 'string' },
+                syslog_ip: { name: 'Syslog IP', type: 'ip' },
                 syslog_level: { name: 'Syslog Level', type: 'select', options: logLevelOptions },
                 syslog_facility: { name: 'Syslog Level', type: 'select', options: [
                     { name: 'Kernel', value: 0 },

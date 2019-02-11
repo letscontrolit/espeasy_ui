@@ -48,6 +48,13 @@ export class Form extends Component {
                 return (
                     <input id={id} type="number" value={value} />
                 ) ;
+            case 'ip':
+                return [
+                    (<input id={id} type="number" min="0" max="255" style="width: 80px" value={value[0]} />),
+                    (<input id={id} type="number" min="0" max="255" style="width: 80px" value={value[1]} />),
+                    (<input id={id} type="number" min="0" max="255" style="width: 80px" value={value[2]} />),
+                    (<input id={id} type="number" min="0" max="255" style="width: 80px" value={value[3]} />)
+                ]
             case 'password':
                 return (
                     <input id={id} type="password" />
