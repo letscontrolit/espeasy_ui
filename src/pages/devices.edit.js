@@ -24,7 +24,10 @@ const getFormConfig = (type) => {
             values: {
                 name: 'Values',
                 configs: {
-
+                    ...[...new Array(4)].reduce((acc, x, i) => {
+                        acc[`value${i}`] = [{ name: 'Name', var: `settings.values[${i}].name`, type: 'string' }, { name: 'Formula', var: `settings.values[${i}].formula`, type: 'string' }];
+                        return acc;
+                    }, {})
                 }
             }
         },

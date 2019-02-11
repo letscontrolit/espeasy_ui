@@ -42,62 +42,60 @@ export class Form extends Component {
         switch (config.type) {
             case 'string':
                 return (
-                    <div class="pure-control-group">
-                        <label for={id}>{config.name}</label>
-                        <input id={id} type="text" value={value} />
-                    </div>
+                    <input id={id} type="text" value={value} />
                 );
             case 'number':
                 return (
-                    <div class="pure-control-group">
-                        <label for={id}>{config.name}</label>
-                        <input id={id} type="number" value={value} />
-                    </div>
+                    <input id={id} type="number" value={value} />
                 ) ;
             case 'password':
                 return (
-                    <div class="pure-control-group">
-                        <label for={id}>{config.name}</label>
-                        <input id={id} type="password" />
-                    </div>
+                    <input id={id} type="password" />
                 ) ;
             case 'checkbox':
                 return (
-                    <div class="pure-control-group">
-                        <label for={id} class="pure-checkbox">
-                            {config.name}
-                        </label>
-                        <input id={id} type="checkbox" defaultChecked={value} />
-                    </div>
+                    <input id={id} type="checkbox" defaultChecked={value} />
                 ) ;
             case 'select':
                 const options = (typeof config.options === 'function') ? config.options() : config.options;
                 return (
-                    <div class="pure-control-group">
-                        <label for={id}>{config.name}</label>
-                        <select id={id} type="password" onChange={config.onChange}>
-                            {options.map(option => {
-                                const name = option instanceof Object ? option.name : option;
-                                const val = option instanceof Object ? option.value : option;
-                                if (val === value) {
-                                    return (<option value={val} selected>{name}</option>)
-                                } else {
-                                    return (<option value={val}>{name}</option>);
-                                }
-                            })}
-                        </select>
-                    </div>
+                    <select id={id} type="password" onChange={config.onChange}>
+                        {options.map(option => {
+                            const name = option instanceof Object ? option.name : option;
+                            const val = option instanceof Object ? option.value : option;
+                            if (val === value) {
+                                return (<option value={val} selected>{name}</option>)
+                            } else {
+                                return (<option value={val}>{name}</option>);
+                            }
+                        })}
+                    </select>
                 ) ;
             case 'file':
                 return (
-                    <div class="pure-control-group">
-                        <label for={id} class="pure-checkbox">
-                            {config.name}
-                        </label>
-                        <input id={id} type="file" />
-                    </div>
+                    <input id={id} type="file" />
                 )
         }
+    }
+
+    renderConfigGroup(id, configs, values) {
+        const configArray = Array.isArray(configs) ? configs : [configs];
+
+        return (
+            <div class="pure-control-group">
+                {configArray.map(conf => {
+                    let val;
+                    if (values) {
+                        val = conf.var ? get(values, conf.var) : (values[id] ? values[id][key] : null);
+                    }
+
+                    return [
+                        (<label for={id}>{conf.name}</label>),
+                        this.renderConfig(id, conf, val)
+                    ];
+                })}
+            </div>
+        )
     }
 
     renderGroup(id, group, values) {
@@ -107,12 +105,7 @@ export class Form extends Component {
                 <label>{group.name}</label>
                 {keys.map(key => {
                     const conf = group.configs[key];
-                    let val;
-                    if (values) {
-                        val = conf.var ? get(values, conf.var) : (values[id] ? values[id][key] : null);
-                    }
-                    
-                    return this.renderConfig(`${id}.${key}`, conf, val);
+                    return this.renderConfigGroup(`${id}.${key}`, conf, values);
                 })}
             </fieldset>
         )

@@ -18227,56 +18227,35 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   renderConfig(id, config, value) {
     switch (config.type) {
       case 'string':
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "text",
           value: value
-        }));
+        });
 
       case 'number':
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "number",
           value: value
-        }));
+        });
 
       case 'password':
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "password"
-        }));
+        });
 
       case 'checkbox':
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id,
-          class: "pure-checkbox"
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "checkbox",
           defaultChecked: value
-        }));
+        });
 
       case 'select':
         const options = typeof config.options === 'function' ? config.options() : config.options;
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
           id: id,
           type: "password",
           onChange: config.onChange
@@ -18294,19 +18273,31 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
               value: val
             }, name);
           }
-        })));
+        }));
 
       case 'file':
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-          class: "pure-control-group"
-        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-          for: id,
-          class: "pure-checkbox"
-        }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "file"
-        }));
+        });
     }
+  }
+
+  renderConfigGroup(id, configs, values) {
+    const configArray = Array.isArray(configs) ? configs : [configs];
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      class: "pure-control-group"
+    }, configArray.map(conf => {
+      let val;
+
+      if (values) {
+        val = conf.var ? Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, conf.var) : values[id] ? values[id][key] : null;
+      }
+
+      return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
+        for: id
+      }, conf.name), this.renderConfig(id, conf, val)];
+    }));
   }
 
   renderGroup(id, group, values) {
@@ -18315,13 +18306,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       name: id
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", null, group.name), keys.map(key => {
       const conf = group.configs[key];
-      let val;
-
-      if (values) {
-        val = conf.var ? Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, conf.var) : values[id] ? values[id][key] : null;
-      }
-
-      return this.renderConfig(`${id}.${key}`, conf, val);
+      return this.renderConfigGroup(`${id}.${key}`, conf, values);
     }));
   }
 
@@ -20551,7 +20536,19 @@ const getFormConfig = type => {
       ..._devices__WEBPACK_IMPORTED_MODULE_3__["devices"].find(d => d.value === type).fields,
       values: {
         name: 'Values',
-        configs: {}
+        configs: { ...[...new Array(4)].reduce((acc, x, i) => {
+            acc[`value${i}`] = [{
+              name: 'Name',
+              var: `settings.values[${i}].name`,
+              type: 'string'
+            }, {
+              name: 'Formula',
+              var: `settings.values[${i}].formula`,
+              type: 'string'
+            }];
+            return acc;
+          }, {})
+        }
       }
     }
   };
