@@ -51,12 +51,20 @@ The content `<div>` is where all your content goes.
     text-align: center;
 }
 
+.content {
+    padding-top: 60px;
+}
+
 .header {
-     margin: 0;
-     color: #333;
-     text-align: center;
-     padding: 2.5em 2em 0;
-     border-bottom: 1px solid #eee;
+    margin: 0;
+    color: white;  /* #333; */
+    padding: 0.6em 0 0.6em 0.6em;
+    border-bottom: 1px solid #eee;
+    font-size: 110%;
+    background-color: #1f8dd6;
+    border-bottom: 1px solid #eee;
+    position: fixed;
+    width: 100%;
  }
     .header h1 {
         margin: 0.2em 0;
@@ -253,4 +261,27 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         position: relative;
         left: 150px;
     }
+}
+
+
+fieldset > label {
+    background: #1f8dd6;
+    display: block;
+    padding: 0.6em;
+    color: white;
+    margin: 0px;
+}
+
+.pure-table {
+    width: 100%;
+}
+
+.device {
+    background: aliceblue;
+    padding: 1em;
+    margin: 1em;
+}
+
+.device .info a {
+    float: right;
 }

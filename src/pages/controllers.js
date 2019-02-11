@@ -13,22 +13,22 @@ export class ControllersPage extends Component {
                 return (
                     <div class="device">
                         <span class="info">
-                            {(c.enabled) ? (<b>X</b>) : (<b>o</b>)}
-                            {i+1}: {protocols.find(p => p.value === c.protocol).name} PORT:{c.settings.port} HOST:{c.settings.host}
-                        </span>
-                        <span class="actions">
+                            {i+1}: {(c.enabled) ? (<b>&#x2713;</b>) : (<b>&#x2717;</b>)}
+                            &nbsp;&nbsp;[{protocols.find(p => p.value === c.protocol).name}] PORT:{c.settings.port} HOST:{c.settings.host}
                             <a href={editUrl}>edit</a>
                         </span>
                     </div>
                     )
             })}</div>
             <h3>Notifications</h3>
-            <div>{notifications.map(device => {
+            <div>{notifications.map((n, i) => {
+                const editUrl = `#notifications/edit/${i}`;
                 return (
                     <div class="device">
                         <span class="info">
-                            {(device.enabled) ? (<b>X</b>) : (<b>o</b>)}
-                            {device.nr}: {device.name} TYPE:{device.type} GPIO.{device.gpio} PORT:{device.port}
+                            {i+1}: {(n.enabled) ? (<b>&#x2713;</b>) : (<b>&#x2717;</b>)}
+                            &nbsp;&nbsp;[{n.type}] PORT:{n.settings.port} HOST:{n.settings.host}
+                            <a href={editUrl}>edit</a>
                         </span>
                     </div>
                     )

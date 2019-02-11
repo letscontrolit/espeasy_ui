@@ -21,8 +21,7 @@ export class FSPage extends Component {
                             File:
                         </label>
                         <input id="file" type="file" ref={ref => this.file = ref} />
-                    </div>
-                    <div>
+                        
                         <button type="button" onClick={this.saveForm}>upload</button>
                     </div>
                 </form>

@@ -25,10 +25,8 @@ export class LoadPage extends Component {
                         File:
                     </label>
                     <input id="file" type="file" ref={ref => this.file = ref} />
+                    <button type="button" onClick={this.saveForm}>upload</button>
                 </div>
-            <div>
-                <button type="button" onClick={this.saveForm}>upload</button>
-            </div>
         </form>)
     }
 }

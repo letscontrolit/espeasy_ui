@@ -7,7 +7,7 @@ export class Page extends Component {
         return (
         <div id="main">
             <div class="header">
-                <h2>{props.page.title}</h2>
+                > {props.page.title}
             </div>
 
             <div class="content">

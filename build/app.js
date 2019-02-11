@@ -18436,7 +18436,7 @@ class Page extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "main"
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "header"
-    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("h2", null, props.page.title)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+    }, "> ", props.page.title), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "content"
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(PageComponent, {
       params: props.params
@@ -20061,17 +20061,18 @@ class ControllersPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "info"
-      }, c.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "X") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "o"), i + 1, ": ", _controllers_edit__WEBPACK_IMPORTED_MODULE_2__["protocols"].find(p => p.value === c.protocol).name, " PORT:", c.settings.port, " HOST:", c.settings.host), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
-        class: "actions"
-      }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      }, i + 1, ": ", c.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0[", _controllers_edit__WEBPACK_IMPORTED_MODULE_2__["protocols"].find(p => p.value === c.protocol).name, "] PORT:", c.settings.port, " HOST:", c.settings.host, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: editUrl
       }, "edit")));
-    })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("h3", null, "Notifications"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, notifications.map(device => {
+    })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("h3", null, "Notifications"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, notifications.map((n, i) => {
+      const editUrl = `#notifications/edit/${i}`;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "info"
-      }, device.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "X") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "o"), device.nr, ": ", device.name, " TYPE:", device.type, " GPIO.", device.gpio, " PORT:", device.port));
+      }, i + 1, ": ", n.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0[", n.type, "] PORT:", n.settings.port, " HOST:", n.settings.host, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+        href: editUrl
+      }, "edit")));
     })));
   }
 
@@ -20338,37 +20339,18 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render(props) {
     const tasks = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].get('tasks');
     if (!tasks) return;
-    const devs = tasks.map(task => {
-      const vars = []; //task.settings.values.map(val => val);
-
-      return {
-        nr: task.settings.index,
-        name: task.settings.name,
-        type: _devices_edit__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device).name,
-        vars
-      };
-    }); // const devices = tasks.map(task => {
-    //     return {
-    //         nr: task.settings.index,
-    //         name: task.settings.name,
-    //         type: 'DH11',
-    //         vars: task.settings.values
-    //     }
-    // });
-
-    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, devs.map(device => {
-      const editUrl = `#devices/edit/${device.nr}`;
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, tasks.map((task, i) => {
+      const editUrl = `#devices/edit/${i}`;
+      const deviceType = _devices_edit__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device).name;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "info"
-      }, device.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "X") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "o"), device.nr, ": ", device.name, " TYPE:", device.type, " GPIO.", device.gpio, " PORT:", device.port, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      }, i + 1, ": ", task.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0", task.settings.name, " [", deviceType, "] ", task.gpio1 !== 255 ? `GPIO:${task.gpio1}` : '', Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: editUrl
       }, "edit")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "vars"
-      }, device.vars.map(v => {
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null, v.name, ": ", v.value);
-      })));
+      }));
     }));
   }
 
@@ -20616,7 +20598,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "file",
       type: "file",
       ref: ref => this.file = ref
-    })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.saveForm
     }, "upload"))), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("table", {
@@ -20643,7 +20625,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, RulesPage */
+/*! exports provided: DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage, ControllersPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20756,7 +20738,7 @@ class LoadPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "file",
       type: "file",
       ref: ref => this.file = ref
-    })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.saveForm
     }, "upload")));
@@ -20991,7 +20973,7 @@ class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "file",
       type: "file",
       ref: ref => this.file = ref
-    })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.saveForm
     }, "upload")));

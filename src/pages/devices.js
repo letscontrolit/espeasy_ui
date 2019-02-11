@@ -6,38 +6,22 @@ export class DevicesPage extends Component {
     render(props) {
         const tasks = settings.get('tasks');
         if (!tasks) return;
-        const devs = tasks.map(task => {
-            const vars = []; //task.settings.values.map(val => val);
-            return {
-                nr: task.settings.index,
-                name: task.settings.name,
-                type: devices.find(d => d.value === task.device).name,
-                vars
-            };
-        });
-        // const devices = tasks.map(task => {
-        //     return {
-        //         nr: task.settings.index,
-        //         name: task.settings.name,
-        //         type: 'DH11',
-        //         vars: task.settings.values
-        //     }
-        // });
         return (
             <div>
-            {devs.map(device => {
-                const editUrl = `#devices/edit/${device.nr}`;
+            {tasks.map((task, i) => {
+                const editUrl = `#devices/edit/${i}`;
+                const deviceType = devices.find(d => d.value === task.device).name;
                 return (
                     <div class="device">
                         <span class="info">
-                            {(device.enabled) ? (<b>X</b>) : (<b>o</b>)}
-                            {device.nr}: {device.name} TYPE:{device.type} GPIO.{device.gpio} PORT:{device.port}
+                             {i+1}: {(task.enabled) ? (<b>&#x2713;</b>) : (<b>&#x2717;</b>)}
+                             &nbsp;&nbsp;{task.settings.name} [{deviceType}] {task.gpio1!==255?`GPIO:${task.gpio1}`:''}
                             <a href={editUrl}>edit</a>
                         </span>
                         <span class="vars">
-                            {device.vars.map(v => {
+                            {/* {device.settings.values.map(v => {
                                 return (<span>{v.name}: {v.value}</span>);
-                            })}
+                            })} */}
                         </span>
                     </div>
                     )
