@@ -19,7 +19,7 @@ export const protocols = [
 ];
 
 const baseFields = { 
-    enabled: { name: 'Enabled', type: 'checkbox', var: 'enabled' },
+    
     dns: { name: 'Locate Controller', type: 'select', options: [{ value: 0, name: 'Use IP Address'}, { value: 1, name: 'Use Hostname' }] },
     IP: { name: 'IP', type: 'string' },
     hostname: { name: 'Hostname', type: 'string' },
@@ -75,6 +75,7 @@ const getFormConfig = (type) => {
                 name: 'Controller Settings',
                 configs: {
                     protocol: { name: 'Protocol', type: 'select', var: 'protocol', options: protocols },
+                    enabled: { name: 'Enabled', type: 'checkbox', var: 'enabled' },
                     ...additionalFields
                 }
             },

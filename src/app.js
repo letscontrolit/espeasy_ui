@@ -51,8 +51,6 @@ class App extends Component {
             menu: menus[0],
             page: menus[0],
         }
-
-        loadConfig();
     }
 
     render(props, state) {
@@ -85,4 +83,6 @@ class App extends Component {
     componentWillUnmount() {}
 }
 
-render(<App />, document.body);
+loadConfig().then(() => {
+    render(<App />, document.body);
+});

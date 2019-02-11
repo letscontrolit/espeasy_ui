@@ -18117,7 +18117,6 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       menu: menus[0],
       page: menus[0]
     };
-    Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["loadConfig"])();
   }
 
   render(props, state) {
@@ -18162,7 +18161,9 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 }
 
-Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
+Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["loadConfig"])().then(() => {
+  Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
+});
 
 /***/ }),
 
@@ -18177,6 +18178,9 @@ Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMP
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Form", function() { return Form; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 const getKeys = object => {
@@ -18262,7 +18266,8 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           class: "pure-checkbox"
         }, config.name), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
-          type: "checkbox"
+          type: "checkbox",
+          defaultChecked: value
         }));
 
       case 'select':
@@ -18312,7 +18317,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       let val;
 
       if (values) {
-        val = conf.var ? values[conf.var] : values[id] ? values[id][key] : null;
+        val = conf.var ? Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, conf.var) : values[id] ? values[id][key] : null;
       }
 
       return this.renderConfig(`${id}.${key}`, conf, val);
@@ -18534,14 +18539,8 @@ const configDatParseConfig = [{
   type: 'bytes',
   length: 4
 }, {
-  prop: '___padding2',
-  type: 'int16'
-}, {
   prop: 'UDPPort',
-  type: 'int16'
-}, {
-  prop: '___padding4',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'SyslogLevel',
   type: 'byte'
@@ -18614,180 +18613,39 @@ const configDatParseConfig = [{
   type: 'byte'
 })), {
   prop: 'OLD_TaskDeviceID',
+  type: 'longs',
+  length: TASKS_MAX
+}, [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].gpio1`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].gpio2`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].gpio3`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].gpio4`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].pin1pullup`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].configs`,
   type: 'ints',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePin.1',
-  type: 'bytes',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePin.2',
-  type: 'bytes',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePin.3',
-  type: 'bytes',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePin.4',
-  type: 'bytes',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePin1PullUp',
-  type: 'bytes',
-  length: TASKS_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.1',
-  type: 'bytes',
   length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.2',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.3',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.4',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.5',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.6',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.7',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.8',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.9',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.10',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.11',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfig.12',
-  type: 'bytes',
-  length: PLUGIN_CONFIGVAR_MAX
-}, {
-  prop: 'TaskDevicePin1Inversed',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // good till here ?
-{
-  prop: 'TaskDevicePluginConfigFloat.1',
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].pin1inversed`,
+  type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].configs_float`,
   type: 'floats',
   length: PLUGIN_CONFIGFLOATVAR_MAX
-}, // 12 * 4 * 4 = 192
-{
-  prop: 'TaskDevicePluginConfigFloat.2',
-  type: 'floats',
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].configs_long`,
+  type: 'longs',
   length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.3',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.4',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.5',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.6',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.7',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.8',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.9',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.10',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.11',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigFloat.12',
-  type: 'floats',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.1',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, // 192 /// 384        
-{
-  prop: 'TaskDevicePluginConfigLong.2',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.3',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.4',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.5',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.6',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.7',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.8',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.9',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.10',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.11',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
-  prop: 'TaskDevicePluginConfigLong.12',
-  type: 'longs',
-  length: PLUGIN_CONFIGLONGVAR_MAX
-}, {
+})), {
   prop: 'OLD_TaskDeviceSendData',
   type: 'bytes',
   length: TASKS_MAX
@@ -18814,22 +18672,21 @@ const configDatParseConfig = [{
   type: 'byte'
 })), {
   prop: 'TaskDeviceID.1',
-  type: 'ints',
+  type: 'longs',
   length: TASKS_MAX
 }, {
   prop: 'TaskDeviceID.2',
-  type: 'ints',
+  type: 'longs',
   length: TASKS_MAX
 }, {
   prop: 'TaskDeviceID.3',
-  type: 'ints',
+  type: 'longs',
   length: TASKS_MAX
 }, {
   prop: 'TaskDeviceSendData.1',
   type: 'bytes',
   length: TASKS_MAX
-}, // 3 * 12 = 36
-{
+}, {
   prop: 'TaskDeviceSendData.2',
   type: 'bytes',
   length: TASKS_MAX
@@ -18838,15 +18695,9 @@ const configDatParseConfig = [{
   type: 'bytes',
   length: TASKS_MAX
 }, {
-  prop: '__padding5',
-  type: 'bytes',
-  length: 194
-}, // somewhere in above part we lost 194 bytes ... hmmm
-{
   prop: 'hardware.led.inverse',
   type: 'byte'
-}, // from here on it's correct again
-{
+}, {
   prop: 'config.sleep.sleeponfailiure',
   type: 'byte'
 }, {
@@ -18930,7 +18781,7 @@ const ControllerSettings = [{
   length: 4
 }, {
   prop: 'port',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'hostname',
   type: 'string',
@@ -18957,19 +18808,19 @@ const ControllerSettings = [{
   length: 129
 }, {
   prop: 'minimal_time_between',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'max_queue_depth',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'max_retry',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'delete_oldest',
   type: 'byte'
 }, {
   prop: 'client_timeout',
-  type: 'int16'
+  type: 'int32'
 }, {
   prop: 'must_check_reply',
   type: 'byte'
@@ -19069,19 +18920,19 @@ const SecuritySettings = [{
   length: 16
 }].flat();
 const loadConfig = () => {
-  fetch('config.dat').then(response => response.arrayBuffer()).then(async response => {
+  return fetch('config.dat').then(response => response.arrayBuffer()).then(async response => {
     const settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, configDatParseConfig);
     [...Array(12)].map((x, i) => {
       settings.tasks[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, TaskSettings, 1024 * 4 + 1024 * 2 * i);
       settings.tasks[i].extra = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, TaskSettings, 1024 * 5 + 1024 * 2 * i);
     });
     [...Array(3)].map((x, i) => {
-      settings.controllers[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, ControllerSettings, 1024 * 28 + 1024 * 2 * i);
-      settings.controllers[i].extra = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, ControllerSettings, 1024 * 29 + 1024 * 2 * i);
+      settings.controllers[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, ControllerSettings, 1024 * 27 + 1024 * 2 * i);
+      settings.controllers[i].extra = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(response, ControllerSettings, 1024 * 28 + 1024 * 2 * i);
     });
     const notificationResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
     [...Array(3)].map((x, i) => {
-      settings.controllers[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(notificationResponse, NotificationSettings, 1024 * i);
+      settings.notifications[i].settings = Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(notificationResponse, NotificationSettings, 1024 * i);
     });
     const securityResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
     settings.security = [...Array(3)].map((x, i) => {
@@ -19557,11 +19408,12 @@ class ConfigAdvancedPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"
 /*!**************************************!*\
   !*** ./src/pages/config.hardware.js ***!
   \**************************************/
-/*! exports provided: ConfigHardwarePage */
+/*! exports provided: pins, ConfigHardwarePage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pins", function() { return pins; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConfigHardwarePage", function() { return ConfigHardwarePage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
@@ -19968,11 +19820,6 @@ const protocols = [{
   value: 25
 }];
 const baseFields = {
-  enabled: {
-    name: 'Enabled',
-    type: 'checkbox',
-    var: 'enabled'
-  },
   dns: {
     name: 'Locate Controller',
     type: 'select',
@@ -20150,6 +19997,11 @@ const getFormConfig = type => {
             var: 'protocol',
             options: protocols
           },
+          enabled: {
+            name: 'Enabled',
+            type: 'checkbox',
+            var: 'enabled'
+          },
           ...additionalFields
         }
       }
@@ -20246,6 +20098,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _config_hardware__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config.hardware */ "./src/pages/config.hardware.js");
+
 
 
 
@@ -20259,8 +20113,24 @@ const devices = [{
   name: 'Regulator - Level Control',
   value: 21
 }, {
+  name: 'Generic - Dummy Device',
+  value: 33
+}, {
   name: 'Switch input - Switch',
   value: 1
+}];
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
+}, {
+  value: 1,
+  name: 'Active on LOW'
+}, {
+  value: 2,
+  name: 'Active on HIGH'
+}, {
+  value: 3,
+  name: 'Active on LOW and HIGH'
 }];
 const baseFields = {
   enabled: {
@@ -20273,13 +20143,126 @@ const baseFields = {
     type: 'string'
   }
 };
+const inputSwitch = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      pullup: {
+        name: 'Internal PullUp',
+        type: 'checkbox',
+        var: 'pin1pullup'
+      },
+      inversed: {
+        name: 'Inversed logic',
+        type: 'checkbox',
+        var: 'pin1inversed'
+      },
+      gpio: {
+        name: 'GPIO',
+        type: 'select',
+        options: _config_hardware__WEBPACK_IMPORTED_MODULE_3__["pins"],
+        var: 'gpio1'
+      },
+      switch_type: {
+        name: 'Switch Type',
+        type: 'select',
+        options: [{
+          name: 'switch',
+          value: 0
+        }, {
+          name: 'dimmer',
+          value: 3
+        }],
+        var: 'configs[0]'
+      },
+      switch_button_type: {
+        name: 'Switch Button Type',
+        type: 'select',
+        options: [{
+          name: 'normal',
+          value: 0
+        }, {
+          name: 'active low',
+          value: 1
+        }, {
+          name: 'active high',
+          value: 2
+        }],
+        var: 'configs[2]'
+      },
+      send_boot_state: {
+        name: 'Send Boot State',
+        type: 'checkbox',
+        var: 'configs[3]'
+      }
+    }
+  },
+  advanced: {
+    name: 'Advanced event management',
+    configs: {
+      debounce: {
+        name: 'De-bounce (ms)',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      dblclick: {
+        name: 'Doublclick Event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[4]'
+      },
+      dblclick_interval: {
+        name: 'Doubleclick Max interval (ms)',
+        type: 'number',
+        var: 'configs_float[1]'
+      },
+      longpress: {
+        name: 'Longpress event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[5]'
+      },
+      longpress_interval: {
+        name: 'Longpress min interval (ms)',
+        type: 'number',
+        var: 'configs_float[2]'
+      },
+      safe_button: {
+        name: 'Use safe button',
+        type: 'checkbox',
+        var: 'configs_float[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send: {
+        name: 'Send to Controller',
+        type: 'checkbox'
+      },
+      idx: {
+        name: 'IDX',
+        type: 'number'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number'
+      }
+    }
+  }
+};
 
 const getFormConfig = type => {
   let additionalFields = {};
+  let customFields = {};
 
   switch (Number(type)) {
     case 0:
       break;
+
+    case 1:
+      customFields = inputSwitch;
 
     default:
       additionalFields = { ...baseFields
@@ -20300,6 +20283,7 @@ const getFormConfig = type => {
           ...additionalFields
         }
       },
+      ...inputSwitch,
       values: {
         name: 'Values',
         configs: {}
@@ -20663,7 +20647,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, devices, DevicesEditPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20681,6 +20665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConfigAdvancedPage", function() { return _config_advanced__WEBPACK_IMPORTED_MODULE_3__["ConfigAdvancedPage"]; });
 
 /* harmony import */ var _config_hardware__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./config.hardware */ "./src/pages/config.hardware.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pins", function() { return _config_hardware__WEBPACK_IMPORTED_MODULE_4__["pins"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConfigHardwarePage", function() { return _config_hardware__WEBPACK_IMPORTED_MODULE_4__["ConfigHardwarePage"]; });
 
 /* harmony import */ var _reboot__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reboot */ "./src/pages/reboot.js");

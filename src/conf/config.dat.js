@@ -30,9 +30,7 @@ export const configDatParseConfig = [
     { prop: 'Pin_sd_cs', type: 'byte' },
     { prop: 'hardware.gpio', type: 'bytes', length: 17 },
     { prop: 'Syslog_IP', type: 'bytes', length: 4 },
-    { prop: '___padding2', type: 'int16' },
-    { prop: 'UDPPort', type: 'int16' },
-    { prop: '___padding4', type: 'int16' },
+    { prop: 'UDPPort', type: 'int32' },
     { prop: 'SyslogLevel', type: 'byte' },
     { prop: 'SerialLogLevel', type: 'byte' },
     { prop: 'WebLogLevel', type: 'byte' },
@@ -56,64 +54,30 @@ export const configDatParseConfig = [
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].type`, type:'byte' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].device`, type:'byte' })),
-    { prop: 'OLD_TaskDeviceID', type: 'ints', length: TASKS_MAX }, 
-    { prop: 'TaskDevicePin.1', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDevicePin.2', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDevicePin.3', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDevicePin.4', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDevicePin1PullUp', type: 'bytes', length: TASKS_MAX },
-    { prop: 'TaskDevicePluginConfig.1', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.2', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.3', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.4', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.5', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.6', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.7', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.8', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.9', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.10', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.11', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePluginConfig.12', type: 'bytes', length: PLUGIN_CONFIGVAR_MAX },
-    { prop: 'TaskDevicePin1Inversed', type: 'bytes', length: TASKS_MAX }, // good till here ?
-    { prop: 'TaskDevicePluginConfigFloat.1' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX }, // 12 * 4 * 4 = 192
-    { prop: 'TaskDevicePluginConfigFloat.2' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.3' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.4' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.5' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.6' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.7' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.8' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.9' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.10' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.11' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigFloat.12' ,type: 'floats', length: PLUGIN_CONFIGFLOATVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.1' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX }, // 192 /// 384        
-    { prop: 'TaskDevicePluginConfigLong.2' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.3' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.4' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.5' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.6' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.7' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.8' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.9' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.10' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.11' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
-    { prop: 'TaskDevicePluginConfigLong.12' ,type: 'longs', length: PLUGIN_CONFIGLONGVAR_MAX },
+    { prop: 'OLD_TaskDeviceID', type: 'longs', length: TASKS_MAX }, 
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio1`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio2`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio3`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio4`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].pin1pullup`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].configs`, type:'ints', length: PLUGIN_CONFIGVAR_MAX })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].pin1inversed`, type:'byte' })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].configs_float`, type:'floats', length: PLUGIN_CONFIGFLOATVAR_MAX })), 
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].configs_long`, type:'longs', length: PLUGIN_CONFIGFLOATVAR_MAX })),
     { prop: 'OLD_TaskDeviceSendData', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceGlobalSync', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceDataFeed', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceTimer', type: 'longs', length: TASKS_MAX },
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].enabled`, type:'byte' })),
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
-    [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })),
-    { prop: 'TaskDeviceID.1', type: 'ints', length: TASKS_MAX },
-    { prop: 'TaskDeviceID.2', type: 'ints', length: TASKS_MAX },
-    { prop: 'TaskDeviceID.3', type: 'ints', length: TASKS_MAX },
-    { prop: 'TaskDeviceSendData.1', type: 'bytes', length: TASKS_MAX }, // 3 * 12 = 36
+    [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })), 
+    { prop: 'TaskDeviceID.1', type: 'longs', length: TASKS_MAX },
+    { prop: 'TaskDeviceID.2', type: 'longs', length: TASKS_MAX },
+    { prop: 'TaskDeviceID.3', type: 'longs', length: TASKS_MAX },
+    { prop: 'TaskDeviceSendData.1', type: 'bytes', length: TASKS_MAX }, 
     { prop: 'TaskDeviceSendData.2', type: 'bytes', length: TASKS_MAX },
     { prop: 'TaskDeviceSendData.3', type: 'bytes', length: TASKS_MAX },
-    { prop: '__padding5', type: 'bytes', length: 194 },  // somewhere in above part we lost 194 bytes ... hmmm
-    { prop: 'hardware.led.inverse', type: 'byte' }, // from here on it's correct again
+    { prop: 'hardware.led.inverse', type: 'byte' }, 
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
     { prop: 'UseValueLogger', type: 'byte' },
     { prop: 'ArduinoOTAEnable', type: 'byte' },
@@ -144,18 +108,18 @@ export const TaskSettings = [
 export const ControllerSettings = [
     { prop: 'dns', type:'byte' },
     { prop: 'IP', type:'bytes', length: 4 },
-    { prop: 'port', type:'int16' },
+    { prop: 'port', type:'int32' },
     { prop: 'hostname', type:'string', length: 65 },
     { prop: 'publish', type:'string', length: 129 },
     { prop: 'subscribe', type:'string', length: 129 },
     { prop: 'MQTT_lwt_topic', type:'string', length: 129 },
     { prop: 'lwt_message_connect', type:'string', length: 129 },
     { prop: 'lwt_message_disconnect', type:'string', length: 129 },
-    { prop: 'minimal_time_between', type:'int16' },
-    { prop: 'max_queue_depth', type:'int16' },
-    { prop: 'max_retry', type:'int16' },
+    { prop: 'minimal_time_between', type:'int32' },
+    { prop: 'max_queue_depth', type:'int32' },
+    { prop: 'max_retry', type:'int32' },
     { prop: 'delete_oldest', type:'byte' },
-    { prop: 'client_timeout', type:'int16' },
+    { prop: 'client_timeout', type:'int32' },
     { prop: 'must_check_reply', type:'byte' },
 ];
 
@@ -190,7 +154,7 @@ export const SecuritySettings = [
 ].flat();
 
 export const loadConfig = () => {
-    fetch('config.dat').then(response => response.arrayBuffer()).then(async response => { 
+    return fetch('config.dat').then(response => response.arrayBuffer()).then(async response => { 
         const settings = parseConfig(response, configDatParseConfig);
 
         [...Array(12)].map((x, i) => {
@@ -199,13 +163,13 @@ export const loadConfig = () => {
         });
     
         [...Array(3)].map((x, i) => {
-            settings.controllers[i].settings = parseConfig(response, ControllerSettings, 1024*28 + 1024 * 2 * i);
-            settings.controllers[i].extra = parseConfig(response, ControllerSettings, 1024*29 + 1024 * 2 * i);
+            settings.controllers[i].settings = parseConfig(response, ControllerSettings, 1024*27 + 1024 * 2 * i);
+            settings.controllers[i].extra = parseConfig(response, ControllerSettings, 1024*28 + 1024 * 2 * i);
         });
     
         const notificationResponse = await fetch('notification.dat').then(response => response.arrayBuffer());
         [...Array(3)].map((x, i) => {
-            settings.controllers[i].settings = parseConfig(notificationResponse, NotificationSettings, 1024 * i);
+            settings.notifications[i].settings = parseConfig(notificationResponse, NotificationSettings, 1024 * i);
         });
     
         const securityResponse = await fetch('notification.dat').then(response => response.arrayBuffer());

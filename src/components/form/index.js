@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { get } from 'lodash';
 
 const getKeys = object => {
     const keys = [];
@@ -66,7 +67,7 @@ export class Form extends Component {
                         <label for={id} class="pure-checkbox">
                             {config.name}
                         </label>
-                        <input id={id} type="checkbox" />
+                        <input id={id} type="checkbox" defaultChecked={value} />
                     </div>
                 ) ;
             case 'select':
@@ -107,7 +108,7 @@ export class Form extends Component {
                     const conf = group.configs[key];
                     let val;
                     if (values) {
-                        val = conf.var ? values[conf.var] : (values[id] ? values[id][key] : null);
+                        val = conf.var ? get(values, conf.var) : (values[id] ? values[id][key] : null);
                     }
                     
                     return this.renderConfig(`${id}.${key}`, conf, val);

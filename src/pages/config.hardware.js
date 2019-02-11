@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
-const pins = [
+export const pins = [
     { name: 'None', value: null },
     { name: 'GPIO-0', value: 0 },
     { name: 'GPIO-1', value: 1 },
