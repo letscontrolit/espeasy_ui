@@ -33,7 +33,7 @@ export class Form extends Component {
             return (e) => {
                 let val = this.form.elements[id].value;
                 if (config.type === 'checkbox') {
-                    val =  val === 'on' ? 1 : 0;
+                    val =  this.form.elements[id].checked ? 1 : 0;
                 } else if (config.type === 'number') {
                     val = parseFloat(val);
                 } else if (config.type === 'select') {
@@ -105,8 +105,8 @@ export class Form extends Component {
                     const val = get(values, varName, null);
 
                     return [
-                        (<label for={id}>{conf.name}</label>),
-                        this.renderConfig(id, conf, val, varName)
+                        (<label for={`${id}.${i}`}>{conf.name}</label>),
+                        this.renderConfig(`${id}.${i}`, conf, val, varName)
                     ];
                 })}
             </div>

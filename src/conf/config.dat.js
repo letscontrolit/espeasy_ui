@@ -71,8 +71,8 @@ export const configDatParseConfig = [
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].enabled`, type:'byte' })),
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })), 
-    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `task[${i}].TaskDeviceID`, type:'longs', length: CONTROLLER_MAX })),
-    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `task[${i}].TaskDeviceSendData`, type:'longs', length: CONTROLLER_MAX })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceID`, type:'longs', length: CONTROLLER_MAX })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceSendData`, type:'longs', length: CONTROLLER_MAX })),
     { prop: 'hardware.led.inverse', type: 'byte' }, 
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
     { prop: 'UseValueLogger', type: 'byte' },// TODO

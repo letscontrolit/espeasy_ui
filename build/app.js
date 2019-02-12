@@ -18254,7 +18254,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         let val = this.form.elements[id].value;
 
         if (config.type === 'checkbox') {
-          val = val === 'on' ? 1 : 0;
+          val = this.form.elements[id].checked ? 1 : 0;
         } else if (config.type === 'number') {
           val = parseFloat(val);
         } else if (config.type === 'select') {
@@ -18376,8 +18376,8 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       const varName = conf.var ? conf.var : configArray.length > 1 ? `${id}.${i}` : id;
       const val = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
       return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-        for: id
-      }, conf.name), this.renderConfig(id, conf, val, varName)];
+        for: `${id}.${i}`
+      }, conf.name), this.renderConfig(`${id}.${i}`, conf, val, varName)];
     }));
   }
 
@@ -18736,11 +18736,11 @@ const configDatParseConfig = [{
   prop: `notifications[${i}].enabled`,
   type: 'byte'
 })), [...Array(TASKS_MAX)].map((x, i) => ({
-  prop: `task[${i}].TaskDeviceID`,
+  prop: `tasks[${i}].TaskDeviceID`,
   type: 'longs',
   length: CONTROLLER_MAX
 })), [...Array(TASKS_MAX)].map((x, i) => ({
-  prop: `task[${i}].TaskDeviceSendData`,
+  prop: `tasks[${i}].TaskDeviceSendData`,
   type: 'longs',
   length: CONTROLLER_MAX
 })), {
@@ -19170,17 +19170,40 @@ const inputSwitch = {
   data: {
     name: 'Data Acquisition',
     configs: {
-      send: {
-        name: 'Send to Controller',
-        type: 'checkbox'
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
       },
-      idx: {
-        name: 'IDX',
-        type: 'number'
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
       },
       interval: {
         name: 'Interval',
-        type: 'number'
+        type: 'number',
+        var: 'interval'
       }
     }
   }
@@ -22761,6 +22784,7 @@ __webpack_require__.r(__webpack_exports__);
 class ToolsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
+    this.history = '';
 
     this.sendCommand = e => {
       fetch(`/control?cmd=${this.cmd.value}`).then(response => response.text()).then(response => {
@@ -22772,10 +22796,11 @@ class ToolsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   fetch() {
     fetch('/logjson').then(response => response.json()).then(response => {
       response.Log.Entries.map(log => {
-        this.log.innerText += `${JSON.stringify(log)}\n`;
+        this.history += `<div class="log_level${log.level}"><span class="date">${new Date(log.timestamp).toLocaleTimeString()}</span><span class="value">${log.text}</span></div>`;
+        this.log.innerHTML = this.history;
 
         if (true) {
-          this.log.scrollTop = this.log.scollHeight;
+          this.log.scrollTop = this.log.scrollHeight;
         }
       });
     });
@@ -22791,9 +22816,8 @@ class ToolsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.sendCommand
-    }, "send")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
-      type: "textarea",
-      style: "width: 100%; height: 100px",
+    }, "send")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("textarea", {
+      style: "width: 100%; height: 200px",
       ref: ref => this.cmdOutput = ref
     }));
   }

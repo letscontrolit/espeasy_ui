@@ -370,3 +370,21 @@ fieldset > label {
     background: gray;
     white-space: pre-wrap; 
 }
+
+
+
+.content .value {
+    padding-left: 20px;
+}
+.content .log_level1 {
+    color: yellow;
+}
+.content .log_level2 {
+    color: black;
+}
+.content .log_level3 {
+    color: blue;
+}
+.content .log_level4 {
+    color: red;
+}

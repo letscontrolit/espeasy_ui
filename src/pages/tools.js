@@ -4,6 +4,8 @@ export class ToolsPage extends Component {
     constructor(props) {
         super(props);
 
+        this.history = '';
+
         this.sendCommand = (e) => {
             fetch(`/control?cmd=${this.cmd.value}`).then(response => response.text()).then(response => {
                 this.cmdOutput.value = response;
@@ -14,9 +16,10 @@ export class ToolsPage extends Component {
     fetch() {
         fetch('/logjson').then(response => response.json()).then(response => {
             response.Log.Entries.map(log => {
-                this.log.innerText += `${JSON.stringify(log)}\n`;
+                this.history += `<div class="log_level${log.level}"><span class="date">${(new Date(log.timestamp).toLocaleTimeString())}</span><span class="value">${log.text}</span></div>`;
+                this.log.innerHTML = this.history;
                 if (true) {
-                    this.log.scrollTop = this.log.scollHeight;
+                    this.log.scrollTop = this.log.scrollHeight;
                 }
             })
         });
@@ -27,7 +30,7 @@ export class ToolsPage extends Component {
             <div>
                 <div style="width: 100%; height: 200px; overflow-y: scroll;" ref={ref => this.log = ref}>loading logs ...</div>
                 <div>Command: <input type="text" ref={ref => this.cmd = ref}/><button type="button" onClick={this.sendCommand}>send</button></div>
-                <input type="textarea" style="width: 100%; height: 100px" ref={ref => this.cmdOutput = ref}></input>
+                <textarea style="width: 100%; height: 200px" ref={ref => this.cmdOutput = ref}></textarea>
             </div>
         );
     }
