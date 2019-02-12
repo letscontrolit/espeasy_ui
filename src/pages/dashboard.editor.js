@@ -1,47 +1,36 @@
 import { h, Component } from 'preact';
+import { FlowEditor } from '../lib/floweditor';
+import { nodes } from '../lib/dashboard_node_definitions';
+import { getDashboardConfigNodes, loadDashboardConfig, storeDashboardConfig, storeRule } from '../lib/espeasy';
 
-const devices = [
-    { nr: 1, name: 'Senzor', type: 'DH11', vars: [{ name: 'Temperature', formula: '', value: 21 }, { name: 'Humidity', formula: '', value: 65 }] },
-    { nr: 1, name: 'Humidity', type: 'Linear Regulator', vars: [{ name: 'Output', formula: '', value: 1 }] }
-]
-
-export class DiscoverPage extends Component {
+export class DashboardEditorPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            devices: []
-        }
-
-        this.scani2c = () => {
-            fetch('/i2cscanner').then(r => r.json()).then(r => {
-                this.setState({ devices: r });
-            });
-        }
-
-        this.scanwifi = () => {
-            fetch('/wifiscanner').then(r => r.json()).then(r => {
-                this.setState({ devices: r });
-            });
-        }
+        this.nodes = nodes;
     }
 
     render(props) {
         return (
-            <div>
-                <div>
-                    <button type="button" onClick={this.scani2c}>Scan I2C</button>
-                    <button type="button" onClick={this.scanwifi}>Scan WiFi</button>
-                </div>
-                <table>{this.state.devices.map(device => {
-                    return (
-                        <tr class="device">
-                            <td class="info">
-                                {JSON.stringify(device)}
-                            </td>
-                        </tr>
-                        )
-                })}</table>
+            <div class="editor">
             </div>
         );
+    }
+
+    componentDidMount() {
+        getDashboardConfigNodes().then((out) => {
+            out.nodes.forEach(device => nodes.unshift(device));
+            const varNode = nodes.find(node => node.type === 'VARIABLE');
+            out.vars.forEach(v => varNode.config[0].values.push(v)); 
+
+            this.chart = new FlowEditor(".editor", nodes, { 
+                onSave: (config, rules) => {
+                    storeDashboardConfig(config);
+                }
+            });
+    
+            loadDashboardConfig().then(config => {
+                this.chart.loadConfig(config);
+            });
+        });
     }
 }

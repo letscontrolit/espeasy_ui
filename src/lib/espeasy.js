@@ -198,6 +198,19 @@ export const getConfigNodes = async () => {
     return { nodes, vars };
 }
 
+export const getDashboardConfigNodes = async () => {
+    const devices = await loadDevices();
+    const vars = [];
+    const nodes = devices.map(device => {
+        device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
+        const result = [{}];
+
+        return [];
+    }).flat();
+
+    return { nodes, vars };
+}
+
 export const storeConfig = async (config) => {
     const formData = new FormData();
     formData.append('edit', 1);
@@ -209,8 +222,23 @@ export const storeConfig = async (config) => {
     });
 }
 
+export const storeDashboardConfig = async (config) => {
+    const formData = new FormData();
+    formData.append('edit', 1);
+    formData.append('file', new File([new Blob([config])], "d1.txt"));
+    
+    return await fetch('/upload', {
+        method: 'post',
+        body: formData,
+    });
+}
+
 export const loadConfig = async () => {
     return await fetch('/r1.txt').then(response => response.json());
+}
+
+export const loadDashboardConfig = async () => {
+    return await fetch('/d1.txt').then(response => response.json());
 }
 
 export const storeRule = async (rule) => {

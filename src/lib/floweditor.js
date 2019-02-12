@@ -8,7 +8,7 @@ const color = '#000000';
 
 const saveChart = renderedNodes => {
     // find initial nodes (triggers);
-    const triggers = renderedNodes.filter(node => node.group === 'TRIGGERS');
+    const triggers = renderedNodes.filter(node => node.inputs.length === 0);
 
     // for each initial node walk the tree and produce one 'rule'
     const result = triggers.map(trigger => {
@@ -163,6 +163,7 @@ class Node {
         this.outputs = conf.outputs.map(output => {});
         this.toDsl = conf.toDsl;
         this.toString = conf.toString;
+        this.toHtml = conf.toHtml;
         this.indent = conf.indent;
     }
 }
@@ -177,6 +178,7 @@ class NodeUI extends Node {
         this.linesEnd = [];
         this.toDsl = conf.toDsl;
         this.toString = conf.toString;
+        this.toHtml = conf.toHtml;
         this.indent = conf.indent;
     }
 
@@ -200,6 +202,7 @@ class NodeUI extends Node {
     }
 
     handleMoveEvent(ev) {
+        if (!this.canvas.canEdit) return;
         const shiftX = ev.clientX - this.element.getBoundingClientRect().left;
         const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
         const onMouseMove = ev => {
@@ -217,13 +220,19 @@ class NodeUI extends Node {
     }
 
     handleDblClickEvent(ev) {
+        if (!this.canvas.canEdit) return;
         if (this.config.length)
             showConfigBox(this.type, this.config, () => {
-                this.text.textContent = this.toString();
+                if (this.toHtml) {
+                    this.text.innerHTML = this.toHtml();
+                } else {
+                    this.text.textContent = this.toString();
+                }
             });
     }
 
     handleRightClickEvent(ev) {
+        if (!this.canvas.canEdit) return;
         this.inputs.map(input => {
             input.lines.map(line => {
                 line.output.lines = [];
@@ -252,7 +261,12 @@ class NodeUI extends Node {
         this.element.className = `node node-chart group-${this.group}`;
 
         this.text = document.createElement('span');
-        this.text.textContent = this.toString();
+        if (this.toHtml) {
+            this.text.innerHTML = this.toHtml();
+        } else {
+            this.text.textContent = this.toString();
+        }
+        
         this.element.appendChild(this.text);
 
         this.element.style.top = `${this.position.y}px`;
@@ -412,10 +426,11 @@ const showConfigBox = (type, config, onclose) => {
 }
 
 export class FlowEditor {
-    constructor(selector, nodes, onSave) {
+    constructor(selector, nodes, config) {
         this.nodes = [];
         this.renderedNodes = [];
-        this.onSave = onSave;
+        this.onSave = config.onSave;
+        this.canEdit = !config.readOnly;
 
         this.element = document.querySelectorAll(selector)[0];
 
@@ -425,6 +440,7 @@ export class FlowEditor {
         });
         this.render();
 
+        if (this.canEdit)
         dNd.enableNativeDrop(this.canvas, ev => {
             const configNode = this.nodes.find(node => node.type == ev.dataTransfer.getData('type'));
             let node = new NodeUI(this.canvas, configNode, { x: ev.x, y: ev.y });
@@ -443,46 +459,52 @@ export class FlowEditor {
     }
 
     renderContainers() {
-        this.sidebar = document.createElement('div');
-        this.sidebar.className = 'sidebar';
-        this.element.appendChild(this.sidebar);
+        if (this.canEdit) {
+            this.sidebar = document.createElement('div');
+            this.sidebar.className = 'sidebar';
+            this.element.appendChild(this.sidebar);
+        }
 
         this.canvas = document.createElement('div');
         this.canvas.className = 'canvas';
+        this.canvas.canEdit = this.canEdit;
         this.element.appendChild(this.canvas);
 
-        this.debug = document.createElement('div');
-        this.debug.className = 'debug';
+        if (this.canEdit) {
+            this.debug = document.createElement('div');
+            this.debug.className = 'debug';
 
-        const text = document.createElement('div');
-        this.debug.appendChild(text);
+            const text = document.createElement('div');
+            this.debug.appendChild(text);
 
-        const saveBtn = document.createElement('button');
-        saveBtn.textContent = 'SAVE';
-        saveBtn.onclick = () => {
-            const config = JSON.stringify(saveChart(this.renderedNodes));
-            const rules = exportChart(this.renderedNodes);
-            this.onSave(config, rules);
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'SAVE';
+            saveBtn.onclick = () => {
+                const config = JSON.stringify(saveChart(this.renderedNodes));
+                const rules = exportChart(this.renderedNodes);
+                this.onSave(config, rules);
+            }
+
+            const loadBtn = document.createElement('button');
+            loadBtn.textContent = 'LOAD';
+            loadBtn.onclick = () => {
+                const input = prompt('enter config');
+                loadChart(JSON.parse(input), this);
+            }
+
+            const exportBtn = document.createElement('button');
+            exportBtn.textContent = 'EXPORT';
+            exportBtn.onclick = () => {
+                const exported = exportChart(this.renderedNodes);
+                text.textContent = exported;
+            }
+            this.debug.appendChild(exportBtn);
+            this.debug.appendChild(saveBtn);
+            this.debug.appendChild(loadBtn);
+            this.debug.appendChild(text);
+            this.element.appendChild(this.debug);
         }
-
-        const loadBtn = document.createElement('button');
-        loadBtn.textContent = 'LOAD';
-        loadBtn.onclick = () => {
-            const input = prompt('enter config');
-            loadChart(JSON.parse(input), this);
-        }
-
-        const exportBtn = document.createElement('button');
-        exportBtn.textContent = 'EXPORT';
-        exportBtn.onclick = () => {
-            const exported = exportChart(this.renderedNodes);
-            text.textContent = exported;
-        }
-        this.debug.appendChild(exportBtn);
-        this.debug.appendChild(saveBtn);
-        this.debug.appendChild(loadBtn);
-        this.debug.appendChild(text);
-        this.element.appendChild(this.debug);
+        
     }
 
     renderConfigNodes() {
@@ -506,6 +528,6 @@ export class FlowEditor {
 
     render() {
         this.renderContainers();
-        this.renderConfigNodes();
+        if (this.canEdit) this.renderConfigNodes();
     }
 }

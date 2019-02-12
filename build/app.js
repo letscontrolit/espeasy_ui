@@ -18021,14 +18021,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages */ "./src/pages/index.js");
 /* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./conf/config.dat */ "./src/conf/config.dat.js");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _pages_dashboard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/dashboard */ "./src/pages/dashboard.js");
+/* harmony import */ var _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/dashboard.editor */ "./src/pages/dashboard.editor.js");
 
 
 
 
 
 
-const menus = [//{ title: 'Dashboard', href: '', component: null, children: [] },
-{
+
+
+const menus = [{
+  title: 'Dashboard',
+  href: 'dashboard',
+  class: 'full',
+  component: _pages_dashboard__WEBPACK_IMPORTED_MODULE_6__["DashboardPage"],
+  children: [{
+    title: 'Editor',
+    href: 'dashboard/editor',
+    class: 'full',
+    component: _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_7__["DashboardEditorPage"]
+  }]
+}, {
   title: 'Devices',
   href: 'devices',
   component: _pages__WEBPACK_IMPORTED_MODULE_3__["DevicesPage"],
@@ -19434,19 +19448,103 @@ const devices = [{
 
 /***/ }),
 
+/***/ "./src/lib/dashboard_node_definitions.js":
+/*!***********************************************!*\
+  !*** ./src/lib/dashboard_node_definitions.js ***!
+  \***********************************************/
+/*! exports provided: nodes */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodes", function() { return nodes; });
+const nodes = [// TRIGGERS
+{
+  group: 'DEVICES',
+  type: 'CLOCK',
+  inputs: [],
+  outputs: [],
+  config: [],
+  indent: true,
+  toHtml: () => {
+    return `<b>${new Date().toTimeString()}</b>`;
+  }
+}, {
+  group: 'DEVICES',
+  type: 'VARIABLE',
+  inputs: [],
+  outputs: [],
+  config: [{
+    name: 'device',
+    type: 'select',
+    values: [],
+    value: 0
+  }],
+  toHtml: function () {
+    return `${this.config[0].value}: `;
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'BUTTON',
+  inputs: [],
+  outputs: [],
+  config: [{
+    name: 'text',
+    type: 'text',
+    value: 'CLICK'
+  }, {
+    name: 'cmd',
+    type: 'text',
+    value: 'event,test'
+  }],
+  toHtml: function () {
+    return `<button type="button" onclick="fetch('/control?cmd=${this.config[1].value}')">${this.config[0].value}</button>`;
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'INPUT',
+  inputs: [],
+  outputs: [],
+  config: [{
+    name: 'name',
+    type: 'text',
+    value: 'var'
+  }, {
+    name: 'min',
+    type: 'number',
+    value: '0'
+  }, {
+    name: 'max',
+    type: 'number',
+    value: '255'
+  }, {
+    name: 'cmd',
+    type: 'text',
+    value: 'set_level,1'
+  }],
+  toHtml: function () {
+    return `${this.config[0].value}: <input type="number" min="" max="" />`;
+  }
+}];
+
+/***/ }),
+
 /***/ "./src/lib/espeasy.js":
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: loadDevices, getConfigNodes, storeConfig, loadConfig, storeRule */
+/*! exports provided: loadDevices, getConfigNodes, getDashboardConfigNodes, storeConfig, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDevices", function() { return loadDevices; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfigNodes", function() { return getConfigNodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardConfigNodes", function() { return getDashboardConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeConfig", function() { return storeConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadConfig", function() { return loadConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
 const loadDevices = async () => {
   return await fetch('/json').then(response => response.json()).then(response => response.Sensors);
@@ -19674,6 +19772,19 @@ const getConfigNodes = async () => {
     vars
   };
 };
+const getDashboardConfigNodes = async () => {
+  const devices = await loadDevices();
+  const vars = [];
+  const nodes = devices.map(device => {
+    device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
+    const result = [{}];
+    return [];
+  }).flat();
+  return {
+    nodes,
+    vars
+  };
+};
 const storeConfig = async config => {
   const formData = new FormData();
   formData.append('edit', 1);
@@ -19683,8 +19794,20 @@ const storeConfig = async config => {
     body: formData
   });
 };
+const storeDashboardConfig = async config => {
+  const formData = new FormData();
+  formData.append('edit', 1);
+  formData.append('file', new File([new Blob([config])], "d1.txt"));
+  return await fetch('/upload', {
+    method: 'post',
+    body: formData
+  });
+};
 const loadConfig = async () => {
   return await fetch('/r1.txt').then(response => response.json());
+};
+const loadDashboardConfig = async () => {
+  return await fetch('/d1.txt').then(response => response.json());
 };
 const storeRule = async rule => {
   const formData = new FormData();
@@ -19717,7 +19840,7 @@ const color = '#000000';
 
 const saveChart = renderedNodes => {
   // find initial nodes (triggers);
-  const triggers = renderedNodes.filter(node => node.group === 'TRIGGERS'); // for each initial node walk the tree and produce one 'rule'
+  const triggers = renderedNodes.filter(node => node.inputs.length === 0); // for each initial node walk the tree and produce one 'rule'
 
   const result = triggers.map(trigger => {
     const walkRule = rule => {
@@ -19878,6 +20001,7 @@ class Node {
     this.outputs = conf.outputs.map(output => {});
     this.toDsl = conf.toDsl;
     this.toString = conf.toString;
+    this.toHtml = conf.toHtml;
     this.indent = conf.indent;
   }
 
@@ -19893,6 +20017,7 @@ class NodeUI extends Node {
     this.linesEnd = [];
     this.toDsl = conf.toDsl;
     this.toString = conf.toString;
+    this.toHtml = conf.toHtml;
     this.indent = conf.indent;
   }
 
@@ -19916,6 +20041,7 @@ class NodeUI extends Node {
   }
 
   handleMoveEvent(ev) {
+    if (!this.canvas.canEdit) return;
     const shiftX = ev.clientX - this.element.getBoundingClientRect().left;
     const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
 
@@ -19935,12 +20061,18 @@ class NodeUI extends Node {
   }
 
   handleDblClickEvent(ev) {
+    if (!this.canvas.canEdit) return;
     if (this.config.length) showConfigBox(this.type, this.config, () => {
-      this.text.textContent = this.toString();
+      if (this.toHtml) {
+        this.text.innerHTML = this.toHtml();
+      } else {
+        this.text.textContent = this.toString();
+      }
     });
   }
 
   handleRightClickEvent(ev) {
+    if (!this.canvas.canEdit) return;
     this.inputs.map(input => {
       input.lines.map(line => {
         line.output.lines = [];
@@ -19968,7 +20100,13 @@ class NodeUI extends Node {
     this.element.nodeObject = this;
     this.element.className = `node node-chart group-${this.group}`;
     this.text = document.createElement('span');
-    this.text.textContent = this.toString();
+
+    if (this.toHtml) {
+      this.text.innerHTML = this.toHtml();
+    } else {
+      this.text.textContent = this.toString();
+    }
+
     this.element.appendChild(this.text);
     this.element.style.top = `${this.position.y}px`;
     this.element.style.left = `${this.position.x}px`;
@@ -20141,17 +20279,18 @@ const showConfigBox = (type, config, onclose) => {
 };
 
 class FlowEditor {
-  constructor(selector, nodes, onSave) {
+  constructor(selector, nodes, config) {
     this.nodes = [];
     this.renderedNodes = [];
-    this.onSave = onSave;
+    this.onSave = config.onSave;
+    this.canEdit = !config.readOnly;
     this.element = document.querySelectorAll(selector)[0];
     nodes.map(nodeConfig => {
       const node = new Node(nodeConfig);
       this.nodes.push(node);
     });
     this.render();
-    dNd.enableNativeDrop(this.canvas, ev => {
+    if (this.canEdit) dNd.enableNativeDrop(this.canvas, ev => {
       const configNode = this.nodes.find(node => node.type == ev.dataTransfer.getData('type'));
       let node = new NodeUI(this.canvas, configNode, {
         x: ev.x,
@@ -20174,46 +20313,53 @@ class FlowEditor {
   }
 
   renderContainers() {
-    this.sidebar = document.createElement('div');
-    this.sidebar.className = 'sidebar';
-    this.element.appendChild(this.sidebar);
+    if (this.canEdit) {
+      this.sidebar = document.createElement('div');
+      this.sidebar.className = 'sidebar';
+      this.element.appendChild(this.sidebar);
+    }
+
     this.canvas = document.createElement('div');
     this.canvas.className = 'canvas';
+    this.canvas.canEdit = this.canEdit;
     this.element.appendChild(this.canvas);
-    this.debug = document.createElement('div');
-    this.debug.className = 'debug';
-    const text = document.createElement('div');
-    this.debug.appendChild(text);
-    const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'SAVE';
 
-    saveBtn.onclick = () => {
-      const config = JSON.stringify(saveChart(this.renderedNodes));
-      const rules = exportChart(this.renderedNodes);
-      this.onSave(config, rules);
-    };
+    if (this.canEdit) {
+      this.debug = document.createElement('div');
+      this.debug.className = 'debug';
+      const text = document.createElement('div');
+      this.debug.appendChild(text);
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'SAVE';
 
-    const loadBtn = document.createElement('button');
-    loadBtn.textContent = 'LOAD';
+      saveBtn.onclick = () => {
+        const config = JSON.stringify(saveChart(this.renderedNodes));
+        const rules = exportChart(this.renderedNodes);
+        this.onSave(config, rules);
+      };
 
-    loadBtn.onclick = () => {
-      const input = prompt('enter config');
-      loadChart(JSON.parse(input), this);
-    };
+      const loadBtn = document.createElement('button');
+      loadBtn.textContent = 'LOAD';
 
-    const exportBtn = document.createElement('button');
-    exportBtn.textContent = 'EXPORT';
+      loadBtn.onclick = () => {
+        const input = prompt('enter config');
+        loadChart(JSON.parse(input), this);
+      };
 
-    exportBtn.onclick = () => {
-      const exported = exportChart(this.renderedNodes);
-      text.textContent = exported;
-    };
+      const exportBtn = document.createElement('button');
+      exportBtn.textContent = 'EXPORT';
 
-    this.debug.appendChild(exportBtn);
-    this.debug.appendChild(saveBtn);
-    this.debug.appendChild(loadBtn);
-    this.debug.appendChild(text);
-    this.element.appendChild(this.debug);
+      exportBtn.onclick = () => {
+        const exported = exportChart(this.renderedNodes);
+        text.textContent = exported;
+      };
+
+      this.debug.appendChild(exportBtn);
+      this.debug.appendChild(saveBtn);
+      this.debug.appendChild(loadBtn);
+      this.debug.appendChild(text);
+      this.element.appendChild(this.debug);
+    }
   }
 
   renderConfigNodes() {
@@ -20239,7 +20385,7 @@ class FlowEditor {
 
   render() {
     this.renderContainers();
-    this.renderConfigNodes();
+    if (this.canEdit) this.renderConfigNodes();
   }
 
 }
@@ -21754,6 +21900,104 @@ class ControllersPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 /***/ }),
 
+/***/ "./src/pages/dashboard.editor.js":
+/*!***************************************!*\
+  !*** ./src/pages/dashboard.editor.js ***!
+  \***************************************/
+/*! exports provided: DashboardEditorPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardEditorPage", function() { return DashboardEditorPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/floweditor */ "./src/lib/floweditor.js");
+/* harmony import */ var _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/dashboard_node_definitions */ "./src/lib/dashboard_node_definitions.js");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
+
+
+
+class DashboardEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.nodes = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"];
+  }
+
+  render(props) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      class: "editor"
+    });
+  }
+
+  componentDidMount() {
+    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getDashboardConfigNodes"])().then(out => {
+      out.nodes.forEach(device => _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
+      const varNode = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'VARIABLE');
+      out.vars.forEach(v => varNode.config[0].values.push(v));
+      this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
+        onSave: (config, rules) => {
+          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeDashboardConfig"])(config);
+        }
+      });
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadDashboardConfig"])().then(config => {
+        this.chart.loadConfig(config);
+      });
+    });
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/dashboard.js":
+/*!********************************!*\
+  !*** ./src/pages/dashboard.js ***!
+  \********************************/
+/*! exports provided: DashboardPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardPage", function() { return DashboardPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/floweditor */ "./src/lib/floweditor.js");
+/* harmony import */ var _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/dashboard_node_definitions */ "./src/lib/dashboard_node_definitions.js");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
+
+
+
+class DashboardPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.nodes = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"];
+  }
+
+  render(props) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      class: "editor"
+    });
+  }
+
+  componentDidMount() {
+    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getDashboardConfigNodes"])().then(out => {
+      out.nodes.forEach(device => _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
+      const varNode = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'VARIABLE');
+      out.vars.forEach(v => varNode.config[0].values.push(v));
+      this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
+        readOnly: true
+      });
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadDashboardConfig"])().then(config => {
+        this.chart.loadConfig(config);
+      });
+    });
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/pages/devices.edit.js":
 /*!***********************************!*\
   !*** ./src/pages/devices.edit.js ***!
@@ -21827,7 +22071,6 @@ class DevicesEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get(`tasks[${props.params[0]}]`);
-    debugger;
     this.state = {
       device: this.config.device
     };
@@ -22397,9 +22640,11 @@ class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       out.nodes.forEach(device => _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
       const ifElseNode = _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'if/else');
       out.vars.forEach(v => ifElseNode.config[0].values.push(v));
-      this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], (config, rules) => {
-        Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);
-        Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
+      this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
+        onSave: (config, rules) => {
+          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);
+          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
+        }
       }); // loadConfig().then(config => {
       //     this.chart.loadConfig(config);
       // });

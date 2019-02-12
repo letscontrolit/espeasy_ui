@@ -4,10 +4,14 @@ import { Page } from './components/page';
 import { ConfigPage, DevicesPage, DevicesEditPage, ControllersPage, ControllerEditPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, DiffPage, RulesEditorPage } from './pages';
 import { loadConfig, saveConfig } from './conf/config.dat';
 import { settings } from './lib/settings';
+import { DashboardPage } from './pages/dashboard';
+import { DashboardEditorPage } from './pages/dashboard.editor';
 
 
 const menus = [
-    //{ title: 'Dashboard', href: '', component: null, children: [] },
+    { title: 'Dashboard', href: 'dashboard', class: 'full', component: DashboardPage, children: [
+        { title: 'Editor', href: 'dashboard/editor', class: 'full', component: DashboardEditorPage },
+    ] },
     { title: 'Devices', href: 'devices', component: DevicesPage, children: [] },
     { title: 'Controllers', href: 'controllers', component: ControllersPage, children: [] },
     { title: 'Automation', href: 'rules', component: RulesEditorPage, class: 'full', children: [] },

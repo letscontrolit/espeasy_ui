@@ -42,7 +42,6 @@ export class DevicesEditPage extends Component {
         super(props);
 
         this.config = settings.get(`tasks[${props.params[0]}]`);
-        debugger;
         this.state = {
             device: this.config.device,
         }
