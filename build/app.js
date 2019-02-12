@@ -18020,6 +18020,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/page */ "./src/components/page/index.js");
 /* harmony import */ var _pages__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages */ "./src/pages/index.js");
 /* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./conf/config.dat */ "./src/conf/config.dat.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/settings */ "./src/lib/settings.js");
+
 
 
 
@@ -18095,6 +18097,10 @@ let routes = [{
   title: 'Edit Device',
   href: 'devices/edit',
   component: _pages__WEBPACK_IMPORTED_MODULE_3__["DevicesEditPage"]
+}, {
+  title: 'Save to Flash',
+  href: 'tools/diff',
+  component: _pages__WEBPACK_IMPORTED_MODULE_3__["DiffPage"]
 }];
 menus.map(menu => {
   routes = [...routes, menu, ...menu.children];
@@ -18115,7 +18121,8 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     super();
     this.state = {
       menu: menus[0],
-      page: menus[0]
+      page: menus[0],
+      changed: false
     };
   }
 
@@ -18129,7 +18136,8 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       selected: state.menu
     }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_page__WEBPACK_IMPORTED_MODULE_2__["Page"], {
       page: state.page,
-      params: params
+      params: params,
+      changed: this.state.changed
     }));
   }
 
@@ -18138,6 +18146,13 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
     const fn = () => {
       const newFragment = getFragment();
+      const diff = _lib_settings__WEBPACK_IMPORTED_MODULE_5__["settings"].diff();
+
+      if (this.state.changed !== !!diff.length) {
+        this.setState({
+          changed: !this.state.changed
+        });
+      }
 
       if (current !== newFragment) {
         current = newFragment;
@@ -18154,7 +18169,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       }
     };
 
-    this.interval = setInterval(fn, 50);
+    this.interval = setInterval(fn, 100);
   }
 
   componentWillUnmount() {}
@@ -18180,31 +18195,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../lib/helpers */ "./src/lib/helpers.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../lib/settings */ "./src/lib/settings.js");
 
 
 
-const getKeys = object => {
-  const keys = [];
-
-  for (let key in object) {
-    if (object.hasOwnProperty(key)) {
-      keys.push(key);
-    }
-  }
-
-  return keys;
-};
 
 class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.saveForm = () => {
       const values = {};
-      const groups = getKeys(this.props.config.groups);
+      const groups = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_2__["getKeys"])(this.props.config.groups);
       groups.map(groupKey => {
         const group = this.props.config.groups[groupKey];
-        const keys = getKeys(group.configs);
+        const keys = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_2__["getKeys"])(group.configs);
         if (!values[groupKey]) values[groupKey] = {};
         keys.map(key => {
           let val = this.form.elements[`${groupKey}.${key}`].value;
@@ -18222,66 +18228,94 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     this.resetForm = () => {
       this.form.reset();
     };
+
+    this.onChange = (id, prop, config = {}) => {
+      return e => {
+        let val = this.form.elements[id].value;
+
+        if (config.type === 'checkbox') {
+          val = val === 'on' ? 1 : 0;
+        } else if (config.type === 'number') {
+          val = parseFloat(val);
+        } else if (config.type === 'select') {
+          val = isNaN(val) ? val : parseInt(val);
+        }
+
+        Object(lodash__WEBPACK_IMPORTED_MODULE_1__["set"])(this.props.selected, prop, val);
+
+        if (config.onChange) {
+          config.onChange(e);
+        }
+      };
+    };
   }
 
-  renderConfig(id, config, value) {
+  renderConfig(id, config, value, varName) {
     switch (config.type) {
       case 'string':
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "text",
-          value: value
+          value: value,
+          onChange: this.onChange(id, varName, config)
         });
 
       case 'number':
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "number",
-          value: value
+          value: value,
+          onChange: this.onChange(id, varName, config)
         });
 
       case 'ip':
         return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
-          id: id,
+          id: `${id}.0`,
           type: "number",
           min: "0",
           max: "255",
+          onChange: this.onChange(id, `${varName}.0`, config),
           style: "width: 80px",
-          value: value[0]
+          value: value ? value[0] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
-          id: id,
+          id: `${id}.1`,
           type: "number",
           min: "0",
           max: "255",
+          onChange: this.onChange(id, `${varName}.1`, config),
           style: "width: 80px",
-          value: value[1]
+          value: value ? value[1] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
-          id: id,
+          id: `${id}.2`,
           type: "number",
           min: "0",
           max: "255",
+          onChange: this.onChange(id, `${varName}.2`, config),
           style: "width: 80px",
-          value: value[2]
+          value: value ? value[2] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
-          id: id,
+          id: `${id}.3`,
           type: "number",
           min: "0",
           max: "255",
+          onChange: this.onChange(id, `${varName}.3`, config),
           style: "width: 80px",
-          value: value[3]
+          value: value ? value[3] : null
         })];
 
       case 'password':
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
-          type: "password"
+          type: "password",
+          onChange: this.onChange(id, varName, config)
         });
 
       case 'checkbox':
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           id: id,
           type: "checkbox",
-          defaultChecked: value
+          defaultChecked: value,
+          onChange: this.onChange(id, varName, config)
         });
 
       case 'select':
@@ -18289,7 +18323,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
           id: id,
           type: "password",
-          onChange: config.onChange
+          onChange: this.onChange(id, varName, config)
         }, options.map(option => {
           const name = option instanceof Object ? option.name : option;
           const val = option instanceof Object ? option.value : option;
@@ -18318,21 +18352,17 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     const configArray = Array.isArray(configs) ? configs : [configs];
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "pure-control-group"
-    }, configArray.map(conf => {
-      let val;
-
-      if (values) {
-        val = conf.var ? Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, conf.var) : values[id] ? values[id][key] : null;
-      }
-
+    }, configArray.map((conf, i) => {
+      const varName = conf.var ? conf.var : configArray.length > 1 ? `${id}.${i}` : id;
+      const val = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
       return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
         for: id
-      }, conf.name), this.renderConfig(id, conf, val)];
+      }, conf.name), this.renderConfig(id, conf, val, varName)];
     }));
   }
 
   renderGroup(id, group, values) {
-    const keys = getKeys(group.configs);
+    const keys = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_2__["getKeys"])(group.configs);
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("fieldset", {
       name: id
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", null, group.name), keys.map(key => {
@@ -18342,16 +18372,11 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   render(props) {
-    const keys = getKeys(props.config.groups);
+    const keys = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_2__["getKeys"])(props.config.groups);
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
       class: "pure-form pure-form-aligned",
       ref: ref => this.form = ref
-    }, keys.map(key => this.renderGroup(key, props.config.groups[key], props.selected)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
-      type: "button",
-      onClick: this.saveForm
-    }, "save"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
-      onClick: this.resetForm
-    }, "cancel")));
+    }, keys.map(key => this.renderGroup(key, props.config.groups[key], props.selected)));
   }
 
 }
@@ -18453,7 +18478,10 @@ class Page extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "main"
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "header"
-    }, "> ", props.page.title), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+    }, "> ", props.page.title, props.changed ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      style: "float: right",
+      href: "#tools/diff"
+    }, "CHANGED! Click here to SAVE") : null), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "content"
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(PageComponent, {
       params: props.params
@@ -18633,11 +18661,10 @@ const configDatParseConfig = [{
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].device`,
   type: 'byte'
-})), {
-  prop: 'OLD_TaskDeviceID',
-  type: 'longs',
-  length: TASKS_MAX
-}, [...Array(TASKS_MAX)].map((x, i) => ({
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `tasks[${i}].OLD_TaskDeviceID`,
+  type: 'int32'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].gpio1`,
   type: 'byte'
 })), [...Array(TASKS_MAX)].map((x, i) => ({
@@ -18688,37 +18715,15 @@ const configDatParseConfig = [{
 })), [...Array(NOTIFICATION_MAX)].map((x, i) => ({
   prop: `notifications[${i}].enabled`,
   type: 'byte'
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `task[${i}].TaskDeviceID`,
+  type: 'longs',
+  length: CONTROLLER_MAX
+})), [...Array(TASKS_MAX)].map((x, i) => ({
+  prop: `task[${i}].TaskDeviceSendData`,
+  type: 'longs',
+  length: CONTROLLER_MAX
 })), {
-  prop: 'TaskDeviceID.1',
-  type: 'longs',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceID.2',
-  type: 'longs',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceID.3',
-  type: 'longs',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceSendData.1',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceSendData.2',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
-  prop: 'TaskDeviceSendData.3',
-  type: 'bytes',
-  length: TASKS_MAX
-}, // TODO
-{
   prop: 'hardware.led.inverse',
   type: 'byte'
 }, {
@@ -19393,7 +19398,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "devices", function() { return devices; });
 /* harmony import */ var _1_input_switch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./1_input_switch */ "./src/devices/1_input_switch.js");
 /* harmony import */ var _5_dht__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./5_dht */ "./src/devices/5_dht.js");
-/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
+/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
 /* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
 
 
@@ -19410,7 +19415,7 @@ const devices = [{
 }, {
   name: 'Regulator - Level Control',
   value: 21,
-  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_4__["levelControl"]
+  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_2__["levelControl"]
 }, {
   name: 'Generic - Dummy Device',
   value: 33,
@@ -19420,6 +19425,30 @@ const devices = [{
   value: 1,
   fields: _1_input_switch__WEBPACK_IMPORTED_MODULE_0__["inputSwitch"]
 }];
+
+/***/ }),
+
+/***/ "./src/lib/helpers.js":
+/*!****************************!*\
+  !*** ./src/lib/helpers.js ***!
+  \****************************/
+/*! exports provided: getKeys */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getKeys", function() { return getKeys; });
+const getKeys = object => {
+  const keys = [];
+
+  for (let key in object) {
+    if (object.hasOwnProperty(key)) {
+      keys.push(key);
+    }
+  }
+
+  return keys;
+};
 
 /***/ }),
 
@@ -19572,24 +19601,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "settings", function() { return settings; });
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/lib/helpers.js");
 
+
+
+const diff = (obj1, obj2, path = '') => {
+  return Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getKeys"])(obj1).map(key => {
+    const val1 = obj1[key];
+    const val2 = obj2[key];
+    if (val1 instanceof Object) return diff(val1, val2, `${path}.${key}`);else if (val1 !== val2) {
+      return [{
+        path: `${path}.${key}`,
+        val1,
+        val2
+      }];
+    } else return [];
+  }).flat();
+};
 
 class Settings {
   init(settings) {
     this.settings = settings;
+    this.apply();
   }
 
   get(prop) {
     return Object(lodash__WEBPACK_IMPORTED_MODULE_0__["get"])(this.settings, prop);
   }
+  /**
+   * sets changes to the current version and sets changed flag
+   * @param {*} prop 
+   * @param {*} value 
+   */
+
 
   set(prop, value) {
-    return Object(lodash__WEBPACK_IMPORTED_MODULE_0__["set"])(this.settings, prop, value);
+    const obj = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["get"])(this.settings, prop);
+    const res = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["merge"])(obj, value);
+    Object(lodash__WEBPACK_IMPORTED_MODULE_0__["set"])(this.settings, prop, res);
+    if (this.diff().length) this.changed = true;
+  }
+  /**
+   * returns diff between applied and current version
+   */
+
+
+  diff() {
+    return diff(this.stored, this.settings);
+  }
+  /***
+   * applys changes and creates new version in localStorage
+   */
+
+
+  apply() {
+    this.stored = JSON.parse(JSON.stringify(this.settings));
+    this.changed = false;
   }
 
 }
 
-const settings = new Settings();
+const settings = window.settings1 = new Settings();
 
 /***/ }),
 
@@ -19823,6 +19895,11 @@ const formConfig = {
 };
 class ConfigAdvancedPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render(props) {
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set('config', values);
+      window.location.href = '#devices';
+    };
+
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
       config: formConfig,
       selected: _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get('config')
@@ -20027,8 +20104,9 @@ class ConfigHardwarePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"
   render(props) {
     const config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get('hardware');
 
-    formConfig.onSave = vals => {
-      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set('hardware', vals);
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set('hardware', values);
+      window.location.href = '#devices';
     };
 
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
@@ -20058,9 +20136,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const formConfig = {
-  onSave: vals => {
-    console.log(vals);
-  },
   groups: {
     general: {
       name: 'General',
@@ -20177,6 +20252,11 @@ const formConfig = {
 };
 class ConfigPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render(props) {
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(`config`, values);
+      window.location.href = '#devices';
+    };
+
     const config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get('config');
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
       config: formConfig,
@@ -20259,7 +20339,7 @@ const baseFields = {
   },
   IP: {
     name: 'IP',
-    type: 'string'
+    type: 'ip'
   },
   hostname: {
     name: 'Hostname',
@@ -20456,6 +20536,11 @@ class ControllerEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"
       });
     };
 
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(`controllers[${props.params[0]}]`, values);
+      window.location.href = '#controllers';
+    };
+
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
       config: formConfig,
       selected: this.config
@@ -20584,6 +20669,7 @@ class DevicesEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get(`tasks[${props.params[0]}]`);
+    debugger;
     this.state = {
       device: this.config.device
     };
@@ -20596,6 +20682,11 @@ class DevicesEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       this.setState({
         device: e.currentTarget.value
       });
+    };
+
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(`tasks[${props.params[0]}]`, values);
+      window.location.href = '#devices';
     };
 
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
@@ -20644,6 +20735,17 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
 }
+
+/***/ }),
+
+/***/ "./src/pages/diff.js":
+/*!***************************!*\
+  !*** ./src/pages/diff.js ***!
+  \***************************/
+/*! exports provided: DiffPage */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: F:\\_projects\\esphome\\src\\pages\\diff.js: Unexpected token (19:156)\n\n\u001b[0m \u001b[90m 17 | \u001b[39m                    \u001b[36mreturn\u001b[39m (\u001b[0m\n\u001b[0m \u001b[90m 18 | \u001b[39m                        \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 | \u001b[39m                            \u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{change\u001b[33m.\u001b[39mpath}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m\u001b[33m:\u001b[39m before\u001b[33m:\u001b[39m \u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(change\u001b[33m.\u001b[39mval1)}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m now\u001b[33m:\u001b[39m\u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(change\u001b[33m.\u001b[39mval2)}\u001b[33m<\u001b[39m\u001b[35m/b> <input name={change.} type='checkbox' defaultChecked={true} /\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m                                                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 20 | \u001b[39m                        \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mdiv\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 21 | \u001b[39m                    )\u001b[0m\n\u001b[0m \u001b[90m 22 | \u001b[39m                })}\u001b[0m\n    at Object.raise (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3831:17)\n    at Object.unexpected (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5143:16)\n    at Object.parseIdentifierName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6970:18)\n    at Object.parseIdentifier (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6948:23)\n    at Object.parseMaybePrivateName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6312:19)\n    at Object.parseSubscript (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5930:28)\n    at Object.parseSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5882:19)\n    at Object.parseExprSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5872:17)\n    at Object.parseMaybeUnary (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5842:21)\n    at Object.parseExprOps (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5729:23)\n    at Object.parseMaybeConditional (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5702:23)\n    at Object.parseMaybeAssign (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5647:21)\n    at Object.parseExpression (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5595:23)\n    at Object.jsxParseExpressionContainer (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3408:30)\n    at Object.jsxParseAttributeValue (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3370:21)\n    at Object.jsxParseAttribute (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3426:44)\n    at Object.jsxParseOpeningElementAfterName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3446:28)\n    at Object.jsxParseOpeningElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3439:17)\n    at Object.jsxParseElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3471:33)\n    at Object.jsxParseElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3487:32)\n    at Object.jsxParseElement (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3540:17)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3547:19)\n    at Object.parseExprSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5862:23)\n    at Object.parseMaybeUnary (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5842:21)\n    at Object.parseExprOps (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5729:23)\n    at Object.parseMaybeConditional (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5702:23)\n    at Object.parseMaybeAssign (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5647:21)\n    at Object.parseParenAndDistinguishExpression (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6435:28)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6215:21)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3552:20)");
 
 /***/ }),
 
@@ -20914,7 +21016,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, ConfigAdvancedPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, ConfigPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20967,6 +21069,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _devices_edit__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./devices.edit */ "./src/pages/devices.edit.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DevicesEditPage", function() { return _devices_edit__WEBPACK_IMPORTED_MODULE_14__["DevicesEditPage"]; });
+
+/* harmony import */ var _diff__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./diff */ "./src/pages/diff.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return _diff__WEBPACK_IMPORTED_MODULE_15__["DiffPage"]; });
+
 
 
 

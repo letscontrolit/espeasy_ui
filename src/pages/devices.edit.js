@@ -42,6 +42,7 @@ export class DevicesEditPage extends Component {
         super(props);
 
         this.config = settings.get(`tasks[${props.params[0]}]`);
+        debugger;
         this.state = {
             device: this.config.device,
         }
@@ -52,7 +53,10 @@ export class DevicesEditPage extends Component {
         formConfig.groups.settings.configs.device.onChange = (e) => {
             this.setState({ device: e.currentTarget.value });
         };
-        
+        formConfig.onSave = (values) => {
+            settings.set(`tasks[${props.params[0]}]`, values);
+            window.location.href='#devices';
+        }
         return (
             <Form config={formConfig} selected={this.config} />
         );

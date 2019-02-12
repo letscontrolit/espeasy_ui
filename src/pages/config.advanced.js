@@ -102,6 +102,10 @@ const formConfig = {
 
 export class ConfigAdvancedPage extends Component {
     render(props) {
+        formConfig.onSave = (values) => {
+            settings.set('config', values);
+            window.location.href='#devices';
+        }
         return (
             <Form config={formConfig} selected={settings.get('config')} />
         );

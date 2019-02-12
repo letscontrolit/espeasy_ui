@@ -54,7 +54,7 @@ export const configDatParseConfig = [
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].type`, type:'byte' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].device`, type:'byte' })),
-    { prop: 'OLD_TaskDeviceID', type: 'longs', length: TASKS_MAX }, 
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].OLD_TaskDeviceID`, type:'int32' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio1`, type:'byte' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio2`, type:'byte' })),
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].gpio3`, type:'byte' })),
@@ -71,12 +71,8 @@ export const configDatParseConfig = [
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].enabled`, type:'byte' })),
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })), 
-    { prop: 'TaskDeviceID.1', type: 'longs', length: TASKS_MAX },// TODO
-    { prop: 'TaskDeviceID.2', type: 'longs', length: TASKS_MAX },// TODO
-    { prop: 'TaskDeviceID.3', type: 'longs', length: TASKS_MAX },// TODO
-    { prop: 'TaskDeviceSendData.1', type: 'bytes', length: TASKS_MAX }, // TODO
-    { prop: 'TaskDeviceSendData.2', type: 'bytes', length: TASKS_MAX },// TODO
-    { prop: 'TaskDeviceSendData.3', type: 'bytes', length: TASKS_MAX },// TODO
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `task[${i}].TaskDeviceID`, type:'longs', length: CONTROLLER_MAX })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `task[${i}].TaskDeviceSendData`, type:'longs', length: CONTROLLER_MAX })),
     { prop: 'hardware.led.inverse', type: 'byte' }, 
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
     { prop: 'UseValueLogger', type: 'byte' },// TODO

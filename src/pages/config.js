@@ -3,7 +3,6 @@ import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
 const formConfig = {
-    onSave: (vals) => { console.log(vals); },
     groups: {
         general: {
             name: 'General',
@@ -54,7 +53,10 @@ const formConfig = {
 
 export class ConfigPage extends Component {
     render(props) {
-
+        formConfig.onSave = (values) => {
+            settings.set(`config`, values);
+            window.location.href='#devices';
+        }
         const config = settings.get('config');
         return (
             <Form config={formConfig} selected={config} />

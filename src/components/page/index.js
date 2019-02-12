@@ -8,6 +8,9 @@ export class Page extends Component {
         <div id="main">
             <div class="header">
                 > {props.page.title}
+                { props.changed ? (
+                    <a style="float: right" href="#tools/diff">CHANGED! Click here to SAVE</a>
+                ) : (null) }
             </div>
 
             <div class="content">

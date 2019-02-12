@@ -21,7 +21,7 @@ export const protocols = [
 const baseFields = { 
     
     dns: { name: 'Locate Controller', type: 'select', options: [{ value: 0, name: 'Use IP Address'}, { value: 1, name: 'Use Hostname' }] },
-    IP: { name: 'IP', type: 'string' },
+    IP: { name: 'IP', type: 'ip' },
     hostname: { name: 'Hostname', type: 'string' },
     port: { name: 'Port', type: 'number' },
     minimal_time_between: { name: 'Minimum Send Interval', type: 'number' },
@@ -101,6 +101,10 @@ export class ControllerEditPage extends Component {
         formConfig.groups.settings.configs.protocol.onChange = (e) => {
             this.setState({ protocol: e.currentTarget.value });
         };
+        formConfig.onSave = (values) => {
+            settings.set(`controllers[${props.params[0]}]`, values);
+            window.location.href='#controllers';
+        }
         
         return (
             <Form config={formConfig} selected={this.config} />

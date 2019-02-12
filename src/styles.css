@@ -63,8 +63,11 @@ The content `<div>` is where all your content goes.
     font-size: 110%;
     background-color: #1f8dd6;
     border-bottom: 1px solid #eee;
-    position: fixed;
-    width: 100%;
+    position: sticky;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 5000;
  }
     .header h1 {
         margin: 0.2em 0;

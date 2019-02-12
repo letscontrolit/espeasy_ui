@@ -77,9 +77,10 @@ const formConfig = {
 export class ConfigHardwarePage extends Component {
     render(props) {
         const config = settings.get('hardware');
-        formConfig.onSave = (vals) => { 
-            settings.set('hardware', vals);
-        };
+        formConfig.onSave = (values) => {
+            settings.set('hardware', values);
+            window.location.href='#devices';
+        }
 
         return (
             <Form config={formConfig} selected={config} />

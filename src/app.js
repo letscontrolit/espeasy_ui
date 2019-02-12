@@ -1,9 +1,9 @@
 import { h, render, Component } from 'preact';
 import { Menu } from './components/menu';
 import { Page } from './components/page';
-import { ConfigPage, DevicesPage, DevicesEditPage, ControllersPage, ControllerEditPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage } from './pages';
-
+import { ConfigPage, DevicesPage, DevicesEditPage, ControllersPage, ControllerEditPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, DiffPage } from './pages';
 import { loadConfig, saveConfig } from './conf/config.dat';
+import { settings } from './lib/settings';
 
 
 const menus = [
@@ -28,7 +28,8 @@ const menus = [
 
 let routes = [
     { title: 'Edit Controller', href:'controllers/edit', component: ControllerEditPage },
-    { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage }
+    { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage },
+    { title: 'Save to Flash', href:'tools/diff', component: DiffPage }
 ];
 menus.map(menu => {
     routes = [...routes, menu, ...menu.children];
@@ -50,6 +51,7 @@ class App extends Component {
         this.state = {
             menu: menus[0],
             page: menus[0],
+            changed: false,
         }
     }
 
@@ -58,7 +60,7 @@ class App extends Component {
         return (
             <div id="layout">
                 <Menu menus={menus} open={true} selected={state.menu} />
-                <Page page={state.page} params={params} />
+                <Page page={state.page} params={params} changed={this.state.changed} />
             </div>
         );
     }
@@ -67,6 +69,10 @@ class App extends Component {
         let current = '';
         const fn = () => {
             const newFragment = getFragment();
+            const diff = settings.diff();
+            if(this.state.changed !== !!diff.length) {
+                this.setState({changed: !this.state.changed})
+            }
             if(current !== newFragment) {
                 current = newFragment;
                 const parts = current.split('/');
@@ -77,7 +83,7 @@ class App extends Component {
                 }
             }
         }
-        this.interval = setInterval(fn, 50);
+        this.interval = setInterval(fn, 100);
     }
 
     componentWillUnmount() {}
