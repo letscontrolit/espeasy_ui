@@ -14,3 +14,4 @@ export * from './discover';
 export * from './controllers.edit';
 export * from './devices.edit';
 export * from './diff';
+export * from './rules.editor';

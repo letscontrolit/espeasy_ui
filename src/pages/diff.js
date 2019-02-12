@@ -16,7 +16,7 @@ export class DiffPage extends Component {
                 {diff.map(change => {
                     return (
                         <div>
-                            <b>{change.path}</b>: before: <b>{JSON.stringify(change.val1)}</b> now:<b>{JSON.stringify(change.val2)}</b> <input name={change.} type='checkbox' defaultChecked={true} />
+                            <b>{change.path}</b>: before: <b>{JSON.stringify(change.val1)}</b> now:<b>{JSON.stringify(change.val2)}</b> <input name={change.path} type='checkbox' defaultChecked={true} />
                         </div>
                     )
                 })}

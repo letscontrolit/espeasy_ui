@@ -5,7 +5,7 @@ const presets = [
         targets: {
           chrome: "72",
         },
-        useBuiltIns: "usage",
+        useBuiltIns: false, //"usage",
       },
     ],
   ];

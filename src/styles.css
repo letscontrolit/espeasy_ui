@@ -59,10 +59,8 @@ The content `<div>` is where all your content goes.
     margin: 0;
     color: white;  /* #333; */
     padding: 0.6em 0 0.6em 0.6em;
-    border-bottom: 1px solid #eee;
     font-size: 110%;
     background-color: #1f8dd6;
-    border-bottom: 1px solid #eee;
     position: sticky;
     left: 0;
     right: 0;
@@ -287,4 +285,88 @@ fieldset > label {
 
 .device .info a {
     float: right;
+}
+
+
+/* editor */
+
+.content.full {
+    max-width: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+.editor {
+    display: flex;
+    flex: 1 1 auto;
+    height: calc(100vh - 42px);
+}
+.sidebar {
+    background: #191818;
+    overflow-y: scroll;
+}
+.canvas {
+    flex: auto;
+}
+.group {
+    margin: 10px;
+}
+.node {
+    border: 1px solid;
+    text-align: center;
+    margin-top: 5px;
+    padding: 10px;
+    user-select: none;
+    border-radius: 5px;
+}
+.node-chart {
+    position: absolute;
+}
+.node.group-TRIGGERS {
+    border-color: cyan;
+    background: lightcyan;
+}
+.node.group-LOGIC {
+    border-color: yellow;
+    background: lightyellow;
+}
+.node.group-ACTIONS {
+    border-color: red;
+    background: linen;
+}
+.node-inputs {
+    float: left;
+    left: -30px;
+    position: relative;
+}
+.node-outputs {
+    float: right;
+    right: -30px;
+    position: relative;
+}
+.node-input, .node-output {
+    border: 1px solid black;
+    width: 15px;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.configbox { 
+    position: fixed;
+    top: 20%;
+    width: 400px;
+    transform: translate(-50%, 0);
+    left: 50%;
+    background: gray;
+    border: 1px solid black;
+}
+.configbox-title {
+    border-bottom: 1px solid black;
+}
+
+.debug {
+    height: 100%;
+    width: 300px;
+    background: gray;
+    white-space: pre-wrap; 
 }

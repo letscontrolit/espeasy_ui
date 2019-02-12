@@ -18039,6 +18039,12 @@ const menus = [//{ title: 'Dashboard', href: '', component: null, children: [] }
   component: _pages__WEBPACK_IMPORTED_MODULE_3__["ControllersPage"],
   children: []
 }, {
+  title: 'Automation',
+  href: 'rules',
+  component: _pages__WEBPACK_IMPORTED_MODULE_3__["RulesEditorPage"],
+  class: 'full',
+  children: []
+}, {
   title: 'Config',
   href: 'config',
   component: _pages__WEBPACK_IMPORTED_MODULE_3__["ConfigPage"],
@@ -18482,7 +18488,7 @@ class Page extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       style: "float: right",
       href: "#tools/diff"
     }, "CHANGED! Click here to SAVE") : null), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-      class: "content"
+      class: `content ${props.page.class}`
     }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(PageComponent, {
       params: props.params
     })));
@@ -19428,6 +19434,818 @@ const devices = [{
 
 /***/ }),
 
+/***/ "./src/lib/espeasy.js":
+/*!****************************!*\
+  !*** ./src/lib/espeasy.js ***!
+  \****************************/
+/*! exports provided: loadDevices, getConfigNodes, storeConfig, loadConfig, storeRule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDevices", function() { return loadDevices; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfigNodes", function() { return getConfigNodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeConfig", function() { return storeConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadConfig", function() { return loadConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
+const loadDevices = async () => {
+  return await fetch('/json').then(response => response.json()).then(response => response.Sensors);
+};
+const getConfigNodes = async () => {
+  const devices = await loadDevices();
+  const vars = [];
+  const nodes = devices.map(device => {
+    device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
+    const result = [{
+      group: 'TRIGGERS',
+      type: device.TaskName,
+      inputs: [],
+      outputs: [1],
+      config: [{
+        name: 'variable',
+        type: 'select',
+        values: device.TaskValues.map(value => value.Name),
+        value: device.TaskValues[0].Name
+      }, {
+        name: 'euqality',
+        type: 'select',
+        values: ['', '=', '<', '>', '<=', '>=', '!='],
+        value: ''
+      }, {
+        name: 'value',
+        type: 'number'
+      }],
+      indent: true,
+      toString: function () {
+        const comparison = this.config[1].value === '' ? 'changes' : `${this.config[1].value} ${this.config[2].value}`;
+        return `when ${this.type}.${this.config[0].value} ${comparison}`;
+      },
+      toDsl: function () {
+        const comparison = this.config[1].value === '' ? '' : `${this.config[1].value}${this.config[2].value}`;
+        return [`on ${this.type}#${this.config[0].value}${comparison} do\n%%output%%\nEndon\n`];
+      }
+    }];
+    let fnNames, fnName, name;
+
+    switch (device.Type) {
+      // todo: need access to GPIO number
+      // case 'Switch input - Switch':
+      //     result.push({
+      //         group: 'ACTIONS',
+      //         type: `${device.TaskName} - switch`,
+      //         inputs: [1],
+      //         outputs: [1],
+      //         config: [{
+      //             name: 'value',
+      //             type: 'number',
+      //         }],
+      //         toString: function () { return `${device.TaskName}.level = ${this.config[0].value}`; },
+      //         toDsl: function () { return [`config,task,${device.TaskName},setlevel,${this.config[0].value}`]; }
+      //     });
+      //     break;
+      case 'Regulator - Level Control':
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - setlevel`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'value',
+            type: 'number'
+          }],
+          toString: function () {
+            return `${device.TaskName}.level = ${this.config[0].value}`;
+          },
+          toDsl: function () {
+            return [`config,task,${device.TaskName},setlevel,${this.config[0].value}`];
+          }
+        });
+        break;
+
+      case 'Extra IO - PCA9685':
+      case 'Switch input - PCF8574':
+      case 'Switch input - MCP23017':
+        fnNames = {
+          'Extra IO - PCA9685': 'PCF',
+          'Switch input - PCF8574': 'PCF',
+          'Switch input - MCP23017': 'MCP'
+        };
+        fnName = fnNames[device.Type];
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - GPIO`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'pin',
+            type: 'select',
+            values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+          }, {
+            name: 'value',
+            type: 'select',
+            values: [0, 1]
+          }],
+          toString: function () {
+            return `${device.TaskName}.pin${this.config[0].value} = ${this.config[1].value}`;
+          },
+          toDsl: function () {
+            return [`${fnName}GPIO,${this.config[0].value},${this.config[1].value}`];
+          }
+        });
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - Pulse`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'pin',
+            type: 'select',
+            values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+          }, {
+            name: 'value',
+            type: 'select',
+            values: [0, 1]
+          }, {
+            name: 'unit',
+            type: 'select',
+            values: ['ms', 's']
+          }, {
+            name: 'duration',
+            type: 'number'
+          }],
+          toString: function () {
+            return `${device.TaskName}.pin${this.config[0].value} = ${this.config[1].value} for ${this.config[3].value}${this.config[2].value}`;
+          },
+          toDsl: function () {
+            if (this.config[2].value === 's') {
+              return [`${fnName}LongPulse,${this.config[0].value},${this.config[1].value},${this.config[2].value}`];
+            } else {
+              return [`${fnName}Pulse,${this.config[0].value},${this.config[1].value},${this.config[2].value}`];
+            }
+          }
+        });
+        break;
+
+      case 'Extra IO - ProMini Extender':
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - GPIO`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'pin',
+            type: 'select',
+            values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+          }, {
+            name: 'value',
+            type: 'select',
+            values: [0, 1]
+          }],
+          toString: function () {
+            return `${device.TaskName}.pin${this.config[0].value} = ${this.config[1].value}`;
+          },
+          toDsl: function () {
+            return [`EXTGPIO,${this.config[0].value},${this.config[1].value}`];
+          }
+        });
+        break;
+
+      case 'Display - OLED SSD1306':
+      case 'Display - LCD2004':
+        fnNames = {
+          'Display - OLED SSD1306': 'OLED',
+          'Display - LCD2004': 'LCD'
+        };
+        fnName = fnNames[device.Type];
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - Write`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'row',
+            type: 'select',
+            values: [1, 2, 3, 4]
+          }, {
+            name: 'column',
+            type: 'select',
+            values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+          }, {
+            name: 'text',
+            type: 'text'
+          }],
+          toString: function () {
+            return `${device.TaskName}.text = ${this.config[2].value}`;
+          },
+          toDsl: function () {
+            return [`${fnName},${this.config[0].value},${this.config[1].value},${this.config[2].value}`];
+          }
+        });
+        break;
+
+      case 'Generic - Dummy Device':
+        result.push({
+          group: 'ACTIONS',
+          type: `${device.TaskName} - Write`,
+          inputs: [1],
+          outputs: [1],
+          config: [{
+            name: 'variable',
+            type: 'select',
+            values: device.TaskValues.map(value => value.Name)
+          }, {
+            name: 'value',
+            type: 'text'
+          }],
+          toString: function () {
+            return `${device.TaskName}.${this.config[0].value} = ${this.config[1].value}`;
+          },
+          toDsl: function () {
+            return [`TaskValueSet,${device.TaskNumber},${this.config[0].values.findIndex(this.config[0].value)},${this.config[1].value}`];
+          }
+        });
+        break;
+    }
+
+    return result;
+  }).flat();
+  return {
+    nodes,
+    vars
+  };
+};
+const storeConfig = async config => {
+  const formData = new FormData();
+  formData.append('edit', 1);
+  formData.append('file', new File([new Blob([config])], "r1.txt"));
+  return await fetch('/upload', {
+    method: 'post',
+    body: formData
+  });
+};
+const loadConfig = async () => {
+  return await fetch('/r1.txt').then(response => response.json());
+};
+const storeRule = async rule => {
+  const formData = new FormData();
+  formData.append('set', 1);
+  formData.append('rules', rule);
+  return await fetch('/rules', {
+    method: 'post',
+    body: formData
+  });
+};
+
+/***/ }),
+
+/***/ "./src/lib/floweditor.js":
+/*!*******************************!*\
+  !*** ./src/lib/floweditor.js ***!
+  \*******************************/
+/*! exports provided: FlowEditor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FlowEditor", function() { return FlowEditor; });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./src/lib/helpers.js");
+ // todo:
+// improve relability of moving elements around
+// global config
+
+const color = '#000000';
+
+const saveChart = renderedNodes => {
+  // find initial nodes (triggers);
+  const triggers = renderedNodes.filter(node => node.group === 'TRIGGERS'); // for each initial node walk the tree and produce one 'rule'
+
+  const result = triggers.map(trigger => {
+    const walkRule = rule => {
+      return {
+        t: rule.type,
+        v: rule.config.map(config => config.value),
+        o: rule.outputs.map(out => out.lines.map(line => walkRule(line.input.nodeObject))),
+        c: [rule.position.x, rule.position.y]
+      };
+    };
+
+    return walkRule(trigger);
+  });
+  return result;
+};
+
+const loadChart = (config, chart, from) => {
+  config.map(config => {
+    let node = chart.renderedNodes.find(n => n.position.x === config.c[0] && n.position.y === config.c[1]);
+
+    if (!node) {
+      const configNode = chart.nodes.find(n => config.t == n.type);
+      node = new NodeUI(chart.canvas, configNode, {
+        x: config.c[0],
+        y: config.c[1]
+      });
+      node.config.map((cfg, i) => {
+        cfg.value = config.v[i];
+      });
+      node.render();
+      chart.renderedNodes.push(node);
+    }
+
+    if (from) {
+      const fromDimension = from.getBoundingClientRect();
+      const toDimension = node.inputs[0].getBoundingClientRect();
+      const lineSvg = new svgArrow(document.body.clientWidth, document.body.clientHeight, 'none', color);
+      chart.canvas.appendChild(lineSvg.element);
+      const x1 = fromDimension.x + fromDimension.width;
+      const y1 = fromDimension.y + fromDimension.height / 2;
+      const x2 = toDimension.x;
+      const y2 = toDimension.y + toDimension.height / 2;
+      lineSvg.setPath(x1, y1, x2, y2);
+      const connection = {
+        output: from,
+        input: node.inputs[0],
+        svg: lineSvg,
+        start: {
+          x: x1,
+          y: y1
+        },
+        end: {
+          x: x2,
+          y: y2
+        }
+      };
+      node.inputs[0].lines.push(connection);
+      from.lines.push(connection);
+    }
+
+    config.o.map((output, outputI) => {
+      loadChart(output, chart, node.outputs[outputI]);
+    });
+  });
+};
+
+const exportChart = renderedNodes => {
+  // find initial nodes (triggers);
+  const triggers = renderedNodes.filter(node => node.group === 'TRIGGERS');
+  let result = ''; // for each initial node walk the tree and produce one 'rule'
+
+  triggers.map(trigger => {
+    const walkRule = (r, i) => {
+      const rules = r.toDsl ? r.toDsl() : [];
+      let ruleset = '';
+      let padding = r.indent ? '  ' : '';
+      r.outputs.map((out, outI) => {
+        let rule = rules[outI] || r.type;
+        let subrule = '';
+
+        if (out.lines) {
+          out.lines.map(line => {
+            subrule += walkRule(line.input.nodeObject, r.indent ? i + 1 : i);
+          });
+          subrule = subrule.split('\n').map(line => padding + line).filter(line => line.trim() !== '').join('\n') + '\n';
+        }
+
+        if (rule.includes('%%output%%')) {
+          rule = rule.replace('%%output%%', subrule);
+        } else {
+          rule += subrule;
+        }
+
+        ruleset += rule;
+      });
+      return ruleset;
+    };
+
+    const rule = walkRule(trigger, 0);
+    result += rule + "\n\n";
+  });
+  return result;
+}; // drag and drop helpers
+
+
+const dNd = {
+  enableNativeDrag: (nodeElement, data) => {
+    nodeElement.draggable = true;
+
+    nodeElement.ondragstart = ev => {
+      Object(_helpers__WEBPACK_IMPORTED_MODULE_0__["getKeys"])(data).map(key => {
+        ev.dataTransfer.setData(key, data[key]);
+      });
+    };
+  },
+  enableNativeDrop: (nodeElement, fn) => {
+    nodeElement.ondragover = ev => {
+      ev.preventDefault();
+    };
+
+    nodeElement.ondrop = fn;
+  } // svg helpers
+
+};
+
+class svgArrow {
+  constructor(width, height, fill, color) {
+    this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.element.setAttribute('style', 'z-index: -1;position:absolute;top:0px;left:0px');
+    this.element.setAttribute('width', width);
+    this.element.setAttribute('height', height);
+    this.element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+    this.line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    this.line.setAttributeNS(null, "fill", fill);
+    this.line.setAttributeNS(null, "stroke", color);
+    this.element.appendChild(this.line);
+  }
+
+  setPath(x1, y1, x2, y2, tension = 0.5) {
+    const delta = (x2 - x1) * tension;
+    const hx1 = x1 + delta;
+    const hy1 = y1;
+    const hx2 = x2 - delta;
+    const hy2 = y2;
+    const path = `M ${x1} ${y1} C ${hx1} ${hy1} ${hx2} ${hy2} ${x2} ${y2}`;
+    this.line.setAttributeNS(null, "d", path);
+  }
+
+} // node configuration (each node in the left menu is represented by an instance of this object)
+
+
+class Node {
+  constructor(conf) {
+    this.type = conf.type;
+    this.group = conf.group;
+    this.config = conf.config.map(config => Object.assign({}, config));
+    this.inputs = conf.inputs.map(input => {});
+    this.outputs = conf.outputs.map(output => {});
+    this.toDsl = conf.toDsl;
+    this.toString = conf.toString;
+    this.indent = conf.indent;
+  }
+
+} // node UI (each node in your flow diagram is represented by an instance of this object)
+
+
+class NodeUI extends Node {
+  constructor(canvas, conf, position) {
+    super(conf);
+    this.canvas = canvas;
+    this.position = position;
+    this.lines = [];
+    this.linesEnd = [];
+    this.toDsl = conf.toDsl;
+    this.toString = conf.toString;
+    this.indent = conf.indent;
+  }
+
+  updateInputsOutputs(inputs, outputs) {
+    inputs.map(input => {
+      const rect = input.getBoundingClientRect();
+      input.lines.map(line => {
+        line.end.x = rect.x;
+        line.end.y = rect.y + rect.height / 2;
+        line.svg.setPath(line.start.x, line.start.y, line.end.x, line.end.y);
+      });
+    });
+    outputs.map(output => {
+      const rect = output.getBoundingClientRect();
+      output.lines.map(line => {
+        line.start.x = rect.x + rect.width;
+        line.start.y = rect.y + rect.height / 2;
+        line.svg.setPath(line.start.x, line.start.y, line.end.x, line.end.y);
+      });
+    });
+  }
+
+  handleMoveEvent(ev) {
+    const shiftX = ev.clientX - this.element.getBoundingClientRect().left;
+    const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
+
+    const onMouseMove = ev => {
+      this.element.style.top = `${ev.y - shiftY}px`;
+      this.element.style.left = `${ev.x - shiftX}px`;
+      this.updateInputsOutputs(this.inputs, this.outputs);
+    };
+
+    const onMouseUp = ev => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  handleDblClickEvent(ev) {
+    if (this.config.length) showConfigBox(this.type, this.config, () => {
+      this.text.textContent = this.toString();
+    });
+  }
+
+  handleRightClickEvent(ev) {
+    this.inputs.map(input => {
+      input.lines.map(line => {
+        line.output.lines = [];
+        line.svg.element.parentNode.removeChild(line.svg.element);
+      });
+      input.lines = [];
+    });
+    this.outputs.map(output => {
+      output.lines.map(line => {
+        const index = line.input.lines.indexOf(line);
+        line.input.lines.splice(index, 1);
+        line.svg.element.parentNode.removeChild(line.svg.element);
+      });
+      output.lines = [];
+    });
+    this.element.parentNode.removeChild(this.element);
+    if (this.destroy) this.destroy();
+    ev.preventDefault();
+    ev.stopPropagation();
+    return false;
+  }
+
+  render() {
+    this.element = document.createElement('div');
+    this.element.nodeObject = this;
+    this.element.className = `node node-chart group-${this.group}`;
+    this.text = document.createElement('span');
+    this.text.textContent = this.toString();
+    this.element.appendChild(this.text);
+    this.element.style.top = `${this.position.y}px`;
+    this.element.style.left = `${this.position.x}px`;
+    const inputs = document.createElement('div');
+    inputs.className = 'node-inputs';
+    this.element.appendChild(inputs);
+    this.inputs.map((val, index) => {
+      const input = this.inputs[index] = document.createElement('div');
+      input.className = 'node-input';
+      input.nodeObject = this;
+      input.lines = [];
+
+      input.onmousedown = ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+      };
+
+      inputs.appendChild(input);
+    });
+    const outputs = document.createElement('div');
+    outputs.className = 'node-outputs';
+    this.element.appendChild(outputs);
+    this.outputs.map((val, index) => {
+      const output = this.outputs[index] = document.createElement('div');
+      output.className = 'node-output';
+      output.nodeObject = this;
+      output.lines = [];
+
+      output.oncontextmenu = ev => {
+        output.lines.map(line => {
+          line.svg.element.parentNode.removeChild(line.svg.element);
+        });
+        output.lines = [];
+        ev.stopPropagation();
+        ev.preventDefault();
+        return false;
+      };
+
+      output.onmousedown = ev => {
+        ev.stopPropagation();
+        if (output.lines.length) return;
+        const rects = output.getBoundingClientRect();
+        const x1 = rects.x + rects.width;
+        const y1 = rects.y + rects.height / 2;
+        const lineSvg = new svgArrow(document.body.clientWidth, document.body.clientHeight, 'none', color);
+        this.canvas.appendChild(lineSvg.element);
+
+        const onMouseMove = ev => {
+          lineSvg.setPath(x1, y1, ev.pageX, ev.pageY);
+        };
+
+        const onMouseUp = ev => {
+          const elemBelow = document.elementFromPoint(ev.clientX, ev.clientY);
+          const input = elemBelow ? elemBelow.closest('.node-input') : null;
+
+          if (!input) {
+            lineSvg.element.remove();
+          } else {
+            const inputRect = input.getBoundingClientRect();
+            const x2 = inputRect.x;
+            const y2 = inputRect.y + inputRect.height / 2;
+            lineSvg.setPath(x1, y1, x2, y2);
+            const connection = {
+              output,
+              input,
+              svg: lineSvg,
+              start: {
+                x: x1,
+                y: y1
+              },
+              end: {
+                x: x2,
+                y: y2
+              }
+            };
+            output.lines.push(connection);
+            input.lines.push(connection);
+          }
+
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      };
+
+      outputs.appendChild(output);
+    });
+    this.element.ondblclick = this.handleDblClickEvent.bind(this);
+    this.element.onmousedown = this.handleMoveEvent.bind(this);
+    this.element.oncontextmenu = this.handleRightClickEvent.bind(this);
+    this.canvas.appendChild(this.element);
+  }
+
+}
+
+const getCfgUI = cfg => {
+  const template = document.createElement('template');
+
+  const getSelectOptions = val => {
+    const selected = val == cfg.value ? 'selected' : '';
+    return `<option ${selected}>${val}</option>`;
+  };
+
+  switch (cfg.type) {
+    case 'text':
+      template.innerHTML = `<div>${cfg.name}: <input type='text' name='${cfg.name}' value='${cfg.value}' /></div>`;
+      break;
+
+    case 'number':
+      template.innerHTML = `<div>${cfg.name}: <input type='number' name='${cfg.name}' value='${cfg.value}' /></div>`;
+      break;
+
+    case 'select':
+      template.innerHTML = `<div>${cfg.name}: <select name='${cfg.name}'>${cfg.values.map(val => getSelectOptions(val))}</select></div>`;
+      break;
+
+    case 'textselect':
+      template.innerHTML = `<div>${cfg.name}<div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;">
+            <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
+                    onchange="document.getElementById('displayValue').value=this.options[this.selectedIndex].text; document.getElementById('idValue').value=this.options[this.selectedIndex].value;">
+                    ${cfg.values.map(val => getSelectOptions(val))}
+            </select>
+            <input type="text" name="${cfg.name}" id="displayValue" 
+                   placeholder="add/select a value" onfocus="this.select()"
+                   style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;"  >
+            <input name="idValue" id="idValue" type="hidden">
+          </div></div>`;
+  }
+
+  return template.content.cloneNode(true);
+};
+
+const showConfigBox = (type, config, onclose) => {
+  const template = document.createElement('template');
+  template.innerHTML = `
+        <div class='configbox'>
+            <div class="configbox-title">${type}</div>
+            <form class="configbox-body" name=configform onsubmit="return false;">
+            </form>
+            <div class="configbox-footer">
+                <button id=ob>OK</button>
+                <button id=cb>Cancel</button>
+            </div>
+        </div>
+    `;
+  const configBox = document.body.appendChild(template.content.cloneNode(true));
+  const body = document.body.querySelectorAll('.configbox-body')[0];
+  const okButton = document.getElementById('ob');
+  const cancelButton = document.getElementById('cb');
+
+  cancelButton.onclick = () => {
+    body.parentElement.remove();
+  };
+
+  okButton.onclick = () => {
+    // set configuration to node
+    config.map(cfg => {
+      cfg.value = document.forms['configform'].elements[cfg.name].value;
+    });
+    body.parentElement.remove();
+    onclose();
+  };
+
+  config.map(cfg => {
+    const cfgUI = getCfgUI(cfg);
+    body.appendChild(cfgUI);
+  });
+};
+
+class FlowEditor {
+  constructor(selector, nodes, onSave) {
+    this.nodes = [];
+    this.renderedNodes = [];
+    this.onSave = onSave;
+    this.element = document.querySelectorAll(selector)[0];
+    nodes.map(nodeConfig => {
+      const node = new Node(nodeConfig);
+      this.nodes.push(node);
+    });
+    this.render();
+    dNd.enableNativeDrop(this.canvas, ev => {
+      const configNode = this.nodes.find(node => node.type == ev.dataTransfer.getData('type'));
+      let node = new NodeUI(this.canvas, configNode, {
+        x: ev.x,
+        y: ev.y
+      });
+      node.render();
+
+      node.destroy = () => {
+        this.renderedNodes.splice(this.renderedNodes.indexOf(node), 1);
+        node = null;
+      }; // todo, remove from rendered nodes on destroy
+
+
+      this.renderedNodes.push(node);
+    });
+  }
+
+  loadConfig(config) {
+    loadChart(config, this);
+  }
+
+  renderContainers() {
+    this.sidebar = document.createElement('div');
+    this.sidebar.className = 'sidebar';
+    this.element.appendChild(this.sidebar);
+    this.canvas = document.createElement('div');
+    this.canvas.className = 'canvas';
+    this.element.appendChild(this.canvas);
+    this.debug = document.createElement('div');
+    this.debug.className = 'debug';
+    const text = document.createElement('div');
+    this.debug.appendChild(text);
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'SAVE';
+
+    saveBtn.onclick = () => {
+      const config = JSON.stringify(saveChart(this.renderedNodes));
+      const rules = exportChart(this.renderedNodes);
+      this.onSave(config, rules);
+    };
+
+    const loadBtn = document.createElement('button');
+    loadBtn.textContent = 'LOAD';
+
+    loadBtn.onclick = () => {
+      const input = prompt('enter config');
+      loadChart(JSON.parse(input), this);
+    };
+
+    const exportBtn = document.createElement('button');
+    exportBtn.textContent = 'EXPORT';
+
+    exportBtn.onclick = () => {
+      const exported = exportChart(this.renderedNodes);
+      text.textContent = exported;
+    };
+
+    this.debug.appendChild(exportBtn);
+    this.debug.appendChild(saveBtn);
+    this.debug.appendChild(loadBtn);
+    this.debug.appendChild(text);
+    this.element.appendChild(this.debug);
+  }
+
+  renderConfigNodes() {
+    const groups = {};
+    this.nodes.map(node => {
+      if (!groups[node.group]) {
+        const group = document.createElement('div');
+        group.className = 'group';
+        group.textContent = node.group;
+        this.sidebar.appendChild(group);
+        groups[node.group] = group;
+      }
+
+      const nodeElement = document.createElement('div');
+      nodeElement.className = `node group-${node.group}`;
+      nodeElement.textContent = node.type;
+      groups[node.group].appendChild(nodeElement);
+      dNd.enableNativeDrag(nodeElement, {
+        type: node.type
+      });
+    });
+  }
+
+  render() {
+    this.renderContainers();
+    this.renderConfigNodes();
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/lib/helpers.js":
 /*!****************************!*\
   !*** ./src/lib/helpers.js ***!
@@ -19449,6 +20267,346 @@ const getKeys = object => {
 
   return keys;
 };
+
+/***/ }),
+
+/***/ "./src/lib/node_definitions.js":
+/*!*************************************!*\
+  !*** ./src/lib/node_definitions.js ***!
+  \*************************************/
+/*! exports provided: nodes */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodes", function() { return nodes; });
+const nodes = [// TRIGGERS
+{
+  group: 'TRIGGERS',
+  type: 'timer',
+  inputs: [],
+  outputs: [1],
+  config: [{
+    name: 'timer',
+    type: 'select',
+    values: [1, 2, 3, 4, 5, 6, 7, 8]
+  }],
+  indent: true,
+  toString: function () {
+    return `timer ${this.config[0].value}`;
+  },
+  toDsl: function () {
+    return [`on Rules#Timer=${this.config[0].value} do\n%%output%%\nEndon\n`];
+  }
+}, {
+  group: 'TRIGGERS',
+  type: 'event',
+  inputs: [],
+  outputs: [1],
+  config: [{
+    name: 'name',
+    type: 'text'
+  }],
+  indent: true,
+  toString: function () {
+    return `event ${this.config[0].value}`;
+  },
+  toDsl: function () {
+    return [`on ${this.config[0].value} do\n%%output%%\nEndon\n`];
+  }
+}, {
+  group: 'TRIGGERS',
+  type: 'clock',
+  inputs: [],
+  outputs: [1],
+  config: [],
+  indent: true,
+  toString: () => {
+    return 'clock';
+  },
+  toDsl: () => {
+    return ['on Clock#Time do\n%%output%%\nEndon\n'];
+  }
+}, {
+  group: 'TRIGGERS',
+  type: 'system boot',
+  inputs: [],
+  outputs: [1],
+  config: [],
+  indent: true,
+  toString: function () {
+    return `on boot`;
+  },
+  toDsl: function () {
+    return [`On System#Boot do\n%%output%%\nEndon\n`];
+  }
+}, {
+  group: 'TRIGGERS',
+  type: 'Device',
+  inputs: [],
+  outputs: [1],
+  config: [],
+  indent: true,
+  toString: function () {
+    return `on boot`;
+  },
+  toDsl: function () {
+    return [`On Device#Value do\n%%output%%\nEndon\n`];
+  }
+}, // LOGIC
+{
+  group: 'LOGIC',
+  type: 'if/else',
+  inputs: [1],
+  outputs: [1, 2],
+  config: [{
+    name: 'variable',
+    type: 'textselect',
+    values: ['Clock#Time']
+  }, {
+    name: 'equality',
+    type: 'select',
+    values: ['=', '<', '>', '<=', '>=', '!=']
+  }, {
+    name: 'value',
+    type: 'text'
+  }],
+  indent: true,
+  toString: function () {
+    return `IF ${this.config[0].value}${this.config[1].value}${this.config[2].value}`;
+  },
+  toDsl: function () {
+    return [`If [${this.config[0].value}]${this.config[1].value}${this.config[2].value}\n%%output%%`, `Else\n%%output%%\nEndif`];
+  }
+}, {
+  group: 'LOGIC',
+  type: 'delay',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'delay',
+    type: 'number'
+  }],
+  toString: function () {
+    return `delay: ${this.config[0].value}`;
+  },
+  toDsl: function () {
+    return [`Delay ${this.config[0].value}\n`];
+  }
+}, // ACTIONS
+{
+  group: 'ACTIONS',
+  type: 'GPIO',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'gpio',
+    type: 'select',
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  }, {
+    name: 'value',
+    type: 'select',
+    values: [0, 1]
+  }],
+  toString: function () {
+    return `GPIO ${this.config[0].value}, ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`GPIO,${this.config[0].value},${this.config[1].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'Pulse',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'gpio',
+    type: 'select',
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+    value: 0
+  }, {
+    name: 'value',
+    type: 'select',
+    values: [0, 1],
+    value: 1
+  }, {
+    name: 'unit',
+    type: 'select',
+    values: ['s', 'ms'],
+    value: 'ms'
+  }, {
+    name: 'duration',
+    type: 'number',
+    value: 1000
+  }],
+  toString: function () {
+    return `Pulse ${this.config[0].value}=${this.config[1].value} for ${this.config[3].value}${this.config[2].value}`;
+  },
+  toDsl: function () {
+    const fn = this.config[2].value === 's' ? 'LongPulse' : 'Pulse';
+    return [`${fn},${this.config[0].value},${this.config[1].value},${this.config[2].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'PWM',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'gpio',
+    type: 'select',
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    value: 0
+  }, {
+    name: 'value',
+    type: 'number',
+    value: 1023
+  }],
+  toString: function () {
+    return `PWM.GPIO${this.config[0].value} = ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`PWM,${this.config[0].value},${this.config[1].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'SERVO',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'gpio',
+    type: 'select',
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    value: 0
+  }, {
+    name: 'servo',
+    type: 'select',
+    values: [1, 2],
+    value: 0
+  }, {
+    name: 'position',
+    type: 'number',
+    value: 90
+  }],
+  toString: function () {
+    return `SERVO.GPIO${this.config[0].value} = ${this.config[2].value}`;
+  },
+  toDsl: function () {
+    return [`Servo,${this.config[1].value},${this.config[0].value},${this.config[2].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'fire event',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'name',
+    type: 'text'
+  }],
+  toString: function () {
+    return `event ${this.config[0].value}`;
+  },
+  toDsl: function () {
+    return [`event,${this.config[0].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'settimer',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'timer',
+    type: 'select',
+    values: [1, 2, 3, 4, 5, 6, 7, 8]
+  }, {
+    name: 'value',
+    type: 'number'
+  }],
+  toString: function () {
+    return `timer${this.config[0].value} = ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`timerSet,${this.config[0].value},${this.config[1].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'MQTT',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'topic',
+    type: 'text'
+  }, {
+    name: 'command',
+    type: 'text'
+  }],
+  toString: function () {
+    return `mqtt ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`Publish ${this.config[0].value},${this.config[1].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'UDP',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'ip',
+    type: 'text'
+  }, {
+    name: 'port',
+    type: 'number'
+  }, {
+    name: 'command',
+    type: 'text'
+  }],
+  toString: function () {
+    return `UDP ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`SendToUDP ${this.config[0].value},${this.config[1].value},${this.config[2].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'HTTP',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'host',
+    type: 'text'
+  }, {
+    name: 'port',
+    type: 'number',
+    value: 80
+  }, {
+    name: 'url',
+    type: 'text'
+  }],
+  toString: function () {
+    return `HTTP ${this.config[2].value}`;
+  },
+  toDsl: function () {
+    return [`SentToHTTP ${this.config[0].value},${this.config[1].value},${this.config[2].value}\n`];
+  }
+}, {
+  group: 'ACTIONS',
+  type: 'ESPEASY',
+  inputs: [1],
+  outputs: [1],
+  config: [{
+    name: 'device',
+    type: 'number'
+  }, {
+    name: 'command',
+    type: 'text'
+  }],
+  toString: function () {
+    return `mqtt ${this.config[1].value}`;
+  },
+  toDsl: function () {
+    return [`SendTo ${this.config[0].value},${this.config[1].value}\n`];
+  }
+}];
 
 /***/ }),
 
@@ -20743,9 +21901,39 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   !*** ./src/pages/diff.js ***!
   \***************************/
 /*! exports provided: DiffPage */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: F:\\_projects\\esphome\\src\\pages\\diff.js: Unexpected token (19:156)\n\n\u001b[0m \u001b[90m 17 | \u001b[39m                    \u001b[36mreturn\u001b[39m (\u001b[0m\n\u001b[0m \u001b[90m 18 | \u001b[39m                        \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 | \u001b[39m                            \u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{change\u001b[33m.\u001b[39mpath}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m\u001b[33m:\u001b[39m before\u001b[33m:\u001b[39m \u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(change\u001b[33m.\u001b[39mval1)}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m now\u001b[33m:\u001b[39m\u001b[33m<\u001b[39m\u001b[33mb\u001b[39m\u001b[33m>\u001b[39m{\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(change\u001b[33m.\u001b[39mval2)}\u001b[33m<\u001b[39m\u001b[35m/b> <input name={change.} type='checkbox' defaultChecked={true} /\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m                                                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 20 | \u001b[39m                        \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mdiv\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 21 | \u001b[39m                    )\u001b[0m\n\u001b[0m \u001b[90m 22 | \u001b[39m                })}\u001b[0m\n    at Object.raise (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3831:17)\n    at Object.unexpected (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5143:16)\n    at Object.parseIdentifierName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6970:18)\n    at Object.parseIdentifier (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6948:23)\n    at Object.parseMaybePrivateName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6312:19)\n    at Object.parseSubscript (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5930:28)\n    at Object.parseSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5882:19)\n    at Object.parseExprSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5872:17)\n    at Object.parseMaybeUnary (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5842:21)\n    at Object.parseExprOps (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5729:23)\n    at Object.parseMaybeConditional (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5702:23)\n    at Object.parseMaybeAssign (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5647:21)\n    at Object.parseExpression (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5595:23)\n    at Object.jsxParseExpressionContainer (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3408:30)\n    at Object.jsxParseAttributeValue (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3370:21)\n    at Object.jsxParseAttribute (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3426:44)\n    at Object.jsxParseOpeningElementAfterName (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3446:28)\n    at Object.jsxParseOpeningElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3439:17)\n    at Object.jsxParseElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3471:33)\n    at Object.jsxParseElementAt (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3487:32)\n    at Object.jsxParseElement (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3540:17)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3547:19)\n    at Object.parseExprSubscripts (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5862:23)\n    at Object.parseMaybeUnary (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5842:21)\n    at Object.parseExprOps (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5729:23)\n    at Object.parseMaybeConditional (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5702:23)\n    at Object.parseMaybeAssign (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:5647:21)\n    at Object.parseParenAndDistinguishExpression (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6435:28)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:6215:21)\n    at Object.parseExprAtom (F:\\_projects\\esphome\\node_modules\\@babel\\parser\\lib\\index.js:3552:20)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return DiffPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+
+
+class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  applyChanges() {
+    _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
+    window.location.href = '#devices';
+  }
+
+  render(props) {
+    const diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
+    console.log(diff);
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
+      ref: ref => this.form = ref
+    }, diff.map(change => {
+      return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, change.path), ": before: ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val1)), " now:", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val2)), " ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        name: change.path,
+        type: "checkbox",
+        defaultChecked: true
+      }));
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+      type: "button",
+      onClick: this.applyChanges
+    }, "APPLY"));
+  }
+
+}
 
 /***/ }),
 
@@ -21016,7 +22204,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, ConfigPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21072,6 +22260,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _diff__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./diff */ "./src/pages/diff.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return _diff__WEBPACK_IMPORTED_MODULE_15__["DiffPage"]; });
+
+/* harmony import */ var _rules_editor__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./rules.editor */ "./src/pages/rules.editor.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RulesEditorPage", function() { return _rules_editor__WEBPACK_IMPORTED_MODULE_16__["RulesEditorPage"]; });
+
 
 
 
@@ -21163,6 +22355,54 @@ class RebootPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       setTimeout(() => {
         window.location.hash = '#devices';
       }, 5000);
+    });
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/rules.editor.js":
+/*!***********************************!*\
+  !*** ./src/pages/rules.editor.js ***!
+  \***********************************/
+/*! exports provided: RulesEditorPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RulesEditorPage", function() { return RulesEditorPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/floweditor */ "./src/lib/floweditor.js");
+/* harmony import */ var _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/node_definitions */ "./src/lib/node_definitions.js");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
+
+
+
+class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.nodes = _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"];
+  }
+
+  render(props) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      class: "editor"
+    });
+  }
+
+  componentDidMount() {
+    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getConfigNodes"])().then(out => {
+      out.nodes.forEach(device => _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
+      const ifElseNode = _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'if/else');
+      out.vars.forEach(v => ifElseNode.config[0].values.push(v));
+      this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], (config, rules) => {
+        Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);
+        Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
+      }); // loadConfig().then(config => {
+      //     this.chart.loadConfig(config);
+      // });
     });
   }
 
