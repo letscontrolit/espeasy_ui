@@ -3,7 +3,7 @@ import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
 export const pins = [
-    { name: 'None', value: null },
+    { name: 'None', value: 255 },
     { name: 'GPIO-0', value: 0 },
     { name: 'GPIO-1', value: 1 },
     { name: 'GPIO-2', value: 2 },

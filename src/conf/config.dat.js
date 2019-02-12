@@ -36,7 +36,7 @@ export const configDatParseConfig = [
     { prop: 'config.log.web_level', type: 'byte' },
     { prop: 'config.log.sd_level', type: 'byte' },
     { prop: 'config.serial.baudrate', type: 'int32' },
-    { prop: 'MessageDelay', type: 'int32' }, // TODO
+    { prop: 'config.mqtt.interval', type: 'int32' },
     { prop: 'config.sleep.awaketime', type: 'byte' },
     { prop: 'CustomCSS', type: 'byte' }, // TODO
     { prop: 'config.dst.enabled', type: 'byte' },
@@ -72,7 +72,7 @@ export const configDatParseConfig = [
     [...Array(CONTROLLER_MAX)].map((x, i) => ({ prop: `controllers[${i}].enabled`, type:'byte' })),
     [...Array(NOTIFICATION_MAX)].map((x, i) => ({ prop: `notifications[${i}].enabled`, type:'byte' })), 
     [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceID`, type:'longs', length: CONTROLLER_MAX })),
-    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceSendData`, type:'longs', length: CONTROLLER_MAX })),
+    [...Array(TASKS_MAX)].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceSendData`, type:'bytes', length: CONTROLLER_MAX })),
     { prop: 'hardware.led.inverse', type: 'byte' }, 
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
     { prop: 'UseValueLogger', type: 'byte' },// TODO
@@ -86,7 +86,17 @@ export const configDatParseConfig = [
     { prop: 'config.mqtt.useunitname', type: 'byte' },
     { prop: 'config.location.lat', type: 'float' },
     { prop: 'config.location.long', type: 'float' },
-    { prop: 'VariousBits1', type: 'int32' },// TODO
+    { prop: 'config._emptyBit', type: 'bit' },
+    { prop: 'config.general.appendunit', type: 'bit' },
+    { prop: 'config.mqtt.changeclientid', type: 'bit' },
+    { prop: 'config.rules.oldengine', type: 'bit' },
+    { prop: 'config._bit4', type: 'bit' },
+    { prop: 'config._bit5', type: 'bit' },
+    { prop: 'config._bit6', type: 'bit' },
+    { prop: 'config._bit7', type: 'bit' },
+    { prop: 'config._bits1', type: 'byte' },
+    { prop: 'config._bits2', type: 'byte' },
+    { prop: 'config._bits3', type: 'byte' },
     { prop: 'ResetFactoryDefaultPreference', type: 'int32' },// TODO
 ].flat();
 

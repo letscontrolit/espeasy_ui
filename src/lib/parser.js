@@ -4,6 +4,8 @@ class DataParser {
     constructor(data) {
         this.view = new DataView(data);
         this.offset = 0;
+        this.bitbyte = 0;
+        this.bitbytepos = 7;
     }
 
     pad(nr) {
@@ -12,7 +14,24 @@ class DataParser {
         }
     }
 
+    bit(signed = false, write = false, val) {
+        if (this.bitbytepos === 7) {
+            if (!write) {
+                this.bitbyte = this.byte();
+                this.bitbytepos = 0;
+            } else {
+                this.byte(signed, write, this.bitbyte);
+            }
+        }
+        if (!write) {
+            return (this.bitbyte >> this.bitbytepos++) & 1;
+        } else {
+            this.bitbyte = val ? (this.bitbyte | (1 << this.bitbytepos++)) : (this.bitbyte & ~(1 << this.bitbytepos++));
+        }
+    }
+
     byte(signed = false, write = false, val) {
+        this.pad(1);
         const fn = `${write ? 'set' : 'get'}${signed ? 'Int8' : 'Uint8'}`;
         const res = this.view[fn](this.offset, val);
         this.offset += 1;

@@ -18255,7 +18255,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
         if (config.type === 'checkbox') {
           val = this.form.elements[id].checked ? 1 : 0;
-        } else if (config.type === 'number') {
+        } else if (config.type === 'number' || config.type === 'ip') {
           val = parseFloat(val);
         } else if (config.type === 'select') {
           val = isNaN(val) ? val : parseInt(val);
@@ -18294,7 +18294,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           type: "number",
           min: "0",
           max: "255",
-          onChange: this.onChange(id, `${varName}.0`, config),
+          onChange: this.onChange(`${id}.0`, `${varName}.0`, config),
           style: "width: 80px",
           value: value ? value[0] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
@@ -18302,7 +18302,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           type: "number",
           min: "0",
           max: "255",
-          onChange: this.onChange(id, `${varName}.1`, config),
+          onChange: this.onChange(`${id}.1`, `${varName}.1`, config),
           style: "width: 80px",
           value: value ? value[1] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
@@ -18310,7 +18310,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           type: "number",
           min: "0",
           max: "255",
-          onChange: this.onChange(id, `${varName}.2`, config),
+          onChange: this.onChange(`${id}.2`, `${varName}.2`, config),
           style: "width: 80px",
           value: value ? value[2] : null
         }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
@@ -18318,7 +18318,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           type: "number",
           min: "0",
           max: "255",
-          onChange: this.onChange(id, `${varName}.3`, config),
+          onChange: this.onChange(`${id}.3`, `${varName}.3`, config),
           style: "width: 80px",
           value: value ? value[3] : null
         })];
@@ -18373,11 +18373,12 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
       class: "pure-control-group"
     }, configArray.map((conf, i) => {
-      const varName = conf.var ? conf.var : configArray.length > 1 ? `${id}.${i}` : id;
+      const varId = configArray.length > 1 ? `${id}.${i}` : id;
+      const varName = conf.var ? conf.var : varId;
       const val = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
       return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
-        for: `${id}.${i}`
-      }, conf.name), this.renderConfig(`${id}.${i}`, conf, val, varName)];
+        for: varId
+      }, conf.name), this.renderConfig(varId, conf, val, varName)];
     }));
   }
 
@@ -18623,10 +18624,9 @@ const configDatParseConfig = [{
   prop: 'config.serial.baudrate',
   type: 'int32'
 }, {
-  prop: 'MessageDelay',
+  prop: 'config.mqtt.interval',
   type: 'int32'
-}, // TODO
-{
+}, {
   prop: 'config.sleep.awaketime',
   type: 'byte'
 }, {
@@ -18741,7 +18741,7 @@ const configDatParseConfig = [{
   length: CONTROLLER_MAX
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].TaskDeviceSendData`,
-  type: 'longs',
+  type: 'bytes',
   length: CONTROLLER_MAX
 })), {
   prop: 'hardware.led.inverse',
@@ -18787,10 +18787,39 @@ const configDatParseConfig = [{
   prop: 'config.location.long',
   type: 'float'
 }, {
-  prop: 'VariousBits1',
-  type: 'int32'
-}, // TODO
-{
+  prop: 'config._emptyBit',
+  type: 'bit'
+}, {
+  prop: 'config.general.appendunit',
+  type: 'bit'
+}, {
+  prop: 'config.mqtt.changeclientid',
+  type: 'bit'
+}, {
+  prop: 'config.rules.oldengine',
+  type: 'bit'
+}, {
+  prop: 'config._bit4',
+  type: 'bit'
+}, {
+  prop: 'config._bit5',
+  type: 'bit'
+}, {
+  prop: 'config._bit6',
+  type: 'bit'
+}, {
+  prop: 'config._bit7',
+  type: 'bit'
+}, {
+  prop: 'config._bits1',
+  type: 'byte'
+}, {
+  prop: 'config._bits2',
+  type: 'byte'
+}, {
+  prop: 'config._bits3',
+  type: 'byte'
+}, {
   prop: 'ResetFactoryDefaultPreference',
   type: 'int32'
 }].flat();
@@ -20798,6 +20827,8 @@ class DataParser {
   constructor(data) {
     this.view = new DataView(data);
     this.offset = 0;
+    this.bitbyte = 0;
+    this.bitbytepos = 7;
   }
 
   pad(nr) {
@@ -20806,7 +20837,25 @@ class DataParser {
     }
   }
 
+  bit(signed = false, write = false, val) {
+    if (this.bitbytepos === 7) {
+      if (!write) {
+        this.bitbyte = this.byte();
+        this.bitbytepos = 0;
+      } else {
+        this.byte(signed, write, this.bitbyte);
+      }
+    }
+
+    if (!write) {
+      return this.bitbyte >> this.bitbytepos++ & 1;
+    } else {
+      this.bitbyte = val ? this.bitbyte | 1 << this.bitbytepos++ : this.bitbyte & ~(1 << this.bitbytepos++);
+    }
+  }
+
   byte(signed = false, write = false, val) {
+    this.pad(1);
     const fn = `${write ? 'set' : 'get'}${signed ? 'Int8' : 'Uint8'}`;
     const res = this.view[fn](this.offset, val);
     this.offset += 1;
@@ -21073,7 +21122,7 @@ const formConfig = {
           name: 'Use NTP',
           type: 'checkbox'
         },
-        hostname: {
+        host: {
           name: 'NTP Hostname',
           type: 'string'
         }
@@ -21083,7 +21132,7 @@ const formConfig = {
       name: 'DST Settings',
       configs: {
         enabled: {
-          name: 'Use NTP',
+          name: 'Use DST',
           type: 'checkbox'
         }
       }
@@ -21256,7 +21305,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const pins = [{
   name: 'None',
-  value: null
+  value: 255
 }, {
   name: 'GPIO-0',
   value: 0
@@ -21462,6 +21511,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const ipBlockLevel = [{
+  name: 'Allow All',
+  value: 0
+}, {
+  name: 'Allow Local Subnet',
+  value: 1
+}, {
+  name: 'Allow IP Range',
+  value: 2
+}];
 const formConfig = {
   groups: {
     general: {
@@ -21522,7 +21581,7 @@ const formConfig = {
         blocklevel: {
           name: 'IP Block Level',
           type: 'select',
-          options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'],
+          options: ipBlockLevel,
           var: 'security[0].IPblockLevel'
         },
         lowerrange: {
@@ -21563,11 +21622,11 @@ const formConfig = {
       configs: {
         awaketime: {
           name: 'Sleep awake time',
-          type: 'string'
+          type: 'number'
         },
         sleeptime: {
           name: 'Sleep time',
-          type: 'string'
+          type: 'number'
         },
         sleeponfailiure: {
           name: 'Sleep on connection failure',

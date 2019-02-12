@@ -34,13 +34,13 @@ const formConfig = {
             name: 'NTP Settings',
             configs: {
                 enabled: { name: 'Use NTP', type: 'checkbox' },
-                hostname: { name: 'NTP Hostname', type: 'string' },
+                host: { name: 'NTP Hostname', type: 'string' },
             }
         },
         dst: {
             name: 'DST Settings',
             configs: {
-                enabled: { name: 'Use NTP', type: 'checkbox' },
+                enabled: { name: 'Use DST', type: 'checkbox' },
             }
         },
         location: {

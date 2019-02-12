@@ -2,6 +2,12 @@ import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 
+const ipBlockLevel = [
+    { name: 'Allow All', value: 0 },
+    { name: 'Allow Local Subnet', value: 1 },
+    { name: 'Allow IP Range', value: 2 },
+]
+
 const formConfig = {
     groups: {
         general: {
@@ -26,7 +32,7 @@ const formConfig = {
         clientIP: {
             name: 'Client IP Filtering',
             configs: {
-                blocklevel: { name: 'IP Block Level', type: 'select', options: ['Allow All', 'Allow Local Subnet', 'Allow IP Range'], var: 'security[0].IPblockLevel' },
+                blocklevel: { name: 'IP Block Level', type: 'select', options: ipBlockLevel, var: 'security[0].IPblockLevel' },
                 lowerrange: { name: 'Access IP lower range', type: 'ip', var: 'security[0].AllowedIPrangeLow' },
                 upperrange: { name: 'Access IP upper range', type: 'ip', var: 'security[0].AllowedIPrangeHigh' },
             }
@@ -43,8 +49,8 @@ const formConfig = {
         sleep: {
             name: 'Sleep Mode',
             configs: {
-                awaketime: { name: 'Sleep awake time', type: 'string' },
-                sleeptime: { name: 'Sleep time', type: 'string' },
+                awaketime: { name: 'Sleep awake time', type: 'number' },
+                sleeptime: { name: 'Sleep time', type: 'number' },
                 sleeponfailiure: { name: 'Sleep on connection failure', type: 'checkbox' },
             }
         }

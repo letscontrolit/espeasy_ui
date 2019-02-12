@@ -34,7 +34,7 @@ export class Form extends Component {
                 let val = this.form.elements[id].value;
                 if (config.type === 'checkbox') {
                     val =  this.form.elements[id].checked ? 1 : 0;
-                } else if (config.type === 'number') {
+                } else if (config.type === 'number' || config.type === 'ip') {
                     val = parseFloat(val);
                 } else if (config.type === 'select') {
                     val = isNaN(val) ? val : parseInt(val);
@@ -59,10 +59,10 @@ export class Form extends Component {
                 ) ;
             case 'ip':
                 return [
-                    (<input id={`${id}.0`} type="number" min="0" max="255" onChange={this.onChange(id, `${varName}.0`, config)} style="width: 80px" value={value ? value[0] : null} />),
-                    (<input id={`${id}.1`} type="number" min="0" max="255" onChange={this.onChange(id, `${varName}.1`, config)} style="width: 80px" value={value ? value[1] : null} />),
-                    (<input id={`${id}.2`} type="number" min="0" max="255" onChange={this.onChange(id, `${varName}.2`, config)} style="width: 80px" value={value ? value[2] : null} />),
-                    (<input id={`${id}.3`} type="number" min="0" max="255" onChange={this.onChange(id, `${varName}.3`, config)} style="width: 80px" value={value ? value[3] : null} />)
+                    (<input id={`${id}.0`} type="number" min="0" max="255" onChange={this.onChange(`${id}.0`, `${varName}.0`, config)} style="width: 80px" value={value ? value[0] : null} />),
+                    (<input id={`${id}.1`} type="number" min="0" max="255" onChange={this.onChange(`${id}.1`, `${varName}.1`, config)} style="width: 80px" value={value ? value[1] : null} />),
+                    (<input id={`${id}.2`} type="number" min="0" max="255" onChange={this.onChange(`${id}.2`, `${varName}.2`, config)} style="width: 80px" value={value ? value[2] : null} />),
+                    (<input id={`${id}.3`} type="number" min="0" max="255" onChange={this.onChange(`${id}.3`, `${varName}.3`, config)} style="width: 80px" value={value ? value[3] : null} />)
                 ]
             case 'password':
                 return (
@@ -100,13 +100,13 @@ export class Form extends Component {
         return (
             <div class="pure-control-group">
                 {configArray.map((conf, i) => {
-                    
-                    const varName = conf.var ? conf.var : (configArray.length > 1 ? `${id}.${i}` : id);
+                    const varId = configArray.length > 1 ? `${id}.${i}` : id;
+                    const varName = conf.var ? conf.var : varId;
                     const val = get(values, varName, null);
 
                     return [
-                        (<label for={`${id}.${i}`}>{conf.name}</label>),
-                        this.renderConfig(`${id}.${i}`, conf, val, varName)
+                        (<label for={varId}>{conf.name}</label>),
+                        this.renderConfig(varId, conf, val, varName)
                     ];
                 })}
             </div>
