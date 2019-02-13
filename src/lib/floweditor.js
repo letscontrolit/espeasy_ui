@@ -206,8 +206,10 @@ class NodeUI extends Node {
         const shiftX = ev.clientX - this.element.getBoundingClientRect().left;
         const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
         const onMouseMove = ev => {
-            this.position.y = ev.y - shiftY;
-            this.position.x = ev.x - shiftX;
+            const newy = ev.y - shiftY;
+            const newx = ev.x - shiftX
+            this.position.y = newy - newy % this.canvas.gridSize;
+            this.position.x = newx - newx % this.canvas.gridSize;
             this.element.style.top = `${this.position.y}px`;
             this.element.style.left = `${this.position.x}px`; 
             this.updateInputsOutputs(this.inputs, this.outputs);
@@ -433,6 +435,7 @@ export class FlowEditor {
         this.renderedNodes = [];
         this.onSave = config.onSave;
         this.canEdit = !config.readOnly;
+        this.gridSize = config.gridSize || 1;
 
         this.element = document.querySelectorAll(selector)[0];
 
@@ -469,6 +472,7 @@ export class FlowEditor {
         this.canvas = document.createElement('div');
         this.canvas.className = 'canvas';
         this.canvas.canEdit = this.canEdit;
+        this.canvas.gridSize = this.gridSize;
         this.element.appendChild(this.canvas);
 
         if (this.canEdit) {

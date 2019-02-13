@@ -23,6 +23,7 @@ export class DashboardEditorPage extends Component {
             out.vars.forEach(v => varNode.config[0].values.push(v)); 
 
             this.chart = new FlowEditor(".editor", nodes, { 
+                gridSize: 10,
                 onSave: (config, rules) => {
                     storeDashboardConfig(config);
                 }
