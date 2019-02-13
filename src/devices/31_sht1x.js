@@ -1,22 +1,24 @@
 import { pins, getTasks, getTaskValues } from './_defs';
 
-const sensorModel = [
-    { value: 11, name: 'DHT11' }, 
-    { value: 22, name: 'DHT22' }, 
-    { value: 12, name: 'DHT12' }, 
-    { value: 23, name: 'Sonoff am2301' }, 
-    { value: 70, name: 'Sonoff si7021' },
-]
-
 export const sht1x = {
     sensor: {
         name: 'Sensor',
         configs: {
-            gpio: { name: 'GPIO Level Low', type: 'select', options: pins, var: 'gpio1' },
-            check_task: { name: 'Check Task', type: 'select', options: getTasks, var: 'configs[0]'  },
-            check_value: { name: 'Check Value', type: 'select', options: getTaskValues, var: 'configs[1]'  },
-            level: { name: 'Set Level', type: 'number', var: 'configs_float[0]' },
-            hysteresis: { name: 'Hysteresis', type: 'number', var: 'configs_float[1]' },
+            pullup: { name: 'Internal PullUp', type: 'checkbox', var: 'pin1pullup' },
+            gpio1: { name: 'GPIO Data', type: 'select', options: pins, var: 'gpio1' },
+            gpio2: { name: 'GPIO SCK', type: 'select', options: pins, var: 'gpio2' },
+        },
+        data: {
+            name: 'Data Acquisition',
+            configs: {
+                send1: { name: 'Send to Controller 1', type: 'checkbox', var: 'TaskDeviceSendData[0]' },
+                send2: { name: 'Send to Controller 2', type: 'checkbox', var: 'TaskDeviceSendData[1]' },
+                send3: { name: 'Send to Controller 3', type: 'checkbox', var: 'TaskDeviceSendData[2]' },
+                idx1: { name: 'IDX1', type: 'number', var: 'TaskDeviceID[0]' },
+                idx2: { name: 'IDX2', type: 'number', var: 'TaskDeviceID[1]' },
+                idx3: { name: 'IDX3', type: 'number', var: 'TaskDeviceID[2]' },
+                interval: { name: 'Interval', type: 'number', var: 'interval' },
+            }
         }
     },
 }
