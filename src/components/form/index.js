@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
-import { get, set } from 'lodash';
-import { getKeys } from '../../lib/helpers';
+import { get, set, getKeys } from '../../lib/helpers';
 import { settings } from '../../lib/settings';
 
 export class Form extends Component {

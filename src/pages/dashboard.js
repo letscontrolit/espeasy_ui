@@ -19,10 +19,9 @@ export class DashboardPage extends Component {
                     const style = `top: ${cfg.c[1]}px; left: ${cfg.c[0]}px;`;
                     const context = {
                         config: cfg.v.map(v => ({ value: v })),
-                        vals: this.state.vals,
                     }
                     return (
-                        <div class={cssClass} style={style} dangerouslySetInnerHTML={{ __html: node.toHtml.bind(context)()}}></div>
+                        <div class={cssClass} style={style} dangerouslySetInnerHTML={{ __html: node.toHtml.bind(context)(this.state.vals)}}></div>
                     )
                 })}
             </div>

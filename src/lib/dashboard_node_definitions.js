@@ -22,8 +22,8 @@ export const nodes = [
             values: [],
             value: 0
         }],
-        toHtml: function() {
-            return `${this.config[0].value}: ${this.vals[this.config[0].value]}`;
+        toHtml: function(vals) {
+            return `${this.config[0].value}: ${vals ? vals[this.config[0].value] : 0}`;
         }
     }, {
         group: 'ACTIONS',
@@ -66,8 +66,8 @@ export const nodes = [
             type: 'text',
             value: 'set_level,1',
         }],
-        toHtml: function() {
-            return `${this.config[0].value}: <input type="number" min="${this.config[1].value}" max="${this.config[2].value}" value="${this.vals[this.config[0].value]}" />`;
+        toHtml: function(vals) {
+            return `${this.config[0].value}: <input type="number" min="${this.config[1].value}" max="${this.config[2].value}" value="${vals ? vals[this.config[0].value] : 0}" />`;
         }
     }
 ]

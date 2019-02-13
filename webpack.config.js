@@ -1,16 +1,18 @@
 var path = require('path');
 var webpack = require('webpack');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = {
-    mode: 'development',
+module.exports = env => ({
+    mode: env.production ? 'production' : 'development',
     entry: './src/app.js',
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'app.js'
     },
     plugins: [
-        new LiveReloadPlugin()
+        new LiveReloadPlugin(),
+        new BundleAnalyzerPlugin()
     ],
     module: {
         rules: [
@@ -27,4 +29,4 @@ module.exports = {
         colors: true
     },
     devtool: 'source-map'
-};
+});

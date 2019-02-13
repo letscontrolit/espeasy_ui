@@ -1,4 +1,4 @@
-import { get, set } from 'lodash';
+import { get, set } from './helpers';
 
 class DataParser {
     constructor(data) {

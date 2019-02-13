@@ -1,5 +1,4 @@
-import { get, set, merge } from 'lodash';
-import { getKeys } from './helpers';
+import { get, set, merge, getKeys } from './helpers';
 
 const diff = (obj1, obj2, path = '') => {
     return getKeys(obj1).map(key => {
