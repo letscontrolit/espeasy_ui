@@ -66,21 +66,18 @@ export const devices = [
     { name: 'Environment - SHT1X', value: 31, fields: sht1x },
     { name: 'Environment - MS5611 (GY-63)', value: 32, fields: ms5611 },
     { name: 'Generic - Dummy Device', value: 33, fields: dummyDevice },
+    { name: 'Environment - DHT12 (I2C)', value: 34, fields: dummyDevice },
+    { name: 'Display - OLED SSD1306/SH1106 Framed', value: 36, fields: dummyDevice },
+    { name: 'Generic - MQTT Import', value: 37, fields: dummyDevice },
+    { name: 'Output - NeoPixel (Basic)', value: 38, fields: dummyDevice },
+    { name: 'Environment - Thermocouple', value: 39, fields: dummyDevice },
+    { name: 'Output - NeoPixel (Word Clock)', value: 41, fields: dummyDevice },
+    { name: 'Output - NeoPixel (Candle)', value: 42, fields: dummyDevice },
+    { name: 'Output - Clock', value: 43, fields: dummyDevice },
+    { name: 'Communication - P1 Wifi Gateway', value: 44, fields: dummyDevice },
+    { name: 'Gases - CO2 MH-Z19', value: 49, fields: dummyDevice },
+    { name: 'Gases - CO2 Senseair', value: 52, fields: dummyDevice },
+    { name: 'Dust - SDS011/018/198', value: 56, fields: dummyDevice },
+    { name: 'Switch Input - Rotary Encoder', value: 59, fields: dummyDevice },
+    { name: 'Keypad - TTP229 Touc', value: 63, fields: dummyDevice },
 ];
-
-/*
-<option value="34">Environment - DHT12 (I2C)</option>
-<option value="36">Display - OLED SSD1306/SH1106 Framed</option>
-<option value="37">Generic - MQTT Import</option>
-<option value="38">Output - NeoPixel (Basic)</option>
-<option value="39">Environment - Thermocouple</option>
-<option value="41">Output - NeoPixel (Word Clock)</option>
-<option value="42">Output - NeoPixel (Candle)</option>
-<option value="43">Output - Clock</option>
-<option value="44">Communication - P1 Wifi Gateway</option>
-<option value="49">Gases - CO2 MH-Z19</option>
-<option value="52">Gases - CO2 Senseair</option>
-<option value="56">Dust - SDS011/018/198</option>
-<option value="59">Switch Input - Rotary Encoder</option>
-<option value="63">Keypad - TTP229 Touch</option>
-*/
