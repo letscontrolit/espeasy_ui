@@ -371,16 +371,16 @@ const getCfgUI = cfg => {
 
     switch (cfg.type) {
         case 'text':
-            template.innerHTML = `<div>${cfg.name}: <input type='text' name='${cfg.name}' value='${cfg.value}' /></div>`;
+            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><input type='text' name='${cfg.name}' value='${cfg.value}' /></div>`;
             break;
         case 'number':
-            template.innerHTML = `<div>${cfg.name}: <input type='number' name='${cfg.name}' value='${cfg.value}' /></div>`;
+            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><input type='number' name='${cfg.name}' value='${cfg.value}' /></div>`;
             break;
         case 'select':
-            template.innerHTML = `<div>${cfg.name}: <select name='${cfg.name}'>${cfg.values.map(val => (getSelectOptions(val)))}</select></div>`;
+            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><select name='${cfg.name}'>${cfg.values.map(val => (getSelectOptions(val)))}</select></div>`;
             break;
         case 'textselect':
-            template.innerHTML = `<div>${cfg.name}<div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;">
+            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;">
             <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
                     onchange="document.getElementById('displayValue').value=this.options[this.selectedIndex].text; document.getElementById('idValue').value=this.options[this.selectedIndex].value;">
                     ${cfg.values.map(val => (getSelectOptions(val)))}
@@ -398,29 +398,33 @@ const showConfigBox = (type, config, onclose) => {
     const template = document.createElement('template');
     template.innerHTML = `
         <div class='configbox'>
-            <div class="configbox-title">${type}</div>
-            <form class="configbox-body" name=configform onsubmit="return false;">
+            <form class="pure-form pure-form-aligned" name=configform onsubmit="return false;">
+                <fieldset>
+                    <label>${type}</label>
+                    <div class="configbox-body"></div>
+                </fieldset>
             </form>
             <div class="configbox-footer">
-                <button id=ob>OK</button>
-                <button id=cb>Cancel</button>
+                <button class="pure-button pure-button-primary" id=ob>OK</button>
+                <button class="pure-button" id=cb>Cancel</button>
             </div>
         </div>
     `;
 
-    const configBox = document.body.appendChild(template.content.cloneNode(true));
+    document.body.appendChild(template.content.cloneNode(true));
+    const configBox = document.body.querySelectorAll('.configbox')[0];
     const body = document.body.querySelectorAll('.configbox-body')[0];
     const okButton = document.getElementById('ob');
     const cancelButton = document.getElementById('cb');
     cancelButton.onclick = () => {
-        body.parentElement.remove();
+        configBox.remove();
     }
     okButton.onclick = () => {
         // set configuration to node
         config.map(cfg => {
             cfg.value = document.forms['configform'].elements[cfg.name].value;
         });
-        body.parentElement.remove();
+        configBox.remove();
         onclose();
     }
     config.map(cfg => {

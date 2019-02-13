@@ -364,11 +364,13 @@ fieldset > label {
     width: 400px;
     transform: translate(-50%, 0);
     left: 50%;
-    background: gray;
-    border: 1px solid black;
+    background: aliceblue;
+    border: 1px solid #1f8dd6;
 }
-.configbox-title {
-    border-bottom: 1px solid black;
+
+.configbox-footer {
+    text-align: right;
+    padding: 5px;
 }
 
 .debug {
@@ -394,4 +396,11 @@ fieldset > label {
 }
 .content .log_level4 {
     color: red;
+}
+
+.pure-form fieldset {
+    padding: 0 0 1em
+}
+.pure-form label {
+    margin: 0 0 .5em 0;
 }
