@@ -19080,6 +19080,105 @@ const saveConfig = () => {
 
 /***/ }),
 
+/***/ "./src/devices/10_light_lux.js":
+/*!*************************************!*\
+  !*** ./src/devices/10_light_lux.js ***!
+  \*************************************/
+/*! exports provided: bh1750 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bh1750", function() { return bh1750; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const i2c_address = [{
+  value: 35,
+  name: '0x23 (35) - default'
+}, {
+  value: 92,
+  name: '0x5c (92)'
+}];
+const measurmentMode = [{
+  value: 1,
+  name: 'RESOLUTION_LOW'
+}, {
+  value: 2,
+  name: 'RESOLUTION_NORMAL'
+}, {
+  value: 3,
+  name: 'RESOLUTION_HIGH'
+}, {
+  value: 99,
+  name: 'RESOLUTION_AUTO_HIGH'
+}];
+const bh1750 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      i2c_address: {
+        name: 'I2C Address',
+        type: 'select',
+        options: i2c_address,
+        var: 'configs[0]'
+      },
+      mode: {
+        name: 'Measurement mode',
+        type: 'select',
+        options: measurmentMode,
+        var: 'configs[1]'
+      },
+      send_to_sleep: {
+        name: 'Send sensor to sleep',
+        type: 'checkbox',
+        var: 'configs[2]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./src/devices/1_input_switch.js":
 /*!***************************************!*\
   !*** ./src/devices/1_input_switch.js ***!
@@ -19306,6 +19405,101 @@ const levelControl = {
 
 /***/ }),
 
+/***/ "./src/devices/2_analog_input.js":
+/*!***************************************!*\
+  !*** ./src/devices/2_analog_input.js ***!
+  \***************************************/
+/*! exports provided: analogInput */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "analogInput", function() { return analogInput; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const analogInput = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      oversampling: {
+        name: 'Oversampling',
+        type: 'checkbox',
+        var: 'configs[0]'
+      }
+    }
+  },
+  advanced: {
+    name: 'Two point calibration',
+    configs: {
+      enabled: {
+        name: 'Calibration Enabled',
+        type: 'number',
+        var: 'configs[3]'
+      },
+      point1: [{
+        name: 'Point 1',
+        type: 'number',
+        var: 'configs_long[0]'
+      }, {
+        name: '=',
+        type: 'number',
+        var: 'configs_float[1]'
+      }],
+      point2: [{
+        name: 'Point 2',
+        type: 'number',
+        var: 'configs_long[1]'
+      }, {
+        name: '=',
+        type: 'number',
+        var: 'configs_float[1]'
+      }]
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./src/devices/33_dummy_device.js":
 /*!****************************************!*\
   !*** ./src/devices/33_dummy_device.js ***!
@@ -19363,6 +19557,185 @@ const dummyDevice = {
       interval: {
         name: 'Interval',
         type: 'number'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/3_generic_pulse.js":
+/*!****************************************!*\
+  !*** ./src/devices/3_generic_pulse.js ***!
+  \****************************************/
+/*! exports provided: genericPulse */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "genericPulse", function() { return genericPulse; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const modeTypes = [{
+  value: 0,
+  name: 'LOW'
+}, {
+  value: 1,
+  name: 'CHANGE'
+}, {
+  value: 2,
+  name: 'RISING'
+}, {
+  value: 3,
+  name: 'FALLING'
+}];
+const counterTypes = [{
+  value: 0,
+  name: 'Delta'
+}, {
+  value: 1,
+  name: 'Delta/Total/Time'
+}, {
+  value: 2,
+  name: 'Total'
+}, {
+  value: 3,
+  name: 'Delta/Total'
+}];
+const genericPulse = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio: {
+        name: 'GPIO',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      debounce: {
+        name: 'De-bounce (ms)',
+        type: 'number',
+        var: 'configs[0]'
+      },
+      counter_type: {
+        name: 'Counter Type',
+        type: 'select',
+        options: counterTypes,
+        var: 'configs[1]'
+      },
+      mode_type: {
+        name: 'Switch Button Type',
+        type: 'select',
+        modeTypes,
+        var: 'configs[2]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/4_ds18b20.js":
+/*!**********************************!*\
+  !*** ./src/devices/4_ds18b20.js ***!
+  \**********************************/
+/*! exports provided: ds18b20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ds18b20", function() { return ds18b20; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const ds18b20 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio: {
+        name: 'GPIO',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
       }
     }
   }
@@ -19429,6 +19802,382 @@ const dht = {
 
 /***/ }),
 
+/***/ "./src/devices/6_bmp085.js":
+/*!*********************************!*\
+  !*** ./src/devices/6_bmp085.js ***!
+  \*********************************/
+/*! exports provided: bmp085 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bmp085", function() { return bmp085; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
+}, {
+  value: 1,
+  name: 'Active on LOW'
+}, {
+  value: 2,
+  name: 'Active on HIGH'
+}, {
+  value: 3,
+  name: 'Active on LOW and HIGH'
+}];
+const bmp085 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      altitude: {
+        name: 'Altitude',
+        type: 'number',
+        var: 'configs[1]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/7_pcf8591.js":
+/*!**********************************!*\
+  !*** ./src/devices/7_pcf8591.js ***!
+  \**********************************/
+/*! exports provided: pcf8591 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pcf8591", function() { return pcf8591; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
+}, {
+  value: 1,
+  name: 'Active on LOW'
+}, {
+  value: 2,
+  name: 'Active on HIGH'
+}, {
+  value: 3,
+  name: 'Active on LOW and HIGH'
+}];
+const pcf8591 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      port: {
+        name: 'PORT',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio4'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/8_rfid.js":
+/*!*******************************!*\
+  !*** ./src/devices/8_rfid.js ***!
+  \*******************************/
+/*! exports provided: rfidWeigand */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rfidWeigand", function() { return rfidWeigand; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const weigandType = [{
+  value: 26,
+  name: '26 Bits'
+}, {
+  value: 34,
+  name: '34 Bits'
+}];
+const rfidWeigand = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio1: {
+        name: 'GPIO D0 (green, 5V)',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      gpio2: {
+        name: 'GPIO D1 (white, 5V)',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio2'
+      },
+      type: {
+        name: 'Weigand Type',
+        type: 'select',
+        options: weigandType,
+        var: 'configs[0]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/9_io_mcp.js":
+/*!*********************************!*\
+  !*** ./src/devices/9_io_mcp.js ***!
+  \*********************************/
+/*! exports provided: inputMcp */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inputMcp", function() { return inputMcp; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
+}, {
+  value: 1,
+  name: 'Active on LOW'
+}, {
+  value: 2,
+  name: 'Active on HIGH'
+}, {
+  value: 3,
+  name: 'Active on LOW and HIGH'
+}];
+const inputMcp = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      port: {
+        name: 'Port',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio4'
+      },
+      inversed: {
+        name: 'Inversed logic',
+        type: 'checkbox',
+        var: 'pin1inversed'
+      },
+      send_boot_state: {
+        name: 'Send Boot State',
+        type: 'checkbox',
+        var: 'configs[3]'
+      }
+    }
+  },
+  advanced: {
+    name: 'Advanced event management',
+    configs: {
+      debounce: {
+        name: 'De-bounce (ms)',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      dblclick: {
+        name: 'Doublclick Event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[4]'
+      },
+      dblclick_interval: {
+        name: 'Doubleclick Max interval (ms)',
+        type: 'number',
+        var: 'configs_float[1]'
+      },
+      longpress: {
+        name: 'Longpress event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[5]'
+      },
+      longpress_interval: {
+        name: 'Longpress min interval (ms)',
+        type: 'number',
+        var: 'configs_float[2]'
+      },
+      safe_button: {
+        name: 'Use safe button',
+        type: 'checkbox',
+        var: 'configs_float[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./src/devices/_defs.js":
 /*!******************************!*\
   !*** ./src/devices/_defs.js ***!
@@ -19469,9 +20218,25 @@ const getTaskValues = () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "devices", function() { return devices; });
 /* harmony import */ var _1_input_switch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./1_input_switch */ "./src/devices/1_input_switch.js");
-/* harmony import */ var _5_dht__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./5_dht */ "./src/devices/5_dht.js");
-/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
-/* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
+/* harmony import */ var _2_analog_input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./2_analog_input */ "./src/devices/2_analog_input.js");
+/* harmony import */ var _3_generic_pulse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./3_generic_pulse */ "./src/devices/3_generic_pulse.js");
+/* harmony import */ var _4_ds18b20__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./4_ds18b20 */ "./src/devices/4_ds18b20.js");
+/* harmony import */ var _5_dht__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./5_dht */ "./src/devices/5_dht.js");
+/* harmony import */ var _6_bmp085__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./6_bmp085 */ "./src/devices/6_bmp085.js");
+/* harmony import */ var _7_pcf8591__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./7_pcf8591 */ "./src/devices/7_pcf8591.js");
+/* harmony import */ var _8_rfid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./8_rfid */ "./src/devices/8_rfid.js");
+/* harmony import */ var _9_io_mcp__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./9_io_mcp */ "./src/devices/9_io_mcp.js");
+/* harmony import */ var _10_light_lux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./10_light_lux */ "./src/devices/10_light_lux.js");
+/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
+/* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
+
+
+
+
+
+
+
+
 
 
 
@@ -19481,21 +20246,53 @@ const devices = [{
   value: 0,
   fields: []
 }, {
-  name: 'Environment - DHT11/12/22  SONOFF2301/7021',
-  value: 5,
-  fields: _5_dht__WEBPACK_IMPORTED_MODULE_1__["dht"]
-}, {
-  name: 'Regulator - Level Control',
-  value: 21,
-  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_2__["levelControl"]
-}, {
-  name: 'Generic - Dummy Device',
-  value: 33,
-  fields: _33_dummy_device__WEBPACK_IMPORTED_MODULE_3__["dummyDevice"]
-}, {
   name: 'Switch input - Switch',
   value: 1,
   fields: _1_input_switch__WEBPACK_IMPORTED_MODULE_0__["inputSwitch"]
+}, {
+  name: 'Analog input - internal',
+  value: 2,
+  fields: _2_analog_input__WEBPACK_IMPORTED_MODULE_1__["analogInput"]
+}, {
+  name: 'Generic - Pulse counter',
+  value: 3,
+  fields: _3_generic_pulse__WEBPACK_IMPORTED_MODULE_2__["genericPulse"]
+}, {
+  name: 'Environment - DS18b20',
+  value: 4,
+  fields: _4_ds18b20__WEBPACK_IMPORTED_MODULE_3__["ds18b20"]
+}, {
+  name: 'Environment - DHT11/12/22  SONOFF2301/7021',
+  value: 5,
+  fields: _5_dht__WEBPACK_IMPORTED_MODULE_4__["dht"]
+}, {
+  name: 'Environment - BMP085/180',
+  value: 6,
+  fields: _6_bmp085__WEBPACK_IMPORTED_MODULE_5__["bmp085"]
+}, {
+  name: 'Analog input - PCF8591',
+  value: 7,
+  fields: _7_pcf8591__WEBPACK_IMPORTED_MODULE_6__["pcf8591"]
+}, {
+  name: 'RFID - Wiegand',
+  value: 8,
+  fields: _8_rfid__WEBPACK_IMPORTED_MODULE_7__["rfidWeigand"]
+}, {
+  name: 'Switch input - MCP23017',
+  value: 9,
+  fields: _9_io_mcp__WEBPACK_IMPORTED_MODULE_8__["inputMcp"]
+}, {
+  name: 'Light/Lux - BH1750',
+  value: 10,
+  fields: _10_light_lux__WEBPACK_IMPORTED_MODULE_9__["bh1750"]
+}, {
+  name: 'Regulator - Level Control',
+  value: 21,
+  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_10__["levelControl"]
+}, {
+  name: 'Generic - Dummy Device',
+  value: 33,
+  fields: _33_dummy_device__WEBPACK_IMPORTED_MODULE_11__["dummyDevice"]
 }];
 
 /***/ }),
