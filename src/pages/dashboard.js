@@ -38,4 +38,8 @@ export class DashboardPage extends Component {
             this.setState({ vals: variables });
         }, 1000);
     }
+
+    componentWillUnmount() {
+        if (this.interval) clearInterval(this.interval);
+    }
 }
