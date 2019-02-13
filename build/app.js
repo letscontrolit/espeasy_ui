@@ -19880,25 +19880,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pcf8574", function() { return pcf8574; });
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
-const i2c_address = [{
-  value: 35,
-  name: '0x23 (35) - default'
+const eventTypes = [{
+  value: 0,
+  name: 'Disabled'
 }, {
-  value: 92,
-  name: '0x5c (92)'
-}];
-const measurmentMode = [{
   value: 1,
-  name: 'RESOLUTION_LOW'
+  name: 'Active on LOW'
 }, {
   value: 2,
-  name: 'RESOLUTION_NORMAL'
+  name: 'Active on HIGH'
 }, {
   value: 3,
-  name: 'RESOLUTION_HIGH'
-}, {
-  value: 99,
-  name: 'RESOLUTION_AUTO_HIGH'
+  name: 'Active on LOW and HIGH'
 }];
 const pcf8574 = {
   sensor: {
@@ -21436,17 +21429,18 @@ const getConfigNodes = async () => {
   const devices = await loadDevices();
   const vars = [];
   const nodes = devices.map(device => {
-    device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
+    const taskValues = device.TaskValues || [];
+    taskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
     const result = [{
       group: 'TRIGGERS',
-      type: device.TaskName,
+      type: device.TaskName || `${device.TaskNumber}-${device.Type}`,
       inputs: [],
       outputs: [1],
       config: [{
         name: 'variable',
         type: 'select',
-        values: device.TaskValues.map(value => value.Name),
-        value: device.TaskValues[0].Name
+        values: taskValues.map(value => value.Name),
+        value: taskValues.length ? taskValues[0].Name : ''
       }, {
         name: 'euqality',
         type: 'select',
@@ -21633,7 +21627,7 @@ const getConfigNodes = async () => {
           config: [{
             name: 'variable',
             type: 'select',
-            values: device.TaskValues.map(value => value.Name)
+            values: taskValues.map(value => value.Name)
           }, {
             name: 'value',
             type: 'text'
@@ -21929,8 +21923,10 @@ class NodeUI extends Node {
     const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
 
     const onMouseMove = ev => {
-      this.element.style.top = `${ev.y - shiftY}px`;
-      this.element.style.left = `${ev.x - shiftX}px`;
+      this.position.y = ev.y - shiftY;
+      this.position.x = ev.x - shiftX;
+      this.element.style.top = `${this.position.y}px`;
+      this.element.style.left = `${this.position.x}px`;
       this.updateInputsOutputs(this.inputs, this.outputs);
     };
 
@@ -22184,8 +22180,7 @@ class FlowEditor {
       node.destroy = () => {
         this.renderedNodes.splice(this.renderedNodes.indexOf(node), 1);
         node = null;
-      }; // todo, remove from rendered nodes on destroy
-
+      };
 
       this.renderedNodes.push(node);
     });
@@ -24558,9 +24553,10 @@ class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);
           Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
         }
-      }); // loadConfig().then(config => {
-      //     this.chart.loadConfig(config);
-      // });
+      });
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadConfig"])().then(config => {
+        this.chart.loadConfig(config);
+      });
     });
   }
 

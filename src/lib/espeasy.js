@@ -6,17 +6,18 @@ export const getConfigNodes = async () => {
     const devices = await loadDevices();
     const vars = [];
     const nodes = devices.map(device => {
-        device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
+        const taskValues = device.TaskValues || [];
+        taskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
         const result = [{
             group: 'TRIGGERS',
-            type: device.TaskName,
+            type: device.TaskName || `${device.TaskNumber}-${device.Type}`,
             inputs: [],
             outputs: [1],
             config: [{
                 name: 'variable',
                 type: 'select',
-                values: device.TaskValues.map(value => value.Name),
-                value: device.TaskValues[0].Name,
+                values: taskValues.map(value => value.Name),
+                value: taskValues.length ? taskValues[0].Name : '',
             }, {
                 name: 'euqality',
                 type: 'select',
@@ -181,7 +182,7 @@ export const getConfigNodes = async () => {
                     config: [{
                         name: 'variable',
                         type: 'select',
-                        values: device.TaskValues.map(value => value.Name),
+                        values: taskValues.map(value => value.Name),
                     }, {
                         name: 'value',
                         type: 'text',

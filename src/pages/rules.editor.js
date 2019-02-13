@@ -29,9 +29,9 @@ export class RulesEditorPage extends Component {
                 }
             });
     
-            // loadConfig().then(config => {
-            //     this.chart.loadConfig(config);
-            // });
+            loadConfig().then(config => {
+                this.chart.loadConfig(config);
+            });
         });
     }
 }

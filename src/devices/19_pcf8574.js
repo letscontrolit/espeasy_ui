@@ -1,15 +1,10 @@
 import { pins } from './_defs';
 
-const i2c_address = [
-    { value: 35, name: '0x23 (35) - default' }, 
-    { value: 92, name: '0x5c (92)' }, 
-]
-
-const measurmentMode = [
-    { value: 1, name: 'RESOLUTION_LOW' }, 
-    { value: 2, name: 'RESOLUTION_NORMAL' }, 
-    { value: 3, name: 'RESOLUTION_HIGH' }, 
-    { value: 99, name: 'RESOLUTION_AUTO_HIGH' }, 
+const eventTypes = [
+    { value: 0, name: 'Disabled' }, 
+    { value: 1, name: 'Active on LOW' }, 
+    { value: 2, name: 'Active on HIGH' }, 
+    { value: 3, name: 'Active on LOW and HIGH' }, 
 ]
 
 export const pcf8574 = {

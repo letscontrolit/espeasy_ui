@@ -206,8 +206,10 @@ class NodeUI extends Node {
         const shiftX = ev.clientX - this.element.getBoundingClientRect().left;
         const shiftY = ev.clientY - this.element.getBoundingClientRect().top;
         const onMouseMove = ev => {
-            this.element.style.top = `${ev.y - shiftY}px`;
-            this.element.style.left = `${ev.x - shiftX}px`; 
+            this.position.y = ev.y - shiftY;
+            this.position.x = ev.x - shiftX;
+            this.element.style.top = `${this.position.y}px`;
+            this.element.style.left = `${this.position.x}px`; 
             this.updateInputsOutputs(this.inputs, this.outputs);
         }
         const onMouseUp = ev => {
@@ -449,7 +451,6 @@ export class FlowEditor {
                 this.renderedNodes.splice( this.renderedNodes.indexOf(node), 1 );
                 node = null;
             }
-            // todo, remove from rendered nodes on destroy
             this.renderedNodes.push(node);            
         });
     }
