@@ -19044,7 +19044,7 @@ const saveData = function () {
 }();
 
 let ii = 0;
-const saveConfig = () => {
+const saveConfig = (save = true) => {
   if (ii === 0) {
     const buffer = new ArrayBuffer(65536);
     Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings, configDatParseConfig);
@@ -19060,7 +19060,7 @@ const saveConfig = () => {
         extra: Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings.controllers[i].extra, ControllerSettings, 1024 * 29 + 1024 * 2 * i)
       };
     });
-    saveData(buffer, 'config.dat');
+    if (save) saveData(buffer, 'config.dat');else return buffer;
   } else if (ii === 1) {
     const bufferNotifications = new ArrayBuffer(4096);
     [...Array(3)].map((x, i) => {
@@ -21413,7 +21413,7 @@ const nodes = [// TRIGGERS
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeConfig, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
+/*! exports provided: loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeConfig, storeFile, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21423,6 +21423,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardConfigNodes", function() { return getDashboardConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeConfig", function() { return storeConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeFile", function() { return storeFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadConfig", function() { return loadConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
@@ -21681,6 +21682,15 @@ const storeConfig = async config => {
   const formData = new FormData();
   formData.append('edit', 1);
   formData.append('file', new File([new Blob([config])], "r1.txt"));
+  return await fetch('/upload', {
+    method: 'post',
+    body: formData
+  });
+};
+const storeFile = async (filename, data) => {
+  const formData = new FormData();
+  formData.append('edit', 1);
+  formData.append('file', new File([new Blob([data])], filename));
   return await fetch('/upload', {
     method: 'post',
     body: formData
@@ -22826,7 +22836,7 @@ const diff = (obj1, obj2, path = '') => {
   return Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getKeys"])(obj1).map(key => {
     const val1 = obj1[key];
     const val2 = obj2[key];
-    if (val1 instanceof Object) return diff(val1, val2, `${path}.${key}`);else if (val1 !== val2) {
+    if (val1 instanceof Object) return diff(val1, val2, path ? `${path}.${key}` : key);else if (val1 !== val2) {
       return [{
         path: `${path}.${key}`,
         val1,
@@ -22854,8 +22864,14 @@ class Settings {
 
   set(prop, value) {
     const obj = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["get"])(this.settings, prop);
-    const res = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["merge"])(obj, value);
-    Object(lodash__WEBPACK_IMPORTED_MODULE_0__["set"])(this.settings, prop, res);
+
+    if (typeof obj === 'object') {
+      const res = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["merge"])(obj, value);
+      Object(lodash__WEBPACK_IMPORTED_MODULE_0__["set"])(this.settings, prop, res);
+    } else {
+      Object(lodash__WEBPACK_IMPORTED_MODULE_0__["set"])(this.settings, prop, value);
+    }
+
     if (this.diff().length) this.changed = true;
   }
   /**
@@ -24093,20 +24109,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return DiffPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../conf/config.dat */ "./src/conf/config.dat.js");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
+
 
 
 class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  applyChanges() {
-    _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
-    window.location.href = '#devices';
+  constructor(props) {
+    super(props);
+    this.diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
+
+    this.applyChanges = () => {
+      this.diff.map(d => {
+        const input = this.form.elements[d.path];
+
+        if (!input.checked) {
+          _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].set(input.name, d.val1);
+        }
+      });
+      _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
+      const data = Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_2__["saveConfig"])(false);
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', data);
+      window.location.href = '#devices';
+    };
   }
 
   render(props) {
-    const diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
-    console.log(diff);
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
       ref: ref => this.form = ref
-    }, diff.map(change => {
+    }, this.diff.map(change => {
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, change.path), ": before: ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val1)), " now:", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val2)), " ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
         name: change.path,
         type: "checkbox",
@@ -24389,7 +24421,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, RulesEditorPage, DiffPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -234,6 +234,17 @@ export const storeConfig = async (config) => {
     });
 }
 
+export const storeFile = async (filename, data) => {
+    const formData = new FormData();
+    formData.append('edit', 1);
+    formData.append('file', new File([new Blob([data])], filename));
+    
+    return await fetch('/upload', {
+        method: 'post',
+        body: formData,
+    });
+}
+
 export const storeDashboardConfig = async (config) => {
     const formData = new FormData();
     formData.append('edit', 1);

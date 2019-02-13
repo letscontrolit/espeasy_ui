@@ -206,7 +206,7 @@ const saveData = (function () {
 }());
 
 let ii = 0;
-export const saveConfig = () => {
+export const saveConfig = (save = true) => {
     if (ii === 0) {
         const buffer = new ArrayBuffer(65536);
         writeConfig(buffer, settings.settings, configDatParseConfig);
@@ -223,7 +223,8 @@ export const saveConfig = () => {
                 extra: writeConfig(buffer, settings.settings.controllers[i].extra, ControllerSettings, 1024*29 + 1024 * 2 * i),
             };
         });
-        saveData(buffer, 'config.dat');
+        if (save) saveData(buffer, 'config.dat');
+        else return buffer;
     } else if (ii === 1) {
         const bufferNotifications = new ArrayBuffer(4096);
         [...Array(3)].map((x, i) => {

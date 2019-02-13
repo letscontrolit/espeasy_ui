@@ -5,7 +5,7 @@ const diff = (obj1, obj2, path = '') => {
     return getKeys(obj1).map(key => {
         const val1 = obj1[key];
         const val2 = obj2[key];
-        if (val1 instanceof Object) return diff(val1, val2, `${path}.${key}`);
+        if (val1 instanceof Object) return diff(val1, val2, path ? `${path}.${key}` : key);
         else if (val1 !== val2) {
             return [{ path: `${path}.${key}`, val1, val2 }];
         } else return [];
@@ -29,8 +29,13 @@ class Settings {
      */
     set(prop, value) {
         const obj = get(this.settings, prop);
-        const res = merge(obj, value);
-        set(this.settings, prop, res);
+        if (typeof obj  === 'object') {
+            const res = merge(obj, value);
+            set(this.settings, prop, res);
+        } else {
+            set(this.settings, prop, value);
+        }
+        
         if (this.diff().length) this.changed = true;
     }
 
