@@ -19179,6 +19179,830 @@ const bh1750 = {
 
 /***/ }),
 
+/***/ "./src/devices/11_pme.js":
+/*!*******************************!*\
+  !*** ./src/devices/11_pme.js ***!
+  \*******************************/
+/*! exports provided: pme */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pme", function() { return pme; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const mode = [{
+  value: 0,
+  name: 'Digital'
+}, {
+  value: 1,
+  name: 'Analog'
+}];
+const pme = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      port: {
+        name: 'Port',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio4'
+      },
+      mode: {
+        name: 'Port Type',
+        type: 'select',
+        options: mode,
+        var: 'configs[0]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/12_lcd.js":
+/*!*******************************!*\
+  !*** ./src/devices/12_lcd.js ***!
+  \*******************************/
+/*! exports provided: lcd2004 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lcd2004", function() { return lcd2004; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const i2c_address = [{
+  value: 35,
+  name: '0x23 (35) - default'
+}, {
+  value: 92,
+  name: '0x5c (92)'
+}];
+const displaySize = [{
+  value: 1,
+  name: 'RESOLUTION_LOW'
+}, {
+  value: 2,
+  name: 'RESOLUTION_NORMAL'
+}, {
+  value: 3,
+  name: 'RESOLUTION_HIGH'
+}, {
+  value: 99,
+  name: 'RESOLUTION_AUTO_HIGH'
+}];
+const lcdCommand = [{
+  value: 1,
+  name: 'RESOLUTION_LOW'
+}, {
+  value: 2,
+  name: 'RESOLUTION_NORMAL'
+}, {
+  value: 3,
+  name: 'RESOLUTION_HIGH'
+}, {
+  value: 99,
+  name: 'RESOLUTION_AUTO_HIGH'
+}];
+const lcd2004 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      i2c_address: {
+        name: 'I2C Address',
+        type: 'select',
+        options: i2c_address,
+        var: 'configs[0]'
+      },
+      size: {
+        name: 'Display Size',
+        type: 'select',
+        options: displaySize,
+        var: 'configs[1]'
+      },
+      line1: {
+        name: 'Line 1',
+        type: 'text',
+        var: 'configs[2]'
+      },
+      line2: {
+        name: 'Line 2',
+        type: 'text',
+        var: 'configs[2]'
+      },
+      line3: {
+        name: 'Line 3',
+        type: 'text',
+        var: 'configs[2]'
+      },
+      line4: {
+        name: 'Line 4',
+        type: 'text',
+        var: 'configs[2]'
+      },
+      button: {
+        name: 'Display Button',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      command: {
+        name: 'LCD Command Mode',
+        type: 'select',
+        options: lcdCommand,
+        var: 'configs[2]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/13_hcsr04.js":
+/*!**********************************!*\
+  !*** ./src/devices/13_hcsr04.js ***!
+  \**********************************/
+/*! exports provided: hcsr04 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hcsr04", function() { return hcsr04; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const mode = [{
+  value: 0,
+  name: 'Value'
+}, {
+  value: 1,
+  name: 'State'
+}];
+const units = [{
+  value: 0,
+  name: 'Metric'
+}, {
+  value: 1,
+  name: 'Imperial'
+}];
+const filters = [{
+  value: 0,
+  name: 'None'
+}, {
+  value: 1,
+  name: 'Median'
+}];
+const hcsr04 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio1: {
+        name: 'GPIO Trigger',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      },
+      gpio2: {
+        name: 'GPIO Echo, 5V',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio2'
+      },
+      mode: {
+        name: 'Mode',
+        type: 'select',
+        options: mode,
+        var: 'configs[0]'
+      },
+      treshold: {
+        name: 'Treshold',
+        type: 'number',
+        var: 'configs[1]'
+      },
+      max_distance: {
+        name: 'Max Distance',
+        type: 'number',
+        var: 'configs[2]'
+      },
+      unit: {
+        name: 'Unit',
+        type: 'select',
+        options: units,
+        var: 'configs[3]'
+      },
+      filter: {
+        name: 'Filter',
+        type: 'select',
+        options: filters,
+        var: 'configs[4]'
+      },
+      filter_size: {
+        name: 'Filter Size',
+        type: 'number',
+        var: 'configs[5]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/14_si7021.js":
+/*!**********************************!*\
+  !*** ./src/devices/14_si7021.js ***!
+  \**********************************/
+/*! exports provided: si7021 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "si7021", function() { return si7021; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const resolution = [{
+  value: 0,
+  name: 'Temp 14 bits, RH 12 bits'
+}, {
+  value: 128,
+  name: 'Temp 13 bits, RH 10 bits'
+}, {
+  value: 1,
+  name: 'Temp 12 bits, RH 8 bits'
+}, {
+  value: 129,
+  name: 'Temp 11 bits, RH 11 bits'
+}];
+const si7021 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      resolution: {
+        name: 'Resolution',
+        type: 'select',
+        options: resolution,
+        var: 'configs[0]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/15_tls2561.js":
+/*!***********************************!*\
+  !*** ./src/devices/15_tls2561.js ***!
+  \***********************************/
+/*! exports provided: tls2561 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tls2561", function() { return tls2561; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const i2c_address = [{
+  value: 57,
+  name: '0x39 (57) - default'
+}, {
+  value: 73,
+  name: '0x49 (73)'
+}, {
+  value: 41,
+  name: '0x29 (41)'
+}];
+const measurmentMode = [{
+  value: 0,
+  name: '13 ms'
+}, {
+  value: 1,
+  name: '101 ms'
+}, {
+  value: 2,
+  name: '402 ms'
+}];
+const tls2561 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      i2c_address: {
+        name: 'I2C Address',
+        type: 'select',
+        options: i2c_address,
+        var: 'configs[0]'
+      },
+      mode: {
+        name: 'Integration time',
+        type: 'select',
+        options: measurmentMode,
+        var: 'configs[1]'
+      },
+      send_to_sleep: {
+        name: 'Send sensor to sleep',
+        type: 'checkbox',
+        var: 'configs[2]'
+      },
+      gain: {
+        name: 'Enable 16x gain',
+        type: 'checkbox',
+        var: 'configs[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/17_pn532.js":
+/*!*********************************!*\
+  !*** ./src/devices/17_pn532.js ***!
+  \*********************************/
+/*! exports provided: pn532 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pn532", function() { return pn532; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const pn532 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio1: {
+        name: 'Reset Pin',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/18_dust.js":
+/*!********************************!*\
+  !*** ./src/devices/18_dust.js ***!
+  \********************************/
+/*! exports provided: dust */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dust", function() { return dust; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const i2c_address = [{
+  value: 35,
+  name: '0x23 (35) - default'
+}, {
+  value: 92,
+  name: '0x5c (92)'
+}];
+const measurmentMode = [{
+  value: 1,
+  name: 'RESOLUTION_LOW'
+}, {
+  value: 2,
+  name: 'RESOLUTION_NORMAL'
+}, {
+  value: 3,
+  name: 'RESOLUTION_HIGH'
+}, {
+  value: 99,
+  name: 'RESOLUTION_AUTO_HIGH'
+}];
+const dust = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      gpio1: {
+        name: 'GPIO - LED',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio1'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/19_pcf8574.js":
+/*!***********************************!*\
+  !*** ./src/devices/19_pcf8574.js ***!
+  \***********************************/
+/*! exports provided: pcf8574 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pcf8574", function() { return pcf8574; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const i2c_address = [{
+  value: 35,
+  name: '0x23 (35) - default'
+}, {
+  value: 92,
+  name: '0x5c (92)'
+}];
+const measurmentMode = [{
+  value: 1,
+  name: 'RESOLUTION_LOW'
+}, {
+  value: 2,
+  name: 'RESOLUTION_NORMAL'
+}, {
+  value: 3,
+  name: 'RESOLUTION_HIGH'
+}, {
+  value: 99,
+  name: 'RESOLUTION_AUTO_HIGH'
+}];
+const pcf8574 = {
+  sensor: {
+    name: 'Sensor',
+    configs: {
+      port: {
+        name: 'PORT',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'gpio4'
+      },
+      inversed: {
+        name: 'Inversed logic',
+        type: 'checkbox',
+        var: 'pin1inversed'
+      },
+      send_boot_state: {
+        name: 'Send Boot State',
+        type: 'checkbox',
+        var: 'configs[3]'
+      }
+    }
+  },
+  advanced: {
+    name: 'Advanced event management',
+    configs: {
+      debounce: {
+        name: 'De-bounce (ms)',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      dblclick: {
+        name: 'Doublclick Event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[4]'
+      },
+      dblclick_interval: {
+        name: 'Doubleclick Max interval (ms)',
+        type: 'number',
+        var: 'configs_float[1]'
+      },
+      longpress: {
+        name: 'Longpress event',
+        type: 'select',
+        options: eventTypes,
+        var: 'configs[5]'
+      },
+      longpress_interval: {
+        name: 'Longpress min interval (ms)',
+        type: 'number',
+        var: 'configs_float[2]'
+      },
+      safe_button: {
+        name: 'Use safe button',
+        type: 'checkbox',
+        var: 'configs_float[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./src/devices/1_input_switch.js":
 /*!***************************************!*\
   !*** ./src/devices/1_input_switch.js ***!
@@ -19292,6 +20116,131 @@ const inputSwitch = {
         name: 'Use safe button',
         type: 'checkbox',
         var: 'configs_float[3]'
+      }
+    }
+  },
+  data: {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./src/devices/20_ser2net.js":
+/*!***********************************!*\
+  !*** ./src/devices/20_ser2net.js ***!
+  \***********************************/
+/*! exports provided: ser2net */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ser2net", function() { return ser2net; });
+/* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
+
+const parity = [{
+  value: 0,
+  name: 'No Parity'
+}, {
+  value: 1,
+  name: 'Even'
+}, {
+  value: 2,
+  name: 'Odd'
+}];
+const eventProcessing = [{
+  value: 0,
+  name: 'None'
+}, {
+  value: 1,
+  name: 'Generic'
+}, {
+  value: 2,
+  name: 'RFLink'
+}];
+const ser2net = {
+  sensor: {
+    name: 'Settings',
+    configs: {
+      port: {
+        name: 'TCP Port',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      baudrate: {
+        name: 'Baudrate',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      data_bits: {
+        name: 'Data Bits',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      parity: {
+        name: 'Parity',
+        type: 'select',
+        options: parity,
+        var: 'configs[0]'
+      },
+      stop_bits: {
+        name: 'Stop Bits',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      reset_after_boot: {
+        name: 'Reset target after boot',
+        type: 'select',
+        options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
+        var: 'configs[1]'
+      },
+      timeout: {
+        name: 'RX Receive Timeout',
+        type: 'number',
+        var: 'configs_float[0]'
+      },
+      event_processing: {
+        name: 'Event Processing',
+        type: 'select',
+        options: eventProcessing,
+        var: 'configs[1]'
       }
     }
   },
@@ -20227,8 +21176,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _8_rfid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./8_rfid */ "./src/devices/8_rfid.js");
 /* harmony import */ var _9_io_mcp__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./9_io_mcp */ "./src/devices/9_io_mcp.js");
 /* harmony import */ var _10_light_lux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./10_light_lux */ "./src/devices/10_light_lux.js");
-/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
-/* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
+/* harmony import */ var _11_pme__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./11_pme */ "./src/devices/11_pme.js");
+/* harmony import */ var _12_lcd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./12_lcd */ "./src/devices/12_lcd.js");
+/* harmony import */ var _13_hcsr04__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./13_hcsr04 */ "./src/devices/13_hcsr04.js");
+/* harmony import */ var _14_si7021__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./14_si7021 */ "./src/devices/14_si7021.js");
+/* harmony import */ var _15_tls2561__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./15_tls2561 */ "./src/devices/15_tls2561.js");
+/* harmony import */ var _17_pn532__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./17_pn532 */ "./src/devices/17_pn532.js");
+/* harmony import */ var _18_dust__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./18_dust */ "./src/devices/18_dust.js");
+/* harmony import */ var _19_pcf8574__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./19_pcf8574 */ "./src/devices/19_pcf8574.js");
+/* harmony import */ var _20_ser2net__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./20_ser2net */ "./src/devices/20_ser2net.js");
+/* harmony import */ var _21_level_control__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./21_level_control */ "./src/devices/21_level_control.js");
+/* harmony import */ var _33_dummy_device__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./33_dummy_device */ "./src/devices/33_dummy_device.js");
+
+
+
+
+
+
+
+
+
 
 
 
@@ -20286,14 +21253,81 @@ const devices = [{
   value: 10,
   fields: _10_light_lux__WEBPACK_IMPORTED_MODULE_9__["bh1750"]
 }, {
+  name: 'Extra IO - ProMini Extender',
+  value: 11,
+  fields: _11_pme__WEBPACK_IMPORTED_MODULE_10__["pme"]
+}, {
+  name: 'Display - LCD2004',
+  value: 12,
+  fields: _12_lcd__WEBPACK_IMPORTED_MODULE_11__["lcd2004"]
+}, {
+  name: 'Position - HC-SR04, RCW-0001, etc.',
+  value: 13,
+  fields: _13_hcsr04__WEBPACK_IMPORTED_MODULE_12__["hcsr04"]
+}, {
+  name: 'Environment - SI7021/HTU21D',
+  value: 14,
+  fields: _14_si7021__WEBPACK_IMPORTED_MODULE_13__["si7021"]
+}, {
+  name: 'Light/Lux - TSL2561',
+  value: 15,
+  fields: _15_tls2561__WEBPACK_IMPORTED_MODULE_14__["tls2561"]
+}, //{ name: 'Communication - IR', value: 16, fields: bh1750 },
+{
+  name: 'RFID - PN532',
+  value: 17,
+  fields: _17_pn532__WEBPACK_IMPORTED_MODULE_15__["pn532"]
+}, {
+  name: 'Dust - Sharp GP2Y10',
+  value: 18,
+  fields: _18_dust__WEBPACK_IMPORTED_MODULE_16__["dust"]
+}, {
+  name: 'Switch input - PCF8574',
+  value: 19,
+  fields: _19_pcf8574__WEBPACK_IMPORTED_MODULE_17__["pcf8574"]
+}, {
+  name: 'Communication - Serial Server',
+  value: 20,
+  fields: _20_ser2net__WEBPACK_IMPORTED_MODULE_18__["ser2net"]
+}, {
   name: 'Regulator - Level Control',
   value: 21,
-  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_10__["levelControl"]
+  fields: _21_level_control__WEBPACK_IMPORTED_MODULE_19__["levelControl"]
 }, {
   name: 'Generic - Dummy Device',
   value: 33,
-  fields: _33_dummy_device__WEBPACK_IMPORTED_MODULE_11__["dummyDevice"]
+  fields: _33_dummy_device__WEBPACK_IMPORTED_MODULE_20__["dummyDevice"]
 }];
+/*
+<option value="22">Extra IO - PCA9685</option>
+<option value="23">Display - OLED SSD1306</option>
+<option value="24">Environment - MLX90614</option>
+<option value="25">Analog input - ADS1115</option>
+<option value="26">Generic - System Info</option>
+<option value="27">Energy (DC) - INA219</option>
+<option value="28">Environment - BMx280</option>
+<option value="29">Output - Domoticz MQTT Helper</option>
+<option value="30">Environment - BMP280</option>
+<option value="31">Environment - SHT1X</option>
+<option value="32">Environment - MS5611 (GY-63)</option>
+<option value="34">Environment - DHT12 (I2C)</option>
+<option value="36">Display - OLED SSD1306/SH1106 Framed</option>
+<option value="37">Generic - MQTT Import</option>
+<option value="38">Output - NeoPixel (Basic)</option>
+<option value="39">Environment - Thermocouple</option>
+
+
+<option value="44">Communication - P1 Wifi Gateway</option>
+<option value="56">Dust - SDS011/018/198</option>
+<option value="49">Gases - CO2 MH-Z19</option>
+<option value="52">Gases - CO2 Senseair</option>
+<option value="63">Keypad - TTP229 Touch</option>
+<option value="43">Output - Clock</option>
+<option value="42">Output - NeoPixel (Candle)</option>
+<option value="41">Output - NeoPixel (Word Clock)</option>
+<option value="59">Switch Input - Rotary Encoder</option>
+
+*/
 
 /***/ }),
 
