@@ -199,6 +199,17 @@ export const getConfigNodes = async () => {
     return { nodes, vars };
 }
 
+export const getVariables = async () => {
+    const devices = await loadDevices();
+    const vars = {};
+    devices.map(device => {
+        device.TaskValues.map(value => {
+            vars[`${device.TaskName}#${value.Name}`] = value.Value;
+        });
+    });
+    return vars;
+}
+
 export const getDashboardConfigNodes = async () => {
     const devices = await loadDevices();
     const vars = [];

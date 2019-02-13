@@ -10,7 +10,8 @@ export class DevicesPage extends Component {
             <div>
             {tasks.map((task, i) => {
                 const editUrl = `#devices/edit/${i}`;
-                const deviceType = devices.find(d => d.value === task.device).name;
+                const device = devices.find(d => d.value === task.device);
+                const deviceType = device ? device.name : '--unknown--';
                 return (
                     <div class="device">
                         <span class="info">

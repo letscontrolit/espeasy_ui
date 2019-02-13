@@ -6,6 +6,7 @@ export const nodes = [
         inputs: [],
         outputs: [],
         config: [],
+        vals: [],
         indent: true,
         toHtml: () => { return `<b>${(new Date()).toTimeString()}</b>`; },
     },
@@ -14,6 +15,7 @@ export const nodes = [
         type: 'VARIABLE',
         inputs: [],
         outputs: [],
+        vals: [],
         config: [{
             name: 'device',
             type: 'select',
@@ -21,13 +23,14 @@ export const nodes = [
             value: 0
         }],
         toHtml: function() {
-            return `${this.config[0].value}: `;
+            return `${this.config[0].value}: ${this.vals[this.config[0].value]}`;
         }
     }, {
         group: 'ACTIONS',
         type: 'BUTTON',
         inputs: [],
         outputs: [],
+        vals: [],
         config: [{
             name: 'text',
             type: 'text',
@@ -45,6 +48,7 @@ export const nodes = [
         type: 'INPUT',
         inputs: [],
         outputs: [],
+        vals: [],
         config: [{
             name: 'name',
             type: 'text',
@@ -63,7 +67,7 @@ export const nodes = [
             value: 'set_level,1',
         }],
         toHtml: function() {
-            return `${this.config[0].value}: <input type="number" min="" max="" />`;
+            return `${this.config[0].value}: <input type="number" min="${this.config[1].value}" max="${this.config[2].value}" value="${this.vals[this.config[0].value]}" />`;
         }
     }
 ]

@@ -322,6 +322,13 @@ fieldset > label {
 .node-chart {
     position: absolute;
 }
+.node-dash {
+    text-align: center;
+    margin-top: 5px;
+    padding: 10px;
+    user-select: none;
+    position: absolute;
+}
 .node.group-TRIGGERS {
     border-color: cyan;
     background: lightcyan;
