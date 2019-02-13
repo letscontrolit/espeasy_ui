@@ -9,7 +9,7 @@ export const pme = {
     sensor: {
         name: 'Sensor',
         configs: {
-            port: { name: 'Port', type: 'select', options: pins, var: 'gpio4' },
+            port: { name: 'Port', type: 'number', var: 'gpio4' },
             mode: { name: 'Port Type', type: 'select', options: mode, var: 'configs[0]'  },
         }
     },

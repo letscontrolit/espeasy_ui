@@ -18,6 +18,17 @@ import { dust } from './18_dust';
 import { pcf8574 } from './19_pcf8574';
 import { ser2net } from './20_ser2net';
 import { levelControl } from './21_level_control';
+import { pca9685 } from './22_pca9685';
+import { oled1306 } from './23_oled1306';
+import { mlx90614 } from './24_mlx90614';
+import { ads1115 } from './25_ads1115';
+import { systemInfo } from './26_system_info';
+import { ina219 } from './27_ina219';
+import { bmx280 } from './28_bmx280';
+import { mqttDomoticz } from './29_mqtt_domoticz';
+import { bmp280 } from './30_bmp280';
+import { sht1x } from './31_sht1x';
+import { ms5611 } from './32_ms5611';
 import { dummyDevice } from './33_dummy_device';
 
 export const devices = [
@@ -43,36 +54,33 @@ export const devices = [
     { name: 'Switch input - PCF8574', value: 19, fields: pcf8574 },
     { name: 'Communication - Serial Server', value: 20, fields: ser2net },
     { name: 'Regulator - Level Control', value: 21, fields: levelControl },
+    { name: 'Extra IO - PCA9685', value: 22, fields: pca9685 },
+    { name: 'Display - OLED SSD1306', value: 23, fields: oled1306 },
+    { name: 'Environment - MLX90614', value: 24, fields: mlx90614 },
+    { name: 'Analog input - ADS1115', value: 25, fields: ads1115 },
+    { name: 'Generic - System Info', value: 26, fields: systemInfo },
+    { name: 'Energy (DC) - INA219', value: 27, fields: ina219 },
+    { name: 'Environment - BMx280', value: 28, fields: bmx280 },
+    { name: 'Output - Domoticz MQTT Helper', value: 29, fields: mqttDomoticz },
+    { name: 'Environment - BMP280', value: 30, fields: bmp280 },
+    { name: 'Environment - SHT1X', value: 31, fields: sht1x },
+    { name: 'Environment - MS5611 (GY-63)', value: 32, fields: ms5611 },
     { name: 'Generic - Dummy Device', value: 33, fields: dummyDevice },
 ];
 
 /*
-<option value="22">Extra IO - PCA9685</option>
-<option value="23">Display - OLED SSD1306</option>
-<option value="24">Environment - MLX90614</option>
-<option value="25">Analog input - ADS1115</option>
-<option value="26">Generic - System Info</option>
-<option value="27">Energy (DC) - INA219</option>
-<option value="28">Environment - BMx280</option>
-<option value="29">Output - Domoticz MQTT Helper</option>
-<option value="30">Environment - BMP280</option>
-<option value="31">Environment - SHT1X</option>
-<option value="32">Environment - MS5611 (GY-63)</option>
 <option value="34">Environment - DHT12 (I2C)</option>
 <option value="36">Display - OLED SSD1306/SH1106 Framed</option>
 <option value="37">Generic - MQTT Import</option>
 <option value="38">Output - NeoPixel (Basic)</option>
 <option value="39">Environment - Thermocouple</option>
-
-
+<option value="41">Output - NeoPixel (Word Clock)</option>
+<option value="42">Output - NeoPixel (Candle)</option>
+<option value="43">Output - Clock</option>
 <option value="44">Communication - P1 Wifi Gateway</option>
-<option value="56">Dust - SDS011/018/198</option>
 <option value="49">Gases - CO2 MH-Z19</option>
 <option value="52">Gases - CO2 Senseair</option>
-<option value="63">Keypad - TTP229 Touch</option>
-<option value="43">Output - Clock</option>
-<option value="42">Output - NeoPixel (Candle)</option>
-<option value="41">Output - NeoPixel (Word Clock)</option>
+<option value="56">Dust - SDS011/018/198</option>
 <option value="59">Switch Input - Rotary Encoder</option>
-
+<option value="63">Keypad - TTP229 Touch</option>
 */

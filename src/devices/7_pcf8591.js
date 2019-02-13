@@ -11,7 +11,7 @@ export const pcf8591 = {
     sensor: {
         name: 'Sensor',
         configs: {
-            port: { name: 'PORT', type: 'select', options: pins, var: 'gpio4' },
+            port: { name: 'PORT', type: 'number', var: 'gpio4' },
         }
     },
     data: {

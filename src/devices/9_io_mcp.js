@@ -11,7 +11,7 @@ export const inputMcp = {
     sensor: {
         name: 'Sensor',
         configs: {
-            port: { name: 'Port', type: 'select', options: pins, var: 'gpio4' },
+            port: { name: 'PORT', type: 'number', var: 'gpio4' },
             inversed: { name: 'Inversed logic', type: 'checkbox', var: 'pin1inversed' },
             send_boot_state: { name: 'Send Boot State', type: 'checkbox', var: 'configs[3]'  },
         }
