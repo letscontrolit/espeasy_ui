@@ -404,3 +404,12 @@ fieldset > label {
 .pure-form label {
     margin: 0 0 .5em 0;
 }
+
+.c_meter {
+    border: 1px solid black;
+}
+
+.c_meter_val {
+    background: #1f8dd6;
+    white-space: nowrap;
+}
