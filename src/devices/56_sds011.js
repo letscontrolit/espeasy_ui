@@ -2,7 +2,7 @@
 import { pins } from './_defs';
 
 export const sds011 = {
-    data: {
+    sensor: {
         name: 'Data Acquisition',
         configs: {
             gpio1: { name: 'GPIO - TX', type: 'select', options: pins, var: 'gpio1'  },

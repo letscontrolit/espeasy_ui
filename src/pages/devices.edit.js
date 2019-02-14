@@ -9,6 +9,8 @@ const baseFields = {
 };
 
 const getFormConfig = (type) => {
+    const device = devices.find(d => d.value === parseInt(type));
+    if (!device) return null;
        
     return {
         groups: {
@@ -20,7 +22,7 @@ const getFormConfig = (type) => {
                     
                 }
             },
-            ...devices.find(d => d.value === type).fields,
+            ...device.fields,
             values: {
                 name: 'Values',
                 configs: {
@@ -49,6 +51,10 @@ export class DevicesEditPage extends Component {
 
     render(props) {
         const formConfig = getFormConfig(this.state.device);
+        if (!formConfig) {
+            alert('something went wrong, cant edit device');
+            window.location.href='#devices';
+        }
         formConfig.groups.settings.configs.device.onChange = (e) => {
             this.setState({ device: e.currentTarget.value });
         };

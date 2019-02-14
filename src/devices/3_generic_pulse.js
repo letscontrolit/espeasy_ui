@@ -21,7 +21,7 @@ export const genericPulse = {
             gpio: { name: 'GPIO', type: 'select', options: pins, var: 'gpio1' },
             debounce: { name: 'De-bounce (ms)', type: 'number', var: 'configs[0]'  },
             counter_type: { name: 'Counter Type', type: 'select', options: counterTypes, var: 'configs[1]'  },
-            mode_type: { name: 'Switch Button Type', type: 'select', modeTypes, var: 'configs[2]'  },
+            mode_type: { name: 'Switch Button Type', type: 'select', options: modeTypes, var: 'configs[2]'  },
         }
     },
     data: {

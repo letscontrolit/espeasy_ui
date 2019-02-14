@@ -2,7 +2,7 @@
 import { pins } from './_defs';
 
 export const ttp229 = {
-    data: {
+    sensor: {
         name: 'Sensor',
         configs: {
             gpio1: { name: 'GPIO A - CLK', type: 'select', options: pins, var: 'gpio1'  },
