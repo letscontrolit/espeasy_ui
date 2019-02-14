@@ -20,7 +20,11 @@ export class DashboardEditorPage extends Component {
         getDashboardConfigNodes().then((out) => {
             out.nodes.forEach(device => nodes.unshift(device));
             const varNode = nodes.find(node => node.type === 'VARIABLE');
-            out.vars.forEach(v => varNode.config[0].values.push(v)); 
+            const meterNode = nodes.find(node => node.type === 'METER');
+            out.vars.forEach(v => {
+                varNode.config[0].values.push(v); 
+                meterNode.config[0].values.push(v); 
+            });
 
             this.chart = new FlowEditor(".editor", nodes, { 
                 gridSize: 10,

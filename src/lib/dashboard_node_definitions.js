@@ -78,7 +78,54 @@ export const nodes = [
 
             return `<div class="c_meter" style="width: ${width}px; height: ${height}px;"><div class="c_meter_val" style="width: ${widthPercent}%; height: ${heightPercent}%;">${this.config[0].value}: ${val}</div></div>`;
         }
-    },{
+    }, {
+        group: 'DEVICES',
+        type: 'IMAGE_METER',
+        inputs: [],
+        outputs: [],
+        vals: [],
+        config: [{
+            name: 'device',
+            type: 'select',
+            values: [],
+            value: 0
+        }, {
+            name: 'max',
+            type: 'number',
+            value: '255',
+        }, {
+            name: 'size',
+            type: 'number',
+            value: '255',
+        }, {
+            name: 'image 1 url',
+            type: 'text',
+            value: '#',
+        }, {
+            name: 'image 2 url',
+            type: 'text',
+            value: 'https://www.letscontrolit.com/wiki/images/4/44/ESPeasyLOGO.png',
+        }, {
+            name: 'orientation',
+            type: 'select',
+            values: ['left', 'right', 'top', 'bottom'],
+            value: 'left',
+        }],
+        toHtml: function(vals) {
+            const val = vals ? vals[this.config[0].value] : 0;
+            const width = this.config[2].value;
+            const image1 = this.config[3].value;
+            const image2 = this.config[4].value;
+            const percent = 100 * val / this.config[1].value;
+            const heightPercent = 100;
+
+            return `<div class="c_fill" style="background: url(${image1});">
+                        <div class="c_fill_val" style="width: ${percent}%; height: ${heightPercent}%;">
+                            <img src="${image2}" width="${width}px" />
+                        </div>
+                    </div>`;
+        }
+    }, {
         group: 'ACTIONS',
         type: 'BUTTON',
         inputs: [],

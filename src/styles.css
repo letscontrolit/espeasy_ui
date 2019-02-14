@@ -413,3 +413,7 @@ fieldset > label {
     background: #1f8dd6;
     white-space: nowrap;
 }
+
+.c_fill_val {
+    overflow: hidden;
+}
