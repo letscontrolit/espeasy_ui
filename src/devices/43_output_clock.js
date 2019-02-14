@@ -1,24 +1,24 @@
+import { pins, getTasks, getTaskValues } from './_defs';
 
-const sensorModel = [
-    { value: 1, name: 'SENSOR_TYPE_SINGLE' }, 
-    { value: 2, name: 'SENSOR_TYPE_TEMP_HUM' }, 
-    { value: 3, name: 'SENSOR_TYPE_TEMP_BARO' }, 
-    { value: 4, name: 'SENSOR_TYPE_TEMP_HUM_BARO' }, 
-    { value: 5, name: 'SENSOR_TYPE_DUAL' },
-    { value: 5, name: 'SENSOR_TYPE_TRIPLE' },
-    { value: 7, name: 'SENSOR_TYPE_QUAD' },
-    { value: 10, name: 'SENSOR_TYPE_SWITCH' },
-    { value: 11, name: 'SENSOR_TYPE_DIMMER' },
-    { value: 20, name: 'SENSOR_TYPE_LONG' },
-    { value: 21, name: 'SENSOR_TYPE_WIND' },
+const type = [
+    { value: 0, name: '' },
+    { value: 1, name: 'Off' }, 
+    { value: 2, name: 'On' }, 
 ]
 
-export const dummyDevice = {
-    data: {
-        name: 'Data Acquisition',
+export const clock = {
+    sensor: {
+        name: 'Sensor',
         configs: {
-            switch_type: { name: 'Simulate Sensor Type', type: 'select', options: sensorModel, var: 'configs[0]'  },
-            interval: { name: 'Interval', type: 'number' },
+            gpio: { name: 'GPIO - Clock Event', type: 'select', options: pins, var: 'gpio1'  },
+            event1: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event2: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event3: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event4: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event5: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event6: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event7: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
+            event8: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
         }
-    }
+    },
 }

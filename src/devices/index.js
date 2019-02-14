@@ -30,6 +30,20 @@ import { bmp280 } from './30_bmp280';
 import { sht1x } from './31_sht1x';
 import { ms5611 } from './32_ms5611';
 import { dummyDevice } from './33_dummy_device';
+import { dht12 } from './34_dht12';
+import { sh1106 } from './36_sh1106';
+import { mqttImport } from './37_mqtt_import';
+import { neopixelBasic } from './38_neopixel_basic';
+import { thermocouple } from './39_thermocouple';
+import { neopixelClock } from './41_neopixel_clock';
+import { neopixelCandle } from './42_neopixel_candle';
+import { clock } from './43_output_clock';
+import { wifiGateway } from './44_wifi_gateway';
+import { mhz19 } from './49_mhz19';
+import { senseAir } from './52_senseair';
+import { sds011 } from './56_sds011';
+import { rotaryEncoder } from './59_rotary_encoder';
+import { ttp229 } from './63_ttp229';
 
 export const devices = [
     { name: '- None -', value: 0, fields: [] },
@@ -66,18 +80,18 @@ export const devices = [
     { name: 'Environment - SHT1X', value: 31, fields: sht1x },
     { name: 'Environment - MS5611 (GY-63)', value: 32, fields: ms5611 },
     { name: 'Generic - Dummy Device', value: 33, fields: dummyDevice },
-    { name: 'Environment - DHT12 (I2C)', value: 34, fields: dummyDevice },
-    { name: 'Display - OLED SSD1306/SH1106 Framed', value: 36, fields: dummyDevice },
-    { name: 'Generic - MQTT Import', value: 37, fields: dummyDevice },
-    { name: 'Output - NeoPixel (Basic)', value: 38, fields: dummyDevice },
-    { name: 'Environment - Thermocouple', value: 39, fields: dummyDevice },
-    { name: 'Output - NeoPixel (Word Clock)', value: 41, fields: dummyDevice },
-    { name: 'Output - NeoPixel (Candle)', value: 42, fields: dummyDevice },
-    { name: 'Output - Clock', value: 43, fields: dummyDevice },
-    { name: 'Communication - P1 Wifi Gateway', value: 44, fields: dummyDevice },
-    { name: 'Gases - CO2 MH-Z19', value: 49, fields: dummyDevice },
-    { name: 'Gases - CO2 Senseair', value: 52, fields: dummyDevice },
-    { name: 'Dust - SDS011/018/198', value: 56, fields: dummyDevice },
-    { name: 'Switch Input - Rotary Encoder', value: 59, fields: dummyDevice },
-    { name: 'Keypad - TTP229 Touc', value: 63, fields: dummyDevice },
+    { name: 'Environment - DHT12 (I2C)', value: 34, fields: dht12 },
+    { name: 'Display - OLED SSD1306/SH1106 Framed', value: 36, fields: sh1106 },
+    { name: 'Generic - MQTT Import', value: 37, fields: mqttImport },
+    { name: 'Output - NeoPixel (Basic)', value: 38, fields: neopixelBasic },
+    { name: 'Environment - Thermocouple', value: 39, fields: thermocouple },
+    { name: 'Output - NeoPixel (Word Clock)', value: 41, fields: neopixelClock },
+    { name: 'Output - NeoPixel (Candle)', value: 42, fields: neopixelCandle },
+    { name: 'Output - Clock', value: 43, fields: clock },
+    { name: 'Communication - P1 Wifi Gateway', value: 44, fields: wifiGateway },
+    { name: 'Gases - CO2 MH-Z19', value: 49, fields: mhz19 },
+    { name: 'Gases - CO2 Senseair', value: 52, fields: senseAir },
+    { name: 'Dust - SDS011/018/198', value: 56, fields: sds011 },
+    { name: 'Switch Input - Rotary Encoder', value: 59, fields: rotaryEncoder },
+    { name: 'Keypad - TTP229 Touc', value: 63, fields: ttp229 },
 ];

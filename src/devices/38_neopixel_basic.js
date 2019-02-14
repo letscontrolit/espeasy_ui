@@ -1,24 +1,17 @@
+import { pins, getTasks, getTaskValues } from './_defs';
 
-const sensorModel = [
-    { value: 1, name: 'SENSOR_TYPE_SINGLE' }, 
-    { value: 2, name: 'SENSOR_TYPE_TEMP_HUM' }, 
-    { value: 3, name: 'SENSOR_TYPE_TEMP_BARO' }, 
-    { value: 4, name: 'SENSOR_TYPE_TEMP_HUM_BARO' }, 
-    { value: 5, name: 'SENSOR_TYPE_DUAL' },
-    { value: 5, name: 'SENSOR_TYPE_TRIPLE' },
-    { value: 7, name: 'SENSOR_TYPE_QUAD' },
-    { value: 10, name: 'SENSOR_TYPE_SWITCH' },
-    { value: 11, name: 'SENSOR_TYPE_DIMMER' },
-    { value: 20, name: 'SENSOR_TYPE_LONG' },
-    { value: 21, name: 'SENSOR_TYPE_WIND' },
+const type = [
+    { value: 1, name: 'GRB' }, 
+    { value: 2, name: 'GRBW' }, 
 ]
 
-export const dummyDevice = {
-    data: {
-        name: 'Data Acquisition',
+export const neopixelBasic = {
+    sensor: {
+        name: 'Sensor',
         configs: {
-            switch_type: { name: 'Simulate Sensor Type', type: 'select', options: sensorModel, var: 'configs[0]'  },
-            interval: { name: 'Interval', type: 'number' },
+            leds: { name: 'LEd Count', type: 'number', var: 'configs[0]' },
+            gpio: { name: 'GPIO', type: 'select', options: pins, var: 'gpio1'  },
+            type: { name: 'Strip Type', type: 'select', options: type, var: 'configs[1]'  },
         }
-    }
+    },
 }

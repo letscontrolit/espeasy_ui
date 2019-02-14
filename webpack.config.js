@@ -4,7 +4,7 @@ var LiveReloadPlugin = require('webpack-livereload-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = env => ({
-    mode: 'development',
+    mode: env && env.production ? 'production' : 'development',
     entry: './src/app.js',
     output: {
         path: path.resolve(__dirname, 'build'),
@@ -12,7 +12,7 @@ module.exports = env => ({
     },
     plugins: [
         new LiveReloadPlugin(),
-        new BundleAnalyzerPlugin()
+        //new BundleAnalyzerPlugin()
     ],
     module: {
         rules: [

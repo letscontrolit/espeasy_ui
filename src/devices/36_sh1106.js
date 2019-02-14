@@ -1,24 +1,47 @@
+import { pins } from './_defs';
 
-const sensorModel = [
-    { value: 1, name: 'SENSOR_TYPE_SINGLE' }, 
-    { value: 2, name: 'SENSOR_TYPE_TEMP_HUM' }, 
-    { value: 3, name: 'SENSOR_TYPE_TEMP_BARO' }, 
-    { value: 4, name: 'SENSOR_TYPE_TEMP_HUM_BARO' }, 
-    { value: 5, name: 'SENSOR_TYPE_DUAL' },
-    { value: 5, name: 'SENSOR_TYPE_TRIPLE' },
-    { value: 7, name: 'SENSOR_TYPE_QUAD' },
-    { value: 10, name: 'SENSOR_TYPE_SWITCH' },
-    { value: 11, name: 'SENSOR_TYPE_DIMMER' },
-    { value: 20, name: 'SENSOR_TYPE_LONG' },
-    { value: 21, name: 'SENSOR_TYPE_WIND' },
+const i2c_address = [
+    { value: 35, name: '0x23 (35) - default' }, 
+    { value: 92, name: '0x5c (92)' }, 
 ]
 
-export const dummyDevice = {
+const displaySize = [
+    { value: 1, name: 'RESOLUTION_LOW' }, 
+    { value: 2, name: 'RESOLUTION_NORMAL' }, 
+    { value: 3, name: 'RESOLUTION_HIGH' }, 
+    { value: 99, name: 'RESOLUTION_AUTO_HIGH' }, 
+]
+
+export const sh1106 = {
+    sensor: {
+        name: 'Sensor',
+        configs: {
+            i2c_address: { name: 'I2C Address', type: 'select', options: i2c_address, var: 'configs[0]'  },
+            rotation: { name: 'Rotation', type: 'select', options: displaySize, var: 'configs[1]'  },
+            size: { name: 'Display Size', type: 'select', options: displaySize, var: 'configs[1]'  },
+            font: { name: 'Font Width', type: 'select', options: displaySize, var: 'configs[1]'  },
+            line1: { name: 'Line 1', type: 'text', var: 'configs[2]'  },
+            line2: { name: 'Line 2', type: 'text', var: 'configs[2]'  },
+            line3: { name: 'Line 3', type: 'text', var: 'configs[2]'  },
+            line4: { name: 'Line 4', type: 'text', var: 'configs[2]'  },
+            line5: { name: 'Line 4', type: 'text', var: 'configs[2]'  },
+            line6: { name: 'Line 4', type: 'text', var: 'configs[2]'  },
+            line7: { name: 'Line 4', type: 'text', var: 'configs[2]'  },
+            line8: { name: 'Line 4', type: 'text', var: 'configs[2]'  },
+            button: { name: 'Display Button', type: 'select', options: pins, var: 'gpio1'  },
+            timeout: { name: 'Display Timeout', type: 'number', var: 'configs[2]'  },
+        }
+    },
     data: {
         name: 'Data Acquisition',
         configs: {
-            switch_type: { name: 'Simulate Sensor Type', type: 'select', options: sensorModel, var: 'configs[0]'  },
-            interval: { name: 'Interval', type: 'number' },
+            send1: { name: 'Send to Controller 1', type: 'checkbox', var: 'TaskDeviceSendData[0]' },
+            send2: { name: 'Send to Controller 2', type: 'checkbox', var: 'TaskDeviceSendData[1]' },
+            send3: { name: 'Send to Controller 3', type: 'checkbox', var: 'TaskDeviceSendData[2]' },
+            idx1: { name: 'IDX1', type: 'number', var: 'TaskDeviceID[0]' },
+            idx2: { name: 'IDX2', type: 'number', var: 'TaskDeviceID[1]' },
+            idx3: { name: 'IDX3', type: 'number', var: 'TaskDeviceID[2]' },
+            interval: { name: 'Interval', type: 'number', var: 'interval' },
         }
     }
 }
