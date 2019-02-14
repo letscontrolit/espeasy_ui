@@ -1,4 +1,4 @@
-import { get, set, merge, getKeys } from './helpers';
+import { get, set, getKeys } from './helpers';
 
 const diff = (obj1, obj2, path = '') => {
     return getKeys(obj1).map(key => {
@@ -29,8 +29,8 @@ class Settings {
     set(prop, value) {
         const obj = get(this.settings, prop);
         if (typeof obj  === 'object') {
-            const res = merge(obj, value);
-            set(this.settings, prop, res);
+            console.warn('settings an object!');
+            set(this.settings, prop, value);
         } else {
             set(this.settings, prop, value);
         }
