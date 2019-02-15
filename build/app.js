@@ -19544,6 +19544,278 @@ MillerRabin.prototype.getDivisor = function getDivisor(n, k) {
 
 /***/ }),
 
+/***/ "./node_modules/mini-toastr/mini-toastr.js":
+/*!*************************************************!*\
+  !*** ./node_modules/mini-toastr/mini-toastr.js ***!
+  \*************************************************/
+/*! exports provided: fadeOut, LIB_NAME, ERROR, WARN, SUCCESS, INFO, CONTAINER_CLASS, NOTIFICATION_CLASS, TITLE_CLASS, ICON_CLASS, MESSAGE_CLASS, ERROR_CLASS, WARN_CLASS, SUCCESS_CLASS, INFO_CLASS, DEFAULT_TIMEOUT, flatten, makeCss, appendStyles, config, makeNode, createIcon, addElem, getTypeClass, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fadeOut", function() { return fadeOut; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIB_NAME", function() { return LIB_NAME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ERROR", function() { return ERROR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WARN", function() { return WARN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SUCCESS", function() { return SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "INFO", function() { return INFO; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CONTAINER_CLASS", function() { return CONTAINER_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NOTIFICATION_CLASS", function() { return NOTIFICATION_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TITLE_CLASS", function() { return TITLE_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ICON_CLASS", function() { return ICON_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGE_CLASS", function() { return MESSAGE_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ERROR_CLASS", function() { return ERROR_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WARN_CLASS", function() { return WARN_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SUCCESS_CLASS", function() { return SUCCESS_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "INFO_CLASS", function() { return INFO_CLASS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_TIMEOUT", function() { return DEFAULT_TIMEOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flatten", function() { return flatten; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeCss", function() { return makeCss; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appendStyles", function() { return appendStyles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeNode", function() { return makeNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createIcon", function() { return createIcon; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addElem", function() { return addElem; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTypeClass", function() { return getTypeClass; });
+function fadeOut (element, cb) {
+  if (element.style.opacity && element.style.opacity > 0.05) {
+    element.style.opacity = element.style.opacity - 0.05
+  } else if (element.style.opacity && element.style.opacity <= 0.1) {
+    if (element.parentNode) {
+      element.parentNode.removeChild(element)
+      if (cb) cb()
+    }
+  } else {
+    element.style.opacity = 0.9
+  }
+  setTimeout(() => fadeOut.apply(this, [element, cb]), 1000 / 30
+  )
+}
+
+const LIB_NAME = 'mini-toastr'
+
+const ERROR = 'error'
+const WARN = 'warn'
+const SUCCESS = 'success'
+const INFO = 'info'
+const CONTAINER_CLASS = LIB_NAME
+const NOTIFICATION_CLASS = `${LIB_NAME}__notification`
+const TITLE_CLASS = `${LIB_NAME}-notification__title`
+const ICON_CLASS = `${LIB_NAME}-notification__icon`
+const MESSAGE_CLASS = `${LIB_NAME}-notification__message`
+const ERROR_CLASS = `-${ERROR}`
+const WARN_CLASS = `-${WARN}`
+const SUCCESS_CLASS = `-${SUCCESS}`
+const INFO_CLASS = `-${INFO}`
+const DEFAULT_TIMEOUT = 3000
+
+const EMPTY_STRING = ''
+
+function flatten (obj, into, prefix) {
+  into = into || {}
+  prefix = prefix || EMPTY_STRING
+
+  for (const k in obj) {
+    if (obj.hasOwnProperty(k)) {
+      const prop = obj[k]
+      if (prop && typeof prop === 'object' && !(prop instanceof Date || prop instanceof RegExp)) {
+        flatten(prop, into, prefix + k + ' ')
+      } else {
+        if (into[prefix] && typeof into[prefix] === 'object') {
+          into[prefix][k] = prop
+        } else {
+          into[prefix] = {}
+          into[prefix][k] = prop
+        }
+      }
+    }
+  }
+
+  return into
+}
+
+function makeCss (obj) {
+  const flat = flatten(obj)
+  let str = JSON.stringify(flat, null, 2)
+  str = str.replace(/"([^"]*)": {/g, '$1 {')
+    .replace(/"([^"]*)"/g, '$1')
+    .replace(/(\w*-?\w*): ([\w\d .#]*),?/g, '$1: $2;')
+    .replace(/},/g, '}\n')
+    .replace(/ &([.:])/g, '$1')
+
+  str = str.substr(1, str.lastIndexOf('}') - 1)
+
+  return str
+}
+
+function appendStyles (css) {
+  let head = document.head || document.getElementsByTagName('head')[0]
+  let styleElem = makeNode('style')
+  styleElem.id = `${LIB_NAME}-styles`
+  styleElem.type = 'text/css'
+
+  if (styleElem.styleSheet) {
+    styleElem.styleSheet.cssText = css
+  } else {
+    styleElem.appendChild(document.createTextNode(css))
+  }
+
+  head.appendChild(styleElem)
+}
+
+const config = {
+  types: {ERROR, WARN, SUCCESS, INFO},
+  animation: fadeOut,
+  timeout: DEFAULT_TIMEOUT,
+  icons: {},
+  appendTarget: document.body,
+  node: makeNode(),
+  allowHtml: false,
+  style: {
+    [`.${CONTAINER_CLASS}`]: {
+      position: 'fixed',
+      'z-index': 99999,
+      right: '12px',
+      top: '12px'
+    },
+    [`.${NOTIFICATION_CLASS}`]: {
+      cursor: 'pointer',
+      padding: '12px 18px',
+      margin: '0 0 6px 0',
+      'background-color': '#000',
+      opacity: 0.8,
+      color: '#fff',
+      'border-radius': '3px',
+      'box-shadow': '#3c3b3b 0 0 12px',
+      width: '300px',
+      [`&.${ERROR_CLASS}`]: {
+        'background-color': '#D5122B'
+      },
+      [`&.${WARN_CLASS}`]: {
+        'background-color': '#F5AA1E'
+      },
+      [`&.${SUCCESS_CLASS}`]: {
+        'background-color': '#7AC13E'
+      },
+      [`&.${INFO_CLASS}`]: {
+        'background-color': '#4196E1'
+      },
+      '&:hover': {
+        opacity: 1,
+        'box-shadow': '#000 0 0 12px'
+      }
+    },
+    [`.${TITLE_CLASS}`]: {
+      'font-weight': '500'
+    },
+    [`.${MESSAGE_CLASS}`]: {
+      display: 'inline-block',
+      'vertical-align': 'middle',
+      width: '240px',
+      padding: '0 12px'
+    }
+  }
+}
+
+function makeNode (type = 'div') {
+  return document.createElement(type)
+}
+
+function createIcon (node, type, config) {
+  const iconNode = makeNode(config.icons[type].nodeType)
+  const attrs = config.icons[type].attrs
+
+  for (const k in attrs) {
+    if (attrs.hasOwnProperty(k)) {
+      iconNode.setAttribute(k, attrs[k])
+    }
+  }
+
+  node.appendChild(iconNode)
+}
+
+function addElem (node, text, className, config) {
+  const elem = makeNode()
+  elem.className = className
+  if (config.allowHtml) {
+    elem.innerHTML = text
+  } else {
+    elem.appendChild(document.createTextNode(text))
+  }
+  node.appendChild(elem)
+}
+
+function getTypeClass (type) {
+  if (type === SUCCESS) return SUCCESS_CLASS
+  if (type === WARN) return WARN_CLASS
+  if (type === ERROR) return ERROR_CLASS
+  if (type === INFO) return INFO_CLASS
+
+  return EMPTY_STRING
+}
+
+const miniToastr = {
+  config,
+  isInitialised: false,
+  showMessage (message, title, type, timeout, cb, overrideConf) {
+    const config = {}
+    Object.assign(config, this.config)
+    Object.assign(config, overrideConf)
+
+    const notificationElem = makeNode()
+    notificationElem.className = `${NOTIFICATION_CLASS} ${getTypeClass(type)}`
+
+    notificationElem.onclick = function () {
+      config.animation(notificationElem, null)
+    }
+
+    if (title) addElem(notificationElem, title, TITLE_CLASS, config)
+    if (config.icons[type]) createIcon(notificationElem, type, config)
+    if (message) addElem(notificationElem, message, MESSAGE_CLASS, config)
+
+    config.node.insertBefore(notificationElem, config.node.firstChild)
+    setTimeout(() => config.animation(notificationElem, cb), timeout || config.timeout
+    )
+
+    if (cb) cb()
+    return this
+  },
+  init (aConfig) {
+    const newConfig = {}
+    Object.assign(newConfig, config)
+    Object.assign(newConfig, aConfig)
+    this.config = newConfig
+
+    const cssStr = makeCss(newConfig.style)
+    appendStyles(cssStr)
+
+    newConfig.node.id = CONTAINER_CLASS
+    newConfig.node.className = CONTAINER_CLASS
+    newConfig.appendTarget.appendChild(newConfig.node)
+
+    Object.keys(newConfig.types).forEach(v => {
+      this[newConfig.types[v]] = function (message, title, timeout, cb, config) {
+        this.showMessage(message, title, newConfig.types[v], timeout, cb, config)
+        return this
+      }.bind(this)
+    }
+    )
+
+    this.isInitialised = true
+
+    return this
+  },
+  setIcon (type, nodeType = 'i', attrs = []) {
+    attrs.class = attrs.class ? attrs.class + ' ' + ICON_CLASS : ICON_CLASS
+
+    this.config.icons[type] = {nodeType, attrs}
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (miniToastr);
+
+/***/ }),
+
 /***/ "./node_modules/minimalistic-assert/index.js":
 /*!***************************************************!*\
   !*** ./node_modules/minimalistic-assert/index.js ***!
@@ -26379,13 +26651,14 @@ module.exports = function(module) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
-/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/menu */ "./src/components/menu/index.js");
-/* harmony import */ var _components_page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/page */ "./src/components/page/index.js");
-/* harmony import */ var _pages__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages */ "./src/pages/index.js");
-/* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./conf/config.dat */ "./src/conf/config.dat.js");
-/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/settings */ "./src/lib/settings.js");
-/* harmony import */ var _pages_dashboard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/dashboard */ "./src/pages/dashboard.js");
-/* harmony import */ var _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/dashboard.editor */ "./src/pages/dashboard.editor.js");
+/* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
+/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/menu */ "./src/components/menu/index.js");
+/* harmony import */ var _components_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/page */ "./src/components/page/index.js");
+/* harmony import */ var _pages__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pages */ "./src/pages/index.js");
+/* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./conf/config.dat */ "./src/conf/config.dat.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _pages_dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/dashboard */ "./src/pages/dashboard.js");
+/* harmony import */ var _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/dashboard.editor */ "./src/pages/dashboard.editor.js");
 
 
 
@@ -26394,98 +26667,100 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+mini_toastr__WEBPACK_IMPORTED_MODULE_1__["default"].init({});
 const menus = [{
   title: 'Dashboard',
   pagetitle: '',
   href: 'dashboard',
   class: 'full',
-  component: _pages_dashboard__WEBPACK_IMPORTED_MODULE_6__["DashboardPage"],
+  component: _pages_dashboard__WEBPACK_IMPORTED_MODULE_7__["DashboardPage"],
   children: [{
     title: 'Editor',
     pagetitle: '',
     href: 'dashboard/editor',
     class: 'full',
-    component: _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_7__["DashboardEditorPage"]
+    component: _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_8__["DashboardEditorPage"]
   }]
 }, {
   title: 'Devices',
   href: 'devices',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["DevicesPage"],
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["DevicesPage"],
   children: []
 }, {
   title: 'Controllers',
   href: 'controllers',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["ControllersPage"],
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["ControllersPage"],
   children: []
 }, {
   title: 'Automation',
   href: 'rules',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["RulesEditorPage"],
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["RulesEditorPage"],
   class: 'full',
   children: []
 }, {
   title: 'Config',
   href: 'config',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["ConfigPage"],
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["ConfigPage"],
   children: [{
     title: 'Hardware',
     href: 'config/hardware',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["ConfigHardwarePage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["ConfigHardwarePage"]
   }, {
     title: 'Advanced',
     href: 'config/advanced',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["ConfigAdvancedPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["ConfigAdvancedPage"]
   }, {
     title: 'Rules',
     href: 'config/rules',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["RulesPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["RulesPage"]
   }, {
     title: 'Save',
     href: 'config/save',
-    action: _conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["saveConfig"]
+    action: _conf_config_dat__WEBPACK_IMPORTED_MODULE_5__["saveConfig"]
   }, {
     title: 'Load',
     href: 'config/load',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["LoadPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["LoadPage"]
   }, {
     title: 'Reboot',
     href: 'config/reboot',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["RebootPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["RebootPage"]
   }, {
     title: 'Factory Reset',
     href: 'config/factory',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["FactoryResetPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["FactoryResetPage"]
   }]
 }, {
   title: 'Tools',
   href: 'tools',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["ToolsPage"],
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["ToolsPage"],
   children: [{
     title: 'Discover',
     href: 'tools/discover',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["DiscoverPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["DiscoverPage"]
   }, {
     title: 'Update',
     href: 'tools/update',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["UpdatePage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["UpdatePage"]
   }, {
     title: 'Filesystem',
     href: 'tools/fs',
-    component: _pages__WEBPACK_IMPORTED_MODULE_3__["FSPage"]
+    component: _pages__WEBPACK_IMPORTED_MODULE_4__["FSPage"]
   }]
 }];
 let routes = [{
   title: 'Edit Controller',
   href: 'controllers/edit',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["ControllerEditPage"]
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["ControllerEditPage"]
 }, {
   title: 'Edit Device',
   href: 'devices/edit',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["DevicesEditPage"]
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["DevicesEditPage"]
 }, {
   title: 'Save to Flash',
   href: 'tools/diff',
-  component: _pages__WEBPACK_IMPORTED_MODULE_3__["DiffPage"]
+  component: _pages__WEBPACK_IMPORTED_MODULE_4__["DiffPage"]
 }];
 menus.map(menu => {
   routes = [...routes, menu, ...menu.children];
@@ -26528,10 +26803,10 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       id: "menuLink",
       class: "menu-link",
       onClick: this.menuToggle
-    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_menu__WEBPACK_IMPORTED_MODULE_1__["Menu"], {
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_menu__WEBPACK_IMPORTED_MODULE_2__["Menu"], {
       menus: menus,
       selected: state.menu
-    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_page__WEBPACK_IMPORTED_MODULE_2__["Page"], {
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_page__WEBPACK_IMPORTED_MODULE_3__["Page"], {
       page: state.page,
       params: params,
       changed: this.state.changed
@@ -26543,7 +26818,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
     const fn = () => {
       const newFragment = getFragment();
-      const diff = _lib_settings__WEBPACK_IMPORTED_MODULE_5__["settings"].diff();
+      const diff = _lib_settings__WEBPACK_IMPORTED_MODULE_6__["settings"].diff();
 
       if (this.state.changed !== !!diff.length) {
         this.setState({
@@ -26574,7 +26849,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 }
 
-Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["loadConfig"])().then(() => {
+Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_5__["loadConfig"])().then(() => {
   Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
 });
 
@@ -32028,7 +32303,7 @@ const nodes = [// TRIGGERS
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeConfig, storeFile, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
+/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, storeDashboardConfig, storeRuleConfig, loadRuleConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32038,12 +32313,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfigNodes", function() { return getConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardConfigNodes", function() { return getDashboardConfigNodes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeConfig", function() { return storeConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeFile", function() { return storeFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadConfig", function() { return loadConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRuleConfig", function() { return storeRuleConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadRuleConfig", function() { return loadRuleConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
+/* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
+
 const getJsonStat = async (url = '') => {
   return await fetch(`${url}/json`).then(response => response.json());
 };
@@ -32301,34 +32578,27 @@ const getDashboardConfigNodes = async url => {
     vars
   };
 };
-const storeConfig = async config => {
-  const formData = new FormData();
-  formData.append('edit', 1);
-  formData.append('file', new File([new Blob([config])], "r1.txt"));
-  return await fetch('/upload', {
-    method: 'post',
-    body: formData
-  });
-};
 const storeFile = async (filename, data) => {
+  const file = data ? new File([new Blob([data])], filename) : filename;
   const formData = new FormData();
   formData.append('edit', 1);
-  formData.append('file', new File([new Blob([data])], filename));
+  formData.append('file', file);
   return await fetch('/upload', {
     method: 'post',
     body: formData
+  }).then(() => {
+    mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].success('Successfully saved to flash!', '', 5000);
+  }, e => {
+    mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].error(e.message, '', 5000);
   });
 };
 const storeDashboardConfig = async config => {
-  const formData = new FormData();
-  formData.append('edit', 1);
-  formData.append('file', new File([new Blob([config])], "d1.txt"));
-  return await fetch('/upload', {
-    method: 'post',
-    body: formData
-  });
+  storeFile('d1.txt', config);
 };
-const loadConfig = async () => {
+const storeRuleConfig = async config => {
+  storeFile('r1.txt', config);
+};
+const loadRuleConfig = async () => {
   return await fetch('/r1.txt').then(response => response.json());
 };
 const loadDashboardConfig = async nodes => {
@@ -32817,6 +33087,7 @@ class FlowEditor {
     this.renderedNodes = [];
     this.onSave = config.onSave;
     this.canEdit = !config.readOnly;
+    this.debug = config.debug != null ? config.debug : true;
     this.gridSize = config.gridSize || 1;
     this.element = element;
     nodes.map(nodeConfig => {
@@ -32862,7 +33133,7 @@ class FlowEditor {
     this.canvas.gridSize = this.gridSize;
     this.element.appendChild(this.canvas);
 
-    if (this.canEdit) {
+    if (this.canEdit && this.debug) {
       this.debug = document.createElement('div');
       this.debug.className = 'debug';
       const text = document.createElement('div');
@@ -34921,9 +35192,10 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         return;
       }
 
-      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', this.data);
-      this.stage = 0;
-      window.location.href = '#devices';
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', this.data).then(() => {
+        this.stage = 0;
+        window.location.href = '#devices';
+      });
     };
   }
 
@@ -35315,19 +35587,15 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoadPage", function() { return LoadPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
 
 class LoadPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
 
     this.saveForm = () => {
-      const data = new FormData();
-      data.append('file', this.file.files[0]);
-      data.append('user', 'hubot');
-      fetch('/load', {
-        method: 'POST',
-        body: data
-      }).then(() => {});
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_1__["storeFile"])(this.file.files[0]);
     };
   }
 
@@ -35425,11 +35693,11 @@ class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
       this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](this.element, _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
         onSave: (config, rules) => {
-          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);
+          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRulesConfig"])(config);
           Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
         }
       });
-      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadConfig"])().then(config => {
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadRulesConfig"])().then(config => {
         this.chart.loadConfig(config);
       });
     });

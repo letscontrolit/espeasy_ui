@@ -1,3 +1,5 @@
+import miniToastr from 'mini-toastr';
+
 export const getJsonStat = async (url = '') => {
     return await fetch(`${url}/json`).then(response => response.json())
 }
@@ -230,40 +232,32 @@ export const getDashboardConfigNodes = async (url) => {
     return { nodes, vars };
 }
 
-export const storeConfig = async (config) => {
-    const formData = new FormData();
-    formData.append('edit', 1);
-    formData.append('file', new File([new Blob([config])], "r1.txt"));
-    
-    return await fetch('/upload', {
-        method: 'post',
-        body: formData,
-    });
-}
-
 export const storeFile = async (filename, data) => {
+    const file = data ? new File([new Blob([data])], filename) : filename;
     const formData = new FormData();
     formData.append('edit', 1);
-    formData.append('file', new File([new Blob([data])], filename));
+    formData.append('file', file);
     
     return await fetch('/upload', {
         method: 'post',
         body: formData,
+    }).then(() => {
+        miniToastr.success('Successfully saved to flash!', '', 5000);
+    }, e => {
+        miniToastr.error(e.message, '', 5000);
     });
 }
 
 export const storeDashboardConfig = async (config) => {
-    const formData = new FormData();
-    formData.append('edit', 1);
-    formData.append('file', new File([new Blob([config])], "d1.txt"));
-    
-    return await fetch('/upload', {
-        method: 'post',
-        body: formData,
-    });
+    storeFile('d1.txt', config);
 }
 
-export const loadConfig = async () => {
+export const storeRuleConfig = async (config) => {
+    storeFile('r1.txt', config);
+
+}
+
+export const loadRuleConfig = async () => {
     return await fetch('/r1.txt').then(response => response.json());
 }
 

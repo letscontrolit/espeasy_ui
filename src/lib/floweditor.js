@@ -439,6 +439,7 @@ export class FlowEditor {
         this.renderedNodes = [];
         this.onSave = config.onSave;
         this.canEdit = !config.readOnly;
+        this.debug = config.debug!= null ? config.debug : true;
         this.gridSize = config.gridSize || 1;
 
         this.element = element;
@@ -483,7 +484,7 @@ export class FlowEditor {
         this.canvas.gridSize = this.gridSize;
         this.element.appendChild(this.canvas);
 
-        if (this.canEdit) {
+        if (this.canEdit && this.debug) {
             this.debug = document.createElement('div');
             this.debug.className = 'debug';
 

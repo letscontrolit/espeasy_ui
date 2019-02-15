@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { FlowEditor } from '../lib/floweditor';
 import { nodes } from '../lib/node_definitions';
-import { getConfigNodes, loadConfig, storeConfig, storeRule } from '../lib/espeasy';
+import { getConfigNodes, loadRulesConfig, storeRulesConfig, storeRule } from '../lib/espeasy';
 
 export class RulesEditorPage extends Component {
     constructor(props) {
@@ -27,12 +27,12 @@ export class RulesEditorPage extends Component {
 
             this.chart = new FlowEditor(this.element, nodes, { 
                 onSave: (config, rules) => {
-                    storeConfig(config);
+                    storeRulesConfig(config);
                     storeRule(rules);
                 }
             });
     
-            loadConfig().then(config => {
+            loadRulesConfig().then(config => {
                 this.chart.loadConfig(config);
             });
         });

@@ -1,20 +1,12 @@
 import { h, Component } from 'preact';
+import { storeFile } from '../lib/espeasy';
 
 export class LoadPage extends Component {
     constructor(props) {
         super(props);
 
         this.saveForm = () => {
-            const data = new FormData()
-            data.append('file', this.file.files[0])
-            data.append('user', 'hubot')
-    
-            fetch('/load', {
-                method: 'POST',
-                body: data
-            }).then(() => {
-    
-            });
+            storeFile(this.file.files[0]);
         }
     }
 

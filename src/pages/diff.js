@@ -34,9 +34,11 @@ export class DiffPage extends Component {
                 return;
             }
             
-            storeFile('config.dat', this.data);
-            this.stage = 0;
-            window.location.href='#devices';
+            storeFile('config.dat', this.data).then(() => {
+                this.stage = 0;
+                window.location.href='#devices';
+            });
+            
         };
     }
     

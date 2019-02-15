@@ -1,4 +1,5 @@
 import { h, render, Component } from 'preact';
+import miniToastr from 'mini-toastr';
 import { Menu } from './components/menu';
 import { Page } from './components/page';
 import { ConfigPage, DevicesPage, DevicesEditPage, ControllersPage, ControllerEditPage, ConfigAdvancedPage, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, UpdatePage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, DiffPage, RulesEditorPage } from './pages';
@@ -7,6 +8,8 @@ import { settings } from './lib/settings';
 import { DashboardPage } from './pages/dashboard';
 import { DashboardEditorPage } from './pages/dashboard.editor';
 
+
+miniToastr.init({})
 
 const menus = [
     { title: 'Dashboard', pagetitle: '', href: 'dashboard', class: 'full', component: DashboardPage, children: [
