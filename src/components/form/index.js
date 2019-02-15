@@ -90,6 +90,15 @@ export class Form extends Component {
                 return (
                     <input id={id} type="file" />
                 )
+            case 'button':
+                if (config.if != null && !config.if) return (null);
+                const clickEvent = () => {
+                    if (!config.click) return;
+                    config.click(this.props.selected);
+                }
+                return (
+                    <button type="button" onClick={clickEvent}>GET IT</button>
+                );
         }
     }
 

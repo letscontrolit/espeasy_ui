@@ -1,4 +1,5 @@
 import miniToastr from 'mini-toastr';
+import { loader } from './loader';
 
 export const getJsonStat = async (url = '') => {
     return await fetch(`${url}/json`).then(response => response.json())
@@ -224,8 +225,6 @@ export const getDashboardConfigNodes = async (url) => {
     const vars = [];
     const nodes = devices.map(device => {
         device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
-        const result = [{}];
-
         return [];
     }).flat();
 
@@ -233,6 +232,7 @@ export const getDashboardConfigNodes = async (url) => {
 }
 
 export const storeFile = async (filename, data) => {
+    loader.show();
     const file = data ? new File([new Blob([data])], filename) : filename;
     const formData = new FormData();
     formData.append('edit', 1);
@@ -242,6 +242,16 @@ export const storeFile = async (filename, data) => {
         method: 'post',
         body: formData,
     }).then(() => {
+        loader.hide();
+        miniToastr.success('Successfully saved to flash!', '', 5000);
+    }, e => {
+        loader.hide();
+        miniToastr.error(e.message, '', 5000);
+    });
+}
+
+export const deleteFile = async (filename,) => {    
+    return await fetch('/filelist?delete='+filename).then(() => {
         miniToastr.success('Successfully saved to flash!', '', 5000);
     }, e => {
         miniToastr.error(e.message, '', 5000);
@@ -254,7 +264,6 @@ export const storeDashboardConfig = async (config) => {
 
 export const storeRuleConfig = async (config) => {
     storeFile('r1.txt', config);
-
 }
 
 export const loadRuleConfig = async () => {

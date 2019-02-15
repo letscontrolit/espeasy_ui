@@ -7,6 +7,7 @@ import { loadConfig, saveConfig } from './conf/config.dat';
 import { settings } from './lib/settings';
 import { DashboardPage } from './pages/dashboard';
 import { DashboardEditorPage } from './pages/dashboard.editor';
+import { loader } from './lib/loader';
 
 
 miniToastr.init({})
@@ -69,6 +70,7 @@ class App extends Component {
     }
 
     render(props, state) {
+        
         const params = getFragment().split('/').slice(2);
         const active = this.state.menuActive ? 'active' : '';
         return (
@@ -83,6 +85,8 @@ class App extends Component {
     }
 
     componentDidMount() {
+        loader.hide();
+
         let current = '';
         const fn = () => {
             const newFragment = getFragment();

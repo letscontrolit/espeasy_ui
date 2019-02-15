@@ -47,14 +47,25 @@ export class FactoryResetPage extends Component {
             if (config.keep.ntp) data.append('kntp', 'on');
             if (config.keep.log) data.append('klog', 'on');
             data.append('fdm', config.load.config);
-            data.append('performfactoryreset', 'Factory Reset');
+            data.append('savepref', 'Save Preferences');
             fetch('/factoryreset', {
                 method: 'POST',
                 body: data 
             }).then(() => {
-                setTimeout(() => {
-                    window.location.href="#devices";
-                }, 5000);
+                data.delete('savepref');
+                data.append('performfactoryreset', 'Factory Reset');
+                fetch('/factoryreset', {
+                    method: 'POST',
+                    body: data
+                }).then(() => {
+                    setTimeout(() => {
+                        window.location.href="#devices";
+                    }, 5000);
+                }, e => {
+
+                })
+            }, e => {
+
             });
         };
         return (

@@ -26659,6 +26659,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/settings */ "./src/lib/settings.js");
 /* harmony import */ var _pages_dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/dashboard */ "./src/pages/dashboard.js");
 /* harmony import */ var _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/dashboard.editor */ "./src/pages/dashboard.editor.js");
+/* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lib/loader */ "./src/lib/loader.js");
+
 
 
 
@@ -26814,6 +26816,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   componentDidMount() {
+    _lib_loader__WEBPACK_IMPORTED_MODULE_9__["loader"].hide();
     let current = '';
 
     const fn = () => {
@@ -27015,6 +27018,19 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           id: id,
           type: "file"
         });
+
+      case 'button':
+        if (config.if != null && !config.if) return null;
+
+        const clickEvent = () => {
+          if (!config.click) return;
+          config.click(this.props.selected);
+        };
+
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+          type: "button",
+          onClick: clickEvent
+        }, "GET IT");
     }
   }
 
@@ -32303,7 +32319,7 @@ const nodes = [// TRIGGERS
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, storeDashboardConfig, storeRuleConfig, loadRuleConfig, loadDashboardConfig, storeRule */
+/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, deleteFile, storeDashboardConfig, storeRuleConfig, loadRuleConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32314,12 +32330,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardConfigNodes", function() { return getDashboardConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeFile", function() { return storeFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteFile", function() { return deleteFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRuleConfig", function() { return storeRuleConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadRuleConfig", function() { return loadRuleConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
 /* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
+/* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loader */ "./src/lib/loader.js");
+
 
 const getJsonStat = async (url = '') => {
   return await fetch(`${url}/json`).then(response => response.json());
@@ -32570,7 +32589,6 @@ const getDashboardConfigNodes = async url => {
   const vars = [];
   const nodes = devices.map(device => {
     device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
-    const result = [{}];
     return [];
   }).flat();
   return {
@@ -32579,6 +32597,7 @@ const getDashboardConfigNodes = async url => {
   };
 };
 const storeFile = async (filename, data) => {
+  _loader__WEBPACK_IMPORTED_MODULE_1__["loader"].show();
   const file = data ? new File([new Blob([data])], filename) : filename;
   const formData = new FormData();
   formData.append('edit', 1);
@@ -32587,6 +32606,15 @@ const storeFile = async (filename, data) => {
     method: 'post',
     body: formData
   }).then(() => {
+    _loader__WEBPACK_IMPORTED_MODULE_1__["loader"].hide();
+    mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].success('Successfully saved to flash!', '', 5000);
+  }, e => {
+    _loader__WEBPACK_IMPORTED_MODULE_1__["loader"].hide();
+    mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].error(e.message, '', 5000);
+  });
+};
+const deleteFile = async filename => {
+  return await fetch('/filelist?delete=' + filename).then(() => {
     mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].success('Successfully saved to flash!', '', 5000);
   }, e => {
     mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].error(e.message, '', 5000);
@@ -33240,6 +33268,43 @@ const getKeys = object => {
 };
 
 
+
+/***/ }),
+
+/***/ "./src/lib/loader.js":
+/*!***************************!*\
+  !*** ./src/lib/loader.js ***!
+  \***************************/
+/*! exports provided: loader */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loader", function() { return loader; });
+class Loader {
+  constructor() {
+    const loader = document.createElement('div');
+    loader.className = 'loader';
+    loader.innerHTML = 'loading';
+    document.body.appendChild(loader);
+    this.loader = loader;
+  }
+
+  show() {
+    this.loader.classList.add('show');
+  }
+
+  hide() {
+    this.loader.classList.add('hide');
+    setTimeout(() => {
+      this.loader.classList.remove('hide');
+      this.loader.classList.remove('show');
+    }, 1000);
+  }
+
+}
+
+const loader = new Loader();
 
 /***/ }),
 
@@ -35408,15 +35473,22 @@ class FactoryResetPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] 
       if (config.keep.ntp) data.append('kntp', 'on');
       if (config.keep.log) data.append('klog', 'on');
       data.append('fdm', config.load.config);
-      data.append('performfactoryreset', 'Factory Reset');
+      data.append('savepref', 'Save Preferences');
       fetch('/factoryreset', {
         method: 'POST',
         body: data
       }).then(() => {
-        setTimeout(() => {
-          window.location.href = "#devices";
-        }, 5000);
-      });
+        data.delete('savepref');
+        data.append('performfactoryreset', 'Factory Reset');
+        fetch('/factoryreset', {
+          method: 'POST',
+          body: data
+        }).then(() => {
+          setTimeout(() => {
+            window.location.href = "#devices";
+          }, 5000);
+        }, e => {});
+      }, e => {});
     };
 
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
@@ -35440,12 +35512,23 @@ class FactoryResetPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FSPage", function() { return FSPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
 
 class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
       files: []
+    };
+
+    this.saveForm = () => {
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_1__["storeFile"])(this.file.files[0]);
+    };
+
+    this.deleteFile = e => {
+      const fileName = e.currentTarget.data.name;
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_1__["deleteFile"])(fileName).then(() => this.fetch());
     };
   }
 
@@ -35479,7 +35562,9 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("tr", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: url
       }, file.fileName)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, file.size), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
-        type: "button"
+        type: "button",
+        onClick: this.deleteFile,
+        "data-name": file.fileName
       }, "X")));
     }))));
   }
@@ -35693,11 +35778,11 @@ class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
       this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](this.element, _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
         onSave: (config, rules) => {
-          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRulesConfig"])(config);
+          Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRuleConfig"])(config);
           Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeRule"])(rules);
         }
       });
-      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadRulesConfig"])().then(config => {
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadRuleConfig"])().then(config => {
         this.chart.loadConfig(config);
       });
     });

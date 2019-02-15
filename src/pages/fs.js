@@ -1,9 +1,19 @@
 import { h, Component } from 'preact';
+import { deleteFile, storeFile } from '../lib/espeasy';
 
 export class FSPage extends Component {
     constructor(props) {
         super(props);
         this.state = { files: [] }
+
+        this.saveForm = () => {
+            storeFile(this.file.files[0]);
+        }
+
+        this.deleteFile = e => {
+            const fileName = e.currentTarget.data.name;
+            deleteFile(fileName).then(() => (this.fetch()));
+        }
     }
 
     fetch() {
@@ -41,7 +51,7 @@ export class FSPage extends Component {
                             <td><a href={url}>{file.fileName}</a></td>
                             <td>{file.size}</td>
                             <td>
-                                <button type="button">X</button>
+                                <button type="button" onClick={this.deleteFile} data-name={file.fileName}>X</button>
                             </td>
                         </tr>
                             ); })}
