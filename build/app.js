@@ -26660,6 +26660,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/dashboard */ "./src/pages/dashboard.js");
 /* harmony import */ var _pages_dashboard_editor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/dashboard.editor */ "./src/pages/dashboard.editor.js");
 /* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lib/loader */ "./src/lib/loader.js");
+/* harmony import */ var _lib_plugins__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./lib/plugins */ "./src/lib/plugins.js");
+
 
 
 
@@ -26852,9 +26854,13 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 }
 
-Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_5__["loadConfig"])().then(() => {
+const load = async () => {
+  await Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_5__["loadConfig"])();
+  await Object(_lib_plugins__WEBPACK_IMPORTED_MODULE_10__["loadPlugins"])();
   Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
-});
+};
+
+load();
 
 /***/ }),
 
@@ -33800,6 +33806,54 @@ const writeConfig = (buffer, data, config, start) => {
       p[value.type](value.signed, true, val);
     }
   });
+};
+
+/***/ }),
+
+/***/ "./src/lib/plugins.js":
+/*!****************************!*\
+  !*** ./src/lib/plugins.js ***!
+  \****************************/
+/*! exports provided: loadPlugins */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadPlugins", function() { return loadPlugins; });
+/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./settings */ "./src/lib/settings.js");
+/* harmony import */ var _espeasy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./espeasy */ "./src/lib/espeasy.js");
+/* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loader */ "./src/lib/loader.js");
+
+
+
+const PLUGINS = ['dash.js', 'flow.js'];
+
+const dynamicallyLoadScript = url => {
+  return new Promise(resolve => {
+    var script = document.createElement("script"); // create a script DOM node
+
+    script.src = url; // set its src to the provided URL
+
+    script.onreadystatechange = resolve;
+    script.onload = resolve;
+    script.onerror = resolve;
+    document.head.appendChild(script); // add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
+  });
+};
+
+const getPluginAPI = () => {
+  return {
+    settings: _settings__WEBPACK_IMPORTED_MODULE_0__["settings"],
+    loader: _loader__WEBPACK_IMPORTED_MODULE_2__["loader"],
+    espeasy: _espeasy__WEBPACK_IMPORTED_MODULE_1__["default"]
+  };
+};
+
+window.getPluginAPI = getPluginAPI;
+const loadPlugins = async () => {
+  return Promise.all(PLUGINS.map(async plugin => {
+    return dynamicallyLoadScript(plugin);
+  }));
 };
 
 /***/ }),

@@ -8,6 +8,7 @@ import { settings } from './lib/settings';
 import { DashboardPage } from './pages/dashboard';
 import { DashboardEditorPage } from './pages/dashboard.editor';
 import { loader } from './lib/loader';
+import { loadPlugins } from './lib/plugins';
 
 
 miniToastr.init({})
@@ -110,6 +111,10 @@ class App extends Component {
     componentWillUnmount() {}
 }
 
-loadConfig().then(() => {
+const load = async () => {
+    await loadConfig();
+    await loadPlugins();
     render(<App />, document.body);
-});
+}
+
+load();
