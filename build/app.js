@@ -26505,19 +26505,31 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor() {
     super();
     this.state = {
+      menuActive: false,
       menu: menus[0],
       page: menus[0],
       changed: false
+    };
+
+    this.menuToggle = () => {
+      this.setState({
+        menuActive: !this.state.menuActive
+      });
     };
   }
 
   render(props, state) {
     const params = getFragment().split('/').slice(2);
+    const active = this.state.menuActive ? 'active' : '';
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
-      id: "layout"
-    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_menu__WEBPACK_IMPORTED_MODULE_1__["Menu"], {
+      id: "layout",
+      class: active
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      id: "menuLink",
+      class: "menu-link",
+      onClick: this.menuToggle
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_menu__WEBPACK_IMPORTED_MODULE_1__["Menu"], {
       menus: menus,
-      open: true,
       selected: state.menu
     }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_page__WEBPACK_IMPORTED_MODULE_2__["Page"], {
       page: state.page,
@@ -26548,7 +26560,8 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         if (page) {
           this.setState({
             page,
-            menu
+            menu,
+            menuActive: false
           });
         }
       }

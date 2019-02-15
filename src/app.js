@@ -54,17 +54,26 @@ class App extends Component {
     constructor() {
         super();
         this.state = {
+            menuActive: false,
             menu: menus[0],
             page: menus[0],
             changed: false,
+        }
+
+        this.menuToggle = () => {
+            this.setState({ menuActive: !this.state.menuActive });
         }
     }
 
     render(props, state) {
         const params = getFragment().split('/').slice(2);
+        const active = this.state.menuActive ? 'active' : '';
         return (
-            <div id="layout">
-                <Menu menus={menus} open={true} selected={state.menu} />
+            <div id="layout" class={active}>
+                <a id="menuLink" class="menu-link" onClick={this.menuToggle}>
+                    <span></span>
+                </a>
+                <Menu menus={menus} selected={state.menu} />
                 <Page page={state.page} params={params} changed={this.state.changed} />
             </div>
         );
@@ -84,7 +93,7 @@ class App extends Component {
                 const menu = menus.find(menu => menu.href === parts[0]);
                 const page = parts.length > 1 ? routes.find(route => route.href === `${parts[0]}/${parts[1]}`) : menu;
                 if (page) {
-                    this.setState({ page, menu });
+                    this.setState({ page, menu, menuActive: false });
                 }
             }
         }
