@@ -59,7 +59,7 @@ export class DashboardPage extends Component {
         const timeout = async () => {
             const variables = await getVariables();
             this.setState({ vals: variables });
-            setTimeout(timeout, 1000);
+            if (!this.shutdown) setTimeout(timeout, 1000);
         };
 
         timeout();

@@ -27384,10 +27384,14 @@ const loadConfig = () => {
       console.log(i);
       return Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(securityResponse, SecuritySettings, 1024 * i);
     });
-    return settings;
-  }).then(sets => {
-    _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].init(sets);
-    console.log(sets);
+    return {
+      response,
+      settings
+    };
+  }).then(conf => {
+    _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].init(conf.settings);
+    _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].binary = new Uint8Array(conf.response);
+    console.log(conf.settings);
   });
 };
 
@@ -34680,7 +34684,7 @@ class DashboardPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       this.setState({
         vals: variables
       });
-      setTimeout(timeout, 1000);
+      if (!this.shutdown) setTimeout(timeout, 1000);
     };
 
     timeout();
@@ -34879,23 +34883,49 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
+    this.stage = 0;
 
     this.applyChanges = () => {
-      this.diff.map(d => {
-        const input = this.form.elements[d.path];
+      if (this.stage === 0) {
+        this.diff.map(d => {
+          const input = this.form.elements[d.path];
 
-        if (!input.checked) {
-          _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].set(input.name, d.val1);
-        }
-      });
-      _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
-      const data = Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_2__["saveConfig"])(false);
-      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', data);
+          if (!input.checked) {
+            _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].set(input.name, d.val1);
+          }
+        });
+        _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
+        this.diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
+        this.data = Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_2__["saveConfig"])(false);
+        this.bytediff = Array.from(new Uint8Array(this.data));
+        this.bytediff = this.bytediff.map((byte, i) => {
+          if (byte !== _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].binary[i]) {
+            return `<b style='color:red'>${byte.toString(16)}</b>`;
+          } else return `${byte.toString(16)}`;
+        });
+        this.bytediff = this.bytediff.join(' ');
+        this.stage = 1;
+        return;
+      }
+
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', this.data);
+      this.stage = 0;
       window.location.href = '#devices';
     };
   }
 
   render(props) {
+    if (this.bytediff) {
+      return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+        dangerouslySetInnerHTML: {
+          __html: this.bytediff
+        }
+      }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+        type: "button",
+        onClick: this.applyChanges
+      }, "APPLY"));
+    }
+
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
       ref: ref => this.form = ref
     }, this.diff.map(change => {

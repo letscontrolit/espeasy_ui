@@ -9,23 +9,42 @@ export class DiffPage extends Component {
         super(props);
 
         this.diff = settings.diff();
+        this.stage = 0;
 
         this.applyChanges = () => {
-            this.diff.map(d => {
-                const input = this.form.elements[d.path];
-                if (!input.checked) {
-                    settings.set(input.name, d.val1);
-                }
-            });
-            settings.apply();
-            const data = saveConfig(false);
-            storeFile('config.dat', data);
+            if (this.stage === 0) {
+                this.diff.map(d => {
+                    const input = this.form.elements[d.path];
+                    if (!input.checked) {
+                        settings.set(input.name, d.val1);
+                    }
+                });
+                settings.apply();
+                this.diff = settings.diff();
+                this.data = saveConfig(false);
+                
+                this.bytediff = Array.from(new Uint8Array(this.data));
+                this.bytediff = this.bytediff.map((byte, i) => {
+                    if (byte !== settings.binary[i]) {
+                        return `<b style='color:red'>${byte.toString(16)}</b>`;
+                    } else return `${byte.toString(16)}`;
+                });
+                this.bytediff = this.bytediff.join(' ');
+                this.stage = 1;
+                return;
+            }
+            
+            storeFile('config.dat', this.data);
+            this.stage = 0;
             window.location.href='#devices';
         };
     }
     
 
     render(props) {
+        if (this.bytediff) {
+            return (<div><div dangerouslySetInnerHTML={{ __html: this.bytediff}}></div><button type="button" onClick={this.applyChanges}>APPLY</button></div>)
+        }
         return (
             <form ref={ref => this.form = ref}>
                 {this.diff.map(change => {

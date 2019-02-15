@@ -184,10 +184,11 @@ export const loadConfig = () => {
              return parseConfig(securityResponse, SecuritySettings, 1024 * i);
         });
     
-        return settings;
-    }).then(sets => {
-        settings.init(sets);
-        console.log(sets);
+        return { response, settings };
+    }).then(conf => {
+        settings.init(conf.settings);
+        settings.binary = new Uint8Array(conf.response);
+        console.log(conf.settings);
     });
 }
 

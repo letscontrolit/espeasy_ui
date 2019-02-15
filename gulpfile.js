@@ -8,6 +8,7 @@ var htmlmin = require('gulp-htmlmin');
 var runSequence = require('run-sequence');
 var uglify = require('gulp-uglify-es').default;
 var inlinesource = require('gulp-inline-source');
+var gzip = require('gulp-gzip');
 const urlPrefixer = require('gulp-url-prefixer');
 var gutil = require('gulp-util');
 
@@ -42,6 +43,7 @@ gulp.task('pagesinline', function() {
         removeComments: true
       }))
       .pipe(inlinesource())
+      .pipe(gzip())
       .pipe(gulp.dest('./build'));
   });
 
