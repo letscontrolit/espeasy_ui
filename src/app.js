@@ -9,8 +9,8 @@ import { DashboardEditorPage } from './pages/dashboard.editor';
 
 
 const menus = [
-    { title: 'Dashboard', href: 'dashboard', class: 'full', component: DashboardPage, children: [
-        { title: 'Editor', href: 'dashboard/editor', class: 'full', component: DashboardEditorPage },
+    { title: 'Dashboard', pagetitle: '', href: 'dashboard', class: 'full', component: DashboardPage, children: [
+        { title: 'Editor', pagetitle: '', href: 'dashboard/editor', class: 'full', component: DashboardEditorPage },
     ] },
     { title: 'Devices', href: 'devices', component: DevicesPage, children: [] },
     { title: 'Controllers', href: 'controllers', component: ControllersPage, children: [] },

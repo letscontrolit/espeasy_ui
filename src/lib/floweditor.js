@@ -434,14 +434,14 @@ const showConfigBox = (type, config, onclose) => {
 }
 
 export class FlowEditor {
-    constructor(selector, nodes, config) {
+    constructor(element, nodes, config) {
         this.nodes = [];
         this.renderedNodes = [];
         this.onSave = config.onSave;
         this.canEdit = !config.readOnly;
         this.gridSize = config.gridSize || 1;
 
-        this.element = document.querySelectorAll(selector)[0];
+        this.element = element;
 
         nodes.map(nodeConfig => {
             const node = new Node(nodeConfig);
@@ -464,6 +464,10 @@ export class FlowEditor {
 
     loadConfig(config) {
         loadChart(config, this);
+    }
+
+    saveConfig() {
+        return saveChart(this.renderedNodes);
     }
 
     renderContainers() {

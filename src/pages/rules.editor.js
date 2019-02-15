@@ -11,7 +11,7 @@ export class RulesEditorPage extends Component {
 
     render(props) {
         return (
-            <div class="editor">
+            <div class="editor" ref={ref=> this.element = ref}>
             </div>
         );
     }
@@ -25,7 +25,7 @@ export class RulesEditorPage extends Component {
                 ifElseNode.config[0].loaded = true;
             }
 
-            this.chart = new FlowEditor(".editor", nodes, { 
+            this.chart = new FlowEditor(this.element, nodes, { 
                 onSave: (config, rules) => {
                     storeConfig(config);
                     storeRule(rules);

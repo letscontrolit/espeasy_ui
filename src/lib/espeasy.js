@@ -204,7 +204,7 @@ export const getConfigNodes = async () => {
 }
 
 export const getVariables = async () => {
-    const urls = ['', 'http://192.168.1.130'];
+    const urls = ['']; //, 'http://192.168.1.130'
     const vars = {};
     await Promise.all(urls.map(async url => {
         const stat = await getJsonStat(url);
