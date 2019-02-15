@@ -8447,7 +8447,11 @@ const nodes = [// TRIGGERS
     type: 'number',
     value: '255'
   }, {
-    name: 'size',
+    name: 'image width',
+    type: 'number',
+    value: '255'
+  }, {
+    name: 'image height',
     type: 'number',
     value: '255'
   }, {
@@ -8467,13 +8471,33 @@ const nodes = [// TRIGGERS
   toHtml: function (vals) {
     const val = vals ? vals[this.config[0].value] : 0;
     const width = this.config[2].value;
-    const image1 = this.config[3].value;
-    const image2 = this.config[4].value;
-    const percent = 100 * val / this.config[1].value;
-    const heightPercent = 100;
-    return `<div class="c_fill" style="background: url(${image1});">
-                        <div class="c_fill_val" style="width: ${percent}%; height: ${heightPercent}%;">
-                            <img src="${image2}" width="${width}px" />
+    const height = this.config[3].value;
+    const image1 = this.config[4].value;
+    const image2 = this.config[5].value;
+    let percent = 100 * val / this.config[1].value;
+    let widthPercent, heightPercent;
+
+    switch (this.config[6].value) {
+      case 'right':
+        percent = 100 - percent;
+
+      case 'left':
+        widthPercent = percent;
+        heightPercent = 100;
+        break;
+
+      case 'top':
+        percent = 100 - percent;
+
+      case 'bottom':
+        widthPercent = 100;
+        heightPercent = percent;
+        break;
+    }
+
+    return `<div class="c_fill" style="width: ${width}px; height: ${height}px; background: url(${image1});">
+                        <div class="c_fill_val" style="width: ${widthPercent}%; height: ${heightPercent}%;">
+                            <img src="${image2}" width="${width}px" height="${height}px" />
                         </div>
                     </div>`;
   }
@@ -8534,11 +8558,12 @@ const nodes = [// TRIGGERS
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeConfig, storeFile, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
+/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeConfig, storeFile, storeDashboardConfig, loadConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getJsonStat", function() { return getJsonStat; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDevices", function() { return loadDevices; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfigNodes", function() { return getConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
@@ -8549,8 +8574,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadConfig", function() { return loadConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
-const loadDevices = async () => {
-  return await fetch('/json').then(response => response.json()).then(response => response.Sensors);
+const getJsonStat = async (url = '') => {
+  return await fetch(`${url}/json`).then(response => response.json());
+};
+const loadDevices = async url => {
+  return getJsonStat(url).then(response => response.Sensors);
 };
 const getConfigNodes = async () => {
   const devices = await loadDevices();
@@ -8777,17 +8805,20 @@ const getConfigNodes = async () => {
   };
 };
 const getVariables = async () => {
-  const devices = await loadDevices();
+  const urls = ['', 'http://192.168.1.130'];
   const vars = {};
-  devices.map(device => {
-    device.TaskValues.map(value => {
-      vars[`${device.TaskName}#${value.Name}`] = value.Value;
+  await Promise.all(urls.map(async url => {
+    const stat = await getJsonStat(url);
+    stat.Sensors.map(device => {
+      device.TaskValues.map(value => {
+        vars[`${stat.System.Name}@${device.TaskName}#${value.Name}`] = value.Value;
+      });
     });
-  });
+  }));
   return vars;
 };
-const getDashboardConfigNodes = async () => {
-  const devices = await loadDevices();
+const getDashboardConfigNodes = async url => {
+  const devices = await loadDevices(url);
   const vars = [];
   const nodes = devices.map(device => {
     device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
@@ -8829,7 +8860,7 @@ const storeDashboardConfig = async config => {
 const loadConfig = async () => {
   return await fetch('/r1.txt').then(response => response.json());
 };
-const loadDashboardConfig = async () => {
+const loadDashboardConfig = async nodes => {
   return await fetch('/d1.txt').then(response => response.json());
 };
 const storeRule = async rule => {
@@ -9253,14 +9284,14 @@ const getCfgUI = cfg => {
       break;
 
     case 'textselect':
-      template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;">
-            <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
+      template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><div style="position:relative;display:inline-block;height:30px;">
+            <select style="position:absolute;"
                     onchange="document.getElementById('displayValue').value=this.options[this.selectedIndex].text; document.getElementById('idValue').value=this.options[this.selectedIndex].value;">
                     ${cfg.values.map(val => getSelectOptions(val))}
             </select>
             <input type="text" name="${cfg.name}" id="displayValue" 
                    placeholder="add/select a value" onfocus="this.select()"
-                   style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;"  >
+                   style="position:absolute;top:0px;left:0px;z-index:100;width: 190px;"  >
             <input name="idValue" id="idValue" type="hidden">
           </div></div>`;
   }
@@ -11013,13 +11044,15 @@ class DashboardEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component
   }
 
   componentDidMount() {
-    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getDashboardConfigNodes"])().then(out => {
-      out.nodes.forEach(device => _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
+    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getVariables"])().then(out => {
+      //out.nodes.forEach(device => nodes.unshift(device));
       const varNode = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'VARIABLE');
       const meterNode = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'METER');
-      out.vars.forEach(v => {
+      const imageNode = _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'IMAGE_METER');
+      Object.keys(out).forEach(v => {
         varNode.config[0].values.push(v);
         meterNode.config[0].values.push(v);
+        imageNode.config[0].values.push(v);
       });
       this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_dashboard_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
         gridSize: 10,
@@ -11056,6 +11089,7 @@ __webpack_require__.r(__webpack_exports__);
 class DashboardPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
+    this.shutdown = false;
     this.state = {
       config: [],
       vals: []
@@ -11090,16 +11124,20 @@ class DashboardPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         config
       });
     });
-    this.interval = setInterval(async () => {
+
+    const timeout = async () => {
       const variables = await Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_2__["getVariables"])();
       this.setState({
         vals: variables
       });
-    }, 1000);
+      setTimeout(timeout, 1000);
+    };
+
+    timeout();
   }
 
   componentWillUnmount() {
-    if (this.interval) clearInterval(this.interval);
+    this.shutdown = true;
   }
 
 }
@@ -11232,6 +11270,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+
+    this.handleEnableToggle = e => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].set(e.currentTarget.dataset.prop, e.currentTarget.checked ? 1 : 0);
+    };
+  }
+
   render(props) {
     const tasks = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].get('tasks');
     if (!tasks) return;
@@ -11239,11 +11285,17 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       const editUrl = `#devices/edit/${i}`;
       const device = _devices__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device);
       const deviceType = device ? device.name : '--unknown--';
+      const enabledProp = `tasks[${i}].enabled`;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "info"
-      }, i + 1, ": ", task.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0", task.settings.name, " [", deviceType, "] ", task.gpio1 !== 255 ? `GPIO:${task.gpio1}` : '', Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      }, i + 1, ": ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        type: "checkbox",
+        defaultChecked: task.enabled,
+        "data-prop": enabledProp,
+        onChange: this.handleEnableToggle
+      }), "\xA0\xA0", task.settings.name, " [", deviceType, "] ", task.gpio1 !== 255 ? `GPIO:${task.gpio1}` : '', Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: editUrl
       }, "edit")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "vars"
@@ -11579,7 +11631,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
+/*! exports provided: ControllersPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage, DevicesPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11771,7 +11823,12 @@ class RulesEditorPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["getConfigNodes"])().then(out => {
       out.nodes.forEach(device => _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].unshift(device));
       const ifElseNode = _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"].find(node => node.type === 'if/else');
-      if (!ifElseNode.config[0].values.length) out.vars.forEach(v => ifElseNode.config[0].values.push(v));
+
+      if (!ifElseNode.config[0].loaded) {
+        out.vars.forEach(v => ifElseNode.config[0].values.push(v));
+        ifElseNode.config[0].loaded = true;
+      }
+
       this.chart = new _lib_floweditor__WEBPACK_IMPORTED_MODULE_1__["FlowEditor"](".editor", _lib_node_definitions__WEBPACK_IMPORTED_MODULE_2__["nodes"], {
         onSave: (config, rules) => {
           Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeConfig"])(config);

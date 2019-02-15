@@ -380,14 +380,14 @@ const getCfgUI = cfg => {
             template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><select name='${cfg.name}'>${cfg.values.map(val => (getSelectOptions(val)))}</select></div>`;
             break;
         case 'textselect':
-            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;">
-            <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
+            template.innerHTML = `<div class="pure-control-group"><label>${cfg.name}</label><div style="position:relative;display:inline-block;height:30px;">
+            <select style="position:absolute;"
                     onchange="document.getElementById('displayValue').value=this.options[this.selectedIndex].text; document.getElementById('idValue').value=this.options[this.selectedIndex].value;">
                     ${cfg.values.map(val => (getSelectOptions(val)))}
             </select>
             <input type="text" name="${cfg.name}" id="displayValue" 
                    placeholder="add/select a value" onfocus="this.select()"
-                   style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;"  >
+                   style="position:absolute;top:0px;left:0px;z-index:100;width: 190px;"  >
             <input name="idValue" id="idValue" type="hidden">
           </div></div>`
     }

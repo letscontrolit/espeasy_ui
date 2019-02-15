@@ -1,5 +1,9 @@
-export const loadDevices = async () => {
-    return await fetch('/json').then(response => response.json()).then(response => response.Sensors);
+export const getJsonStat = async (url = '') => {
+    return await fetch(`${url}/json`).then(response => response.json())
+}
+
+export const loadDevices = async (url) => {
+    return getJsonStat(url).then(response => response.Sensors);
 }
 
 export const getConfigNodes = async () => {
@@ -200,18 +204,21 @@ export const getConfigNodes = async () => {
 }
 
 export const getVariables = async () => {
-    const devices = await loadDevices();
+    const urls = ['', 'http://192.168.1.130'];
     const vars = {};
-    devices.map(device => {
-        device.TaskValues.map(value => {
-            vars[`${device.TaskName}#${value.Name}`] = value.Value;
+    await Promise.all(urls.map(async url => {
+        const stat = await getJsonStat(url);
+        stat.Sensors.map(device => {
+            device.TaskValues.map(value => {
+                vars[`${stat.System.Name}@${device.TaskName}#${value.Name}`]  = value.Value;
+            });
         });
-    });
+    }));
     return vars;
 }
 
-export const getDashboardConfigNodes = async () => {
-    const devices = await loadDevices();
+export const getDashboardConfigNodes = async (url) => {
+    const devices = await loadDevices(url);
     const vars = [];
     const nodes = devices.map(device => {
         device.TaskValues.map(value => vars.push(`${device.TaskName}#${value.Name}`));
@@ -260,7 +267,7 @@ export const loadConfig = async () => {
     return await fetch('/r1.txt').then(response => response.json());
 }
 
-export const loadDashboardConfig = async () => {
+export const loadDashboardConfig = async (nodes) => {
     return await fetch('/d1.txt').then(response => response.json());
 }
 

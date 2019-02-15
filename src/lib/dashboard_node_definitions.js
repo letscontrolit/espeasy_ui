@@ -94,7 +94,11 @@ export const nodes = [
             type: 'number',
             value: '255',
         }, {
-            name: 'size',
+            name: 'image width',
+            type: 'number',
+            value: '255',
+        },  {
+            name: 'image height',
             type: 'number',
             value: '255',
         }, {
@@ -114,14 +118,29 @@ export const nodes = [
         toHtml: function(vals) {
             const val = vals ? vals[this.config[0].value] : 0;
             const width = this.config[2].value;
-            const image1 = this.config[3].value;
-            const image2 = this.config[4].value;
-            const percent = 100 * val / this.config[1].value;
-            const heightPercent = 100;
+            const height = this.config[3].value;
+            const image1 = this.config[4].value;
+            const image2 = this.config[5].value;
+            let percent = 100 * val / this.config[1].value;
+            let widthPercent, heightPercent;
+            switch (this.config[6].value) {
+                case 'right':
+                    percent = 100 - percent;
+                case 'left':
+                    widthPercent = percent;
+                    heightPercent = 100;
+                    break;
+                case 'top':
+                    percent = 100 - percent;
+                case 'bottom':
+                    widthPercent = 100;
+                    heightPercent = percent;
+                    break;
+            }
 
-            return `<div class="c_fill" style="background: url(${image1});">
-                        <div class="c_fill_val" style="width: ${percent}%; height: ${heightPercent}%;">
-                            <img src="${image2}" width="${width}px" />
+            return `<div class="c_fill" style="width: ${width}px; height: ${height}px; background: url(${image1});">
+                        <div class="c_fill_val" style="width: ${widthPercent}%; height: ${heightPercent}%;">
+                            <img src="${image2}" width="${width}px" height="${height}px" />
                         </div>
                     </div>`;
         }

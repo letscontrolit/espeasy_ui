@@ -20,8 +20,10 @@ export class RulesEditorPage extends Component {
         getConfigNodes().then((out) => {
             out.nodes.forEach(device => nodes.unshift(device));
             const ifElseNode = nodes.find(node => node.type === 'if/else');
-            if (!ifElseNode.config[0].values.length)
-            out.vars.forEach(v => ifElseNode.config[0].values.push(v)); 
+            if (!ifElseNode.config[0].loaded) {
+                out.vars.forEach(v => ifElseNode.config[0].values.push(v)); 
+                ifElseNode.config[0].loaded = true;
+            }
 
             this.chart = new FlowEditor(".editor", nodes, { 
                 onSave: (config, rules) => {

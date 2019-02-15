@@ -5,6 +5,7 @@ import { getVariables, loadDashboardConfig } from '../lib/espeasy';
 export class DashboardPage extends Component {
     constructor(props) {
         super(props);
+        this.shutdown = false;
         this.state = {
             config: [], vals: []
         }
@@ -33,13 +34,16 @@ export class DashboardPage extends Component {
             this.setState({ config });
         });
 
-        this.interval = setInterval(async () => {
+        const timeout = async () => {
             const variables = await getVariables();
             this.setState({ vals: variables });
-        }, 1000);
+            setTimeout(timeout, 1000);
+        };
+
+        timeout();
     }
 
     componentWillUnmount() {
-        if (this.interval) clearInterval(this.interval);
+        this.shutdown = true;
     }
 }

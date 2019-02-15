@@ -414,6 +414,13 @@ fieldset > label {
     white-space: nowrap;
 }
 
+.c_fill {
+    background-size: contain !important;
+}
 .c_fill_val {
     overflow: hidden;
+}
+
+.pure-form select {
+    max-width: 215px;
 }
