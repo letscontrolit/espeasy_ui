@@ -47,6 +47,7 @@ export class Form extends Component {
     }
 
     renderConfig(id, config, value, varName) {
+        
         switch (config.type) {
             case 'string':
                 return (
@@ -54,7 +55,7 @@ export class Form extends Component {
                 );
             case 'number':
                 return (
-                    <input id={id} type="number" value={value} onChange={this.onChange(id, varName, config)}/>
+                    <input id={id} type="number" value={value} min={config.min} max={config.max} onChange={this.onChange(id, varName, config)}/>
                 ) ;
             case 'ip':
                 return [
@@ -105,6 +106,7 @@ export class Form extends Component {
     renderConfigGroup(id, configs, values) {
         const configArray = Array.isArray(configs) ? configs : [configs];
 
+        
         return (
             <div class="pure-control-group">
                 {configArray.map((conf, i) => {
@@ -112,6 +114,9 @@ export class Form extends Component {
                     const varName = conf.var ? conf.var : varId;
                     const val = get(values, varName, null);
 
+                    if (conf.if) {
+                        if (!get(settings.settings, conf.if, false)) return(null);
+                    }
                     return [
                         (<label for={varId}>{conf.name}</label>),
                         this.renderConfig(varId, conf, val, varName)
@@ -122,7 +127,7 @@ export class Form extends Component {
     }
 
     renderGroup(id, group, values) {
-        if (!group.configs) return (null);
+        if (!group.configs || !Object.keys(group.configs).length) return (null);
         const keys = getKeys(group.configs);
         return (
             <fieldset name={id}>

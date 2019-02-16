@@ -12,6 +12,19 @@ const baseFields = {
 const getFormConfig = (type) => {
     const device = devices.find(d => d.value === parseInt(type));
     if (!device) return null;
+
+    const dataAcquisitionForm = device.fields.data ? {
+        name: 'Data Acquisition',
+        configs: {
+            send1: { name: 'Send to Controller 1', type: 'checkbox', var: 'TaskDeviceSendData[0]', if: 'controllers[0].enabled' },
+            send2: { name: 'Send to Controller 2', type: 'checkbox', var: 'TaskDeviceSendData[1]', if: 'controllers[1].enabled' },
+            send3: { name: 'Send to Controller 3', type: 'checkbox', var: 'TaskDeviceSendData[2]', if: 'controllers[2].enabled' },
+            idx1: { name: 'IDX1', type: 'number', var: 'TaskDeviceID[0]', if: 'controllers[0].enabled' },
+            idx2: { name: 'IDX2', type: 'number', var: 'TaskDeviceID[1]', if: 'controllers[1].enabled' },
+            idx3: { name: 'IDX3', type: 'number', var: 'TaskDeviceID[2]', if: 'controllers[2].enabled' },
+            interval: { name: 'Interval', type: 'number', var: 'interval' },
+        }
+    }: {};
        
     return {
         groups: {
@@ -24,11 +37,12 @@ const getFormConfig = (type) => {
                 }
             },
             ...device.fields,
+            data: dataAcquisitionForm,
             values: {
                 name: 'Values',
                 configs: {
-                    ...[...new Array(4)].reduce((acc, x, i) => {
-                        acc[`value${i}`] = [{ name: 'Name ${i}', var: `settings.values[${i}].name`, type: 'string' }, { name: 'Formula ${i}', var: `settings.values[${i}].formula`, type: 'string' }];
+                    ...[...new Array(device.vals || 0)].reduce((acc, x, i) => {
+                        acc[`value${i}`] = [{ name: `Name ${i+1}`, var: `settings.values[${i}].name`, type: 'string' }, { name: `Formula ${i+1}`, var: `settings.values[${i}].formula`, type: 'string' }];
                         return acc;
                     }, {})
                 }

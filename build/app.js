@@ -3394,6 +3394,8 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           id: id,
           type: "number",
           value: value,
+          min: config.min,
+          max: config.max,
           onChange: this.onChange(id, varName, config)
         });
 
@@ -3498,6 +3500,11 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       const varId = configArray.length > 1 ? `${id}.${i}` : id;
       const varName = conf.var ? conf.var : varId;
       const val = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
+
+      if (conf.if) {
+        if (!Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["get"])(_lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].settings, conf.if, false)) return null;
+      }
+
       return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
         for: varId
       }, conf.name), this.renderConfig(varId, conf, val, varName)];
@@ -3505,7 +3512,7 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   renderGroup(id, group, values) {
-    if (!group.configs) return null;
+    if (!group.configs || !Object.keys(group.configs).length) return null;
     const keys = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["getKeys"])(group.configs);
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("fieldset", {
       name: id
@@ -5150,6 +5157,8 @@ const inputSwitch = {
   defaults: () => ({
     gpio1: 255,
     interval: 60,
+    'configs_float[1]': 1000,
+    'configs_float[2]': 1000,
     'settings.values[0].name': 'Output'
   }),
   sensor: {
@@ -5221,6 +5230,8 @@ const inputSwitch = {
       },
       dblclick_interval: {
         name: 'Doubleclick Max interval (ms)',
+        min: 1000,
+        max: 3000,
         type: 'number',
         var: 'configs_float[1]'
       },
@@ -5232,6 +5243,8 @@ const inputSwitch = {
       },
       longpress_interval: {
         name: 'Longpress min interval (ms)',
+        min: 1000,
+        max: 5000,
         type: 'number',
         var: 'configs_float[2]'
       },
@@ -5248,32 +5261,38 @@ const inputSwitch = {
       send1: {
         name: 'Send to Controller 1',
         type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
+        var: 'TaskDeviceSendData[0]',
+        if: 'controllers[0].enabled'
       },
       send2: {
         name: 'Send to Controller 2',
         type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
+        var: 'TaskDeviceSendData[1]',
+        if: 'controllers[1].enabled'
       },
       send3: {
         name: 'Send to Controller 3',
         type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
+        var: 'TaskDeviceSendData[2]',
+        if: 'controllers[2].enabled'
       },
       idx1: {
         name: 'IDX1',
         type: 'number',
-        var: 'TaskDeviceID[0]'
+        var: 'TaskDeviceID[0]',
+        if: 'controllers[0].enabled'
       },
       idx2: {
         name: 'IDX2',
         type: 'number',
-        var: 'TaskDeviceID[1]'
+        var: 'TaskDeviceID[1]',
+        if: 'controllers[1].enabled'
       },
       idx3: {
         name: 'IDX3',
         type: 'number',
-        var: 'TaskDeviceID[2]'
+        var: 'TaskDeviceID[2]',
+        if: 'controllers[2].enabled'
       },
       interval: {
         name: 'Interval',
@@ -6253,46 +6272,8 @@ const analogInput = {
       }]
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -8381,6 +8362,7 @@ const devices = [{
 }, {
   name: 'Switch input - Switch',
   value: 1,
+  vals: 1,
   fields: _1_input_switch__WEBPACK_IMPORTED_MODULE_0__["inputSwitch"]
 }, {
   name: 'Analog input - internal',
@@ -11299,6 +11281,52 @@ const baseFields = {
 const getFormConfig = type => {
   const device = _devices__WEBPACK_IMPORTED_MODULE_3__["devices"].find(d => d.value === parseInt(type));
   if (!device) return null;
+  const dataAcquisitionForm = device.fields.data ? {
+    name: 'Data Acquisition',
+    configs: {
+      send1: {
+        name: 'Send to Controller 1',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[0]',
+        if: 'controllers[0].enabled'
+      },
+      send2: {
+        name: 'Send to Controller 2',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[1]',
+        if: 'controllers[1].enabled'
+      },
+      send3: {
+        name: 'Send to Controller 3',
+        type: 'checkbox',
+        var: 'TaskDeviceSendData[2]',
+        if: 'controllers[2].enabled'
+      },
+      idx1: {
+        name: 'IDX1',
+        type: 'number',
+        var: 'TaskDeviceID[0]',
+        if: 'controllers[0].enabled'
+      },
+      idx2: {
+        name: 'IDX2',
+        type: 'number',
+        var: 'TaskDeviceID[1]',
+        if: 'controllers[1].enabled'
+      },
+      idx3: {
+        name: 'IDX3',
+        type: 'number',
+        var: 'TaskDeviceID[2]',
+        if: 'controllers[2].enabled'
+      },
+      interval: {
+        name: 'Interval',
+        type: 'number',
+        var: 'interval'
+      }
+    }
+  } : {};
   return {
     groups: {
       settings: {
@@ -11314,15 +11342,16 @@ const getFormConfig = type => {
         }
       },
       ...device.fields,
+      data: dataAcquisitionForm,
       values: {
         name: 'Values',
-        configs: { ...[...new Array(4)].reduce((acc, x, i) => {
+        configs: { ...[...new Array(device.vals || 0)].reduce((acc, x, i) => {
             acc[`value${i}`] = [{
-              name: 'Name ${i}',
+              name: `Name ${i + 1}`,
               var: `settings.values[${i}].name`,
               type: 'string'
             }, {
-              name: 'Formula ${i}',
+              name: `Formula ${i + 1}`,
               var: `settings.values[${i}].formula`,
               type: 'string'
             }];
