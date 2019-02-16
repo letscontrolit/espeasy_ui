@@ -4,7 +4,7 @@ var LiveReloadPlugin = require('webpack-livereload-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = env => ({
-    mode: env && env.production ? 'production' : 'development',
+    mode: 'production', //env && env.production ? 'production' : 'development',
     entry: {
         app: './src/app.js',
         dash: './src/plugins/dashboard/index.js',
