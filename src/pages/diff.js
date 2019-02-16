@@ -36,7 +36,7 @@ export class DiffPage extends Component {
             
             storeFile('config.dat', this.data).then(() => {
                 this.stage = 0;
-                window.location.href='#devices';
+                window.location.href='#config/reboot';
             });
             
         };

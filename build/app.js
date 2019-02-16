@@ -10311,7 +10311,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
       Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', this.data).then(() => {
         this.stage = 0;
-        window.location.href = '#devices';
+        window.location.href = '#config/reboot';
       });
     };
   }
@@ -10633,7 +10633,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, RulesEditorPage, DiffPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
