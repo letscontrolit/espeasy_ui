@@ -1,8 +1,6 @@
 import { 
     ConfigPage, 
     DevicesPage, 
-    DashboardPage,
-    DashboardEditorPage,
     DevicesEditPage, 
     ControllersPage, 
     ControllerEditPage, 
@@ -20,10 +18,29 @@ import {
     RulesEditorPage 
 } from '../pages';
 
+import { saveConfig } from '../conf/config.dat';
+
+class Menus {
+    constructor() {
+        this.menus = [];
+        this.routes = [];
+
+        this.addMenu = (menu) => {
+            this.menus.push(menu);
+            this.addRoute(menu);
+        }
+
+        this.addRoute = (route) => {
+            this.routes.push(route);
+            if (route.children) {
+                route.children.forEach(child => this.routes.push(child));
+            }
+        }
+    }
+    
+}
+
 const menus = [
-    { title: 'Dashboard', pagetitle: '', href: 'dashboard', class: 'full', component: DashboardPage, children: [
-        { title: 'Editor', pagetitle: '', href: 'dashboard/editor', class: 'full', component: DashboardEditorPage },
-    ] },
     { title: 'Devices', href: 'devices', component: DevicesPage, children: [] },
     { title: 'Controllers', href: 'controllers', component: ControllersPage, children: [] },
     { title: 'Automation', href: 'rules', component: RulesEditorPage, class: 'full', children: [] },
@@ -43,13 +60,14 @@ const menus = [
     ] },
 ];
 
-let routes = [
+const routes = [
     { title: 'Edit Controller', href:'controllers/edit', component: ControllerEditPage },
     { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage },
     { title: 'Save to Flash', href:'tools/diff', component: DiffPage }
 ];
-menus.map(menu => {
-    routes = [...routes, menu, ...menu.children];
-});
+
+const menu = new Menus();
+routes.forEach(menu.addRoute);
+menus.forEach(menu.addMenu)
 
 export { menu };

@@ -262,16 +262,16 @@ export const storeDashboardConfig = async (config) => {
     storeFile('d1.txt', config);
 }
 
+export const loadDashboardConfig = async (nodes) => {
+    return await fetch('/d1.txt').then(response => response.json());
+}
+
 export const storeRuleConfig = async (config) => {
     storeFile('r1.txt', config);
 }
 
 export const loadRuleConfig = async () => {
     return await fetch('/r1.txt').then(response => response.json());
-}
-
-export const loadDashboardConfig = async (nodes) => {
-    return await fetch('/d1.txt').then(response => response.json());
 }
 
 export const storeRule = async (rule) => {
@@ -283,4 +283,9 @@ export const storeRule = async (rule) => {
         method: 'post',
         body: formData,
     });
+}
+
+
+export default {
+    getJsonStat, loadDevices, getConfigNodes, getDashboardConfigNodes, getVariables, storeFile, deleteFile, storeDashboardConfig, loadDashboardConfig, storeRuleConfig, loadRuleConfig, storeRule
 }

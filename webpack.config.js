@@ -5,10 +5,12 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 
 module.exports = env => ({
     mode: env && env.production ? 'production' : 'development',
-    entry: './src/app.js',
+    entry: {
+        app: './src/app.js',
+        dash: './src/plugins/dashboard/index.js',
+    },
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'app.js'
     },
     plugins: [
         new LiveReloadPlugin(),

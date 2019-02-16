@@ -1,8 +1,7 @@
 import { h, Component } from 'preact';
-import { FlowEditor } from '../lib/floweditor';
-import { nodes } from '../lib/dashboard_node_definitions';
-import { getDashboardConfigNodes, loadDashboardConfig, storeDashboardConfig, storeRule, getVariables } from '../lib/espeasy';
-import { timingSafeEqual } from 'crypto';
+import { FlowEditor } from '../../lib/floweditor';
+import { nodes } from './dashboard_node_definitions';
+import { loadDashboardConfig, storeDashboardConfig, getVariables } from './api';
 
 export class DashboardEditorPage extends Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
-import { nodes } from '../lib/dashboard_node_definitions';
-import { getVariables, loadDashboardConfig } from '../lib/espeasy';
+import { nodes } from './dashboard_node_definitions';
+import { getVariables, loadDashboardConfig } from './api';
 
 export class DashboardPage extends Component {
     constructor(props) {

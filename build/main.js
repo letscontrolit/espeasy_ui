@@ -3289,7 +3289,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         if (page) {
           this.setState({
             page,
-            menu: m,
+            m,
             menuActive: false
           });
         }
@@ -8561,7 +8561,7 @@ const devices = [{
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, deleteFile, storeDashboardConfig, loadDashboardConfig, storeRuleConfig, loadRuleConfig, storeRule, default */
+/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, deleteFile, storeDashboardConfig, storeRuleConfig, loadRuleConfig, loadDashboardConfig, storeRule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8574,9 +8574,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeFile", function() { return storeFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteFile", function() { return deleteFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRuleConfig", function() { return storeRuleConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadRuleConfig", function() { return loadRuleConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadDashboardConfig", function() { return loadDashboardConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeRule", function() { return storeRule; });
 /* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
 /* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loader */ "./src/lib/loader.js");
@@ -8865,14 +8865,14 @@ const deleteFile = async filename => {
 const storeDashboardConfig = async config => {
   storeFile('d1.txt', config);
 };
-const loadDashboardConfig = async nodes => {
-  return await fetch('/d1.txt').then(response => response.json());
-};
 const storeRuleConfig = async config => {
   storeFile('r1.txt', config);
 };
 const loadRuleConfig = async () => {
   return await fetch('/r1.txt').then(response => response.json());
+};
+const loadDashboardConfig = async nodes => {
+  return await fetch('/d1.txt').then(response => response.json());
 };
 const storeRule = async rule => {
   const formData = new FormData();
@@ -8883,20 +8883,6 @@ const storeRule = async rule => {
     body: formData
   });
 };
-/* harmony default export */ __webpack_exports__["default"] = ({
-  getJsonStat,
-  loadDevices,
-  getConfigNodes,
-  getDashboardConfigNodes,
-  getVariables,
-  storeFile,
-  deleteFile,
-  storeDashboardConfig,
-  loadDashboardConfig,
-  storeRuleConfig,
-  loadRuleConfig,
-  storeRule
-});
 
 /***/ }),
 
@@ -10201,7 +10187,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PLUGINS = ['http://localhost:8080/build/dash.js', 'flow.js'];
+const PLUGINS = ['dash.js', 'flow.js'];
 
 const dynamicallyLoadScript = url => {
   return new Promise(resolve => {
@@ -12207,4 +12193,4 @@ class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=main.js.map

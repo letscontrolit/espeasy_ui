@@ -1,9 +1,10 @@
 import { settings } from './settings';
 import espeasy from './espeasy';
 import { loader } from './loader';
+import { menu } from './menu';
 
 const PLUGINS = [
-    'dash.js', 'flow.js',
+    'http://localhost:8080/build/dash.js', 'flow.js',
 ];
 
 const dynamicallyLoadScript = (url) => {
@@ -21,6 +22,7 @@ const getPluginAPI = () => {
     return {
         settings,
         loader,
+        menu,
         espeasy,
     }
 }

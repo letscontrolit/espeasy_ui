@@ -6,6 +6,7 @@ import { loadConfig } from './conf/config.dat';
 import { settings } from './lib/settings';
 import { loader } from './lib/loader';
 import { loadPlugins } from './lib/plugins';
+import { menu } from './lib/menu';
 
 miniToastr.init({})
 
@@ -24,8 +25,8 @@ class App extends Component {
         super();
         this.state = {
             menuActive: false,
-            menu: menus[0],
-            page: menus[0],
+            menu: menu.menus[0],
+            page:  menu.menus[0],
             changed: false,
         }
 
@@ -43,7 +44,7 @@ class App extends Component {
                 <a id="menuLink" class="menu-link" onClick={this.menuToggle}>
                     <span></span>
                 </a>
-                <Menu menus={menus} selected={state.menu} />
+                <Menu menus={menu.menus} selected={state.menu} />
                 <Page page={state.page} params={params} changed={this.state.changed} />
             </div>
         );
@@ -62,10 +63,10 @@ class App extends Component {
             if(current !== newFragment) {
                 current = newFragment;
                 const parts = current.split('/');
-                const menu = menus.find(menu => menu.href === parts[0]);
-                const page = parts.length > 1 ? routes.find(route => route.href === `${parts[0]}/${parts[1]}`) : menu;
+                const m = menu.menus.find(menu => menu.href === parts[0]);
+                const page = parts.length > 1 ? menu.routes.find(route => route.href === `${parts[0]}/${parts[1]}`) : m;
                 if (page) {
-                    this.setState({ page, menu, menuActive: false });
+                    this.setState({ page, menu: m, menuActive: false });
                 }
             }
         }
