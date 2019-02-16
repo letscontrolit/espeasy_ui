@@ -8,6 +8,11 @@ const eventTypes = [
 ]
 
 export const inputSwitch = {
+    defaults: () => ({
+        gpio1: 255,
+        interval: 60,
+        'settings.values[0].name': 'Output',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

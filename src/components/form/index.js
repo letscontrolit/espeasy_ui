@@ -122,6 +122,7 @@ export class Form extends Component {
     }
 
     renderGroup(id, group, values) {
+        if (!group.configs) return (null);
         const keys = getKeys(group.configs);
         return (
             <fieldset name={id}>

@@ -2,6 +2,9 @@
 import { pins } from './_defs';
 
 export const ttp229 = {
+    defaults: () => ({
+        'gpio1' : 1,
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
