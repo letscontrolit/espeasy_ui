@@ -9763,6 +9763,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _lib_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/helpers */ "./src/lib/helpers.js");
+
 
 
 
@@ -9899,6 +9901,75 @@ const lwtTopicField = {
     type: 'string'
   }
 };
+const baseDefaults = {
+  port: 1883,
+  minimal_time_between: 100,
+  max_queue_depth: 10,
+  max_retry: 10,
+  client_timeout: 1000
+};
+const getDefaults = {
+  1: () => ({
+    // Domoticz HTTP
+    port: 8080
+  }),
+  2: () => ({
+    // Domoticz MQTT
+    subscribe: 'domoticz/out',
+    public: 'domoticz/in'
+  }),
+  3: () => ({
+    // Nodo Telnet
+    port: 23
+  }),
+  4: () => ({
+    // ThingSpeak
+    port: 80
+  }),
+  5: () => ({
+    // OpenHAB MQTT
+    subscribe: '/%sysname%/#',
+    publish: '/%sysname%/%tskname%/%valname%'
+  }),
+  6: () => ({
+    // PiDome MQTT
+    subscribe: '/Home/#',
+    publish: '/hooks/devices/%id%/SensorData/%valname%'
+  }),
+  7: () => ({
+    // Emoncms
+    port: 80
+  }),
+  8: () => ({
+    // Generic HTTP
+    port: 80,
+    publish: 'demo.php?name=%sysname%&task=%tskname%&valuename=%valname%&value=%value%'
+  }),
+  9: () => ({
+    // FHEM HTTP
+    port: 8383
+  }),
+  10: () => ({
+    // Generic UDP
+    port: 514,
+    publish: '%sysname%_%tskname%_%valname%=%value%'
+  }),
+  13: () => ({
+    // EspEasy P2P
+    port: 65501,
+    Custom: 1
+  })
+};
+
+const setDefaultConfig = (type, config) => {
+  const defaults = { ...baseDefaults,
+    ...getDefaults[type]()
+  };
+  Object.keys(defaults).forEach(key => {
+    const val = defaults[key];
+    Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_3__["set"])(config.settings, key, val);
+  });
+};
 
 const getFormConfig = type => {
   let additionalFields = {};
@@ -10015,6 +10086,7 @@ class ControllerEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"
       this.setState({
         protocol: e.currentTarget.value
       });
+      setDefaultConfig(e.currentTarget.value, this.config);
     };
 
     formConfig.onSave = values => {
@@ -10684,7 +10756,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, DevicesEditPage, DiffPage, RulesEditorPage, protocols, ControllerEditPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
+import { set } from '../lib/helpers';
 
 export const protocols = [
     { name: '- Standalone -', value: 0 },
@@ -37,6 +38,53 @@ const password = { name: 'Controller Password', type: 'password' };
 const subscribe = { name: 'Controller Subscribe', type: 'string' };
 const publish = { name: 'Controller Publish', type: 'string' };
 const lwtTopicField = { MQTT_lwt_topic: { name: 'Controller LWT topic:', type: 'string' }, lwt_message_connect: { name: 'LWT Connect Message', type: 'string' }, lwt_message_disconnect: { name: 'LWT Disconnect Message', type: 'string' }, };
+
+const baseDefaults = {
+    port: 1883,
+    minimal_time_between: 100,
+    max_queue_depth: 10,
+    max_retry: 10,
+    client_timeout: 1000,
+}
+const getDefaults = {
+    1: () => ({ // Domoticz HTTP
+        port: 8080,
+    }), 2: () => ({ // Domoticz MQTT
+        subscribe: 'domoticz/out',
+        public: 'domoticz/in'
+    }), 3: () => ({ // Nodo Telnet
+        port: 23,
+    }), 4: () => ({ // ThingSpeak
+        port: 80,
+    }), 5: () => ({ // OpenHAB MQTT
+        subscribe: '/%sysname%/#',
+        publish: '/%sysname%/%tskname%/%valname%',
+    }), 6: () => ({ // PiDome MQTT
+        subscribe: '/Home/#',
+        publish: '/hooks/devices/%id%/SensorData/%valname%',
+    }), 7: () => ({ // Emoncms
+        port: 80,
+    }), 8: () => ({ // Generic HTTP
+        port: 80,
+        publish: 'demo.php?name=%sysname%&task=%tskname%&valuename=%valname%&value=%value%',
+    }), 9: () => ({ // FHEM HTTP
+        port: 8383,
+    }), 10: () => ({ // Generic UDP
+        port: 514,
+        publish: '%sysname%_%tskname%_%valname%=%value%',
+    }), 13: () => ({ // EspEasy P2P
+        port: 65501,
+        Custom: 1
+    }), 
+}
+
+const setDefaultConfig = (type, config) => {
+    const defaults = {...baseDefaults, ...getDefaults[type]()};
+    Object.keys(defaults).forEach((key) => {
+        const val = defaults[key];
+        set(config.settings, key, val);
+    });
+}
 
 const getFormConfig = (type) => {
     let additionalFields = {};
@@ -83,6 +131,7 @@ const getFormConfig = (type) => {
     }
 }
 
+
 // todo: changing protocol needs to update:
 // -- back to default (correct default)
 // -- field list 
@@ -100,6 +149,7 @@ export class ControllerEditPage extends Component {
         const formConfig = getFormConfig(this.state.protocol);
         formConfig.groups.settings.configs.protocol.onChange = (e) => {
             this.setState({ protocol: e.currentTarget.value });
+            setDefaultConfig(e.currentTarget.value, this.config);
         };
         formConfig.onSave = (values) => {
             settings.set(`controllers[${props.params[0]}]`, values);
