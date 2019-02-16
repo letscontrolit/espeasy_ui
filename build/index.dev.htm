@@ -6,8 +6,41 @@
     <title>ESPEasy</title>
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="http://localhost:8080/src/styles.css">
-  </head>
-  <body>
+    <style>
+        body.loading {
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+  
+        .loadingspinner {
+          display: none;
+          pointer-events: none;
+          width: 2.5em;
+          height: 2.5em;
+          border: 0.4em solid transparent;
+          border-color: #eee;
+          border-top-color: #3E67EC;
+          border-radius: 50%;
+          animation: loadingspin 1s linear infinite;
+        }
+  
+        body.loading .loadingspinner {
+          display: block;
+        }
+  
+        @keyframes loadingspin {
+          100% {
+              transform: rotate(360deg)
+          }
+        }
+      </style>
+    </head>
+    <body class="loading">
+      <div class="loadingspinner"></div>
     <script src="http://localhost:8080/build/app.js"></script> 
     <script src="http://localhost:35729/livereload.js"></script>
   </body>

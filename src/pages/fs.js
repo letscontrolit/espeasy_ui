@@ -11,7 +11,7 @@ export class FSPage extends Component {
         }
 
         this.deleteFile = e => {
-            const fileName = e.currentTarget.data.name;
+            const fileName = e.currentTarget.dataset.name;
             deleteFile(fileName).then(() => (this.fetch()));
         }
     }

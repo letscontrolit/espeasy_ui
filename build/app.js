@@ -3306,6 +3306,7 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 const load = async () => {
   await Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["loadConfig"])();
   await Object(_lib_plugins__WEBPACK_IMPORTED_MODULE_7__["loadPlugins"])();
+  document.body.classList.remove("loading");
   Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
 };
 
@@ -11734,7 +11735,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     };
 
     this.deleteFile = e => {
-      const fileName = e.currentTarget.data.name;
+      const fileName = e.currentTarget.dataset.name;
       Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_1__["deleteFile"])(fileName).then(() => this.fetch());
     };
   }
