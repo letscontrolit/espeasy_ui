@@ -3334,30 +3334,6 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
 
-    this.saveForm = () => {
-      const values = {};
-      const groups = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["getKeys"])(this.props.config.groups);
-      groups.map(groupKey => {
-        const group = this.props.config.groups[groupKey];
-        const keys = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["getKeys"])(group.configs);
-        if (!values[groupKey]) values[groupKey] = {};
-        keys.map(key => {
-          let val = this.form.elements[`${groupKey}.${key}`].value;
-
-          if (group.configs[key].type === 'checkbox') {
-            val = val === 'on' ? 1 : 0;
-          }
-
-          values[groupKey][key] = val;
-        });
-      });
-      this.props.config.onSave(values);
-    };
-
-    this.resetForm = () => {
-      this.form.reset();
-    };
-
     this.onChange = (id, prop, config = {}) => {
       return e => {
         let val = this.form.elements[id].value;
@@ -3478,8 +3454,6 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         });
 
       case 'button':
-        if (config.if != null && !config.if) return null;
-
         const clickEvent = () => {
           if (!config.click) return;
           config.click(this.props.selected);
@@ -3843,7 +3817,7 @@ const configDatParseConfig = [{
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].configs_long`,
   type: 'longs',
-  length: PLUGIN_CONFIGFLOATVAR_MAX
+  length: PLUGIN_CONFIGLONGVAR_MAX
 })), [...Array(TASKS_MAX)].map((x, i) => ({
   prop: `tasks[${i}].OLD_senddata`,
   type: 'byte'
@@ -7169,7 +7143,6 @@ const devices = [{
 }, {
   name: 'Switch input - Switch',
   value: 1,
-  vals: 1,
   fields: _1_input_switch__WEBPACK_IMPORTED_MODULE_0__["inputSwitch"]
 }, {
   name: 'Analog input - internal',
@@ -7352,7 +7325,7 @@ const devices = [{
   name: 'Keypad - TTP229 Touc',
   value: 63,
   fields: _63_ttp229__WEBPACK_IMPORTED_MODULE_45__["ttp229"]
-}];
+}].sort((a, b) => a.name.localeCompare(b.name));
 
 /***/ }),
 

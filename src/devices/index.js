@@ -47,7 +47,7 @@ import { ttp229 } from './63_ttp229';
 
 export const devices = [
     { name: '- None -', value: 0, fields: [] },
-    { name: 'Switch input - Switch', value: 1, vals: 1, fields: inputSwitch },
+    { name: 'Switch input - Switch', value: 1, fields: inputSwitch },
     { name: 'Analog input - internal', value: 2, fields: analogInput },
     { name: 'Generic - Pulse counter', value: 3, fields: genericPulse },
     { name: 'Environment - DS18b20', value: 4, fields: ds18b20 },
@@ -94,4 +94,4 @@ export const devices = [
     { name: 'Dust - SDS011/018/198', value: 56, fields: sds011 },
     { name: 'Switch Input - Rotary Encoder', value: 59, fields: rotaryEncoder },
     { name: 'Keypad - TTP229 Touc', value: 63, fields: ttp229 },
-];
+].sort((a, b) => a.name.localeCompare(b.name));

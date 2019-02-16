@@ -6,28 +6,6 @@ export class Form extends Component {
     constructor(props) {
         super(props);
 
-        this.saveForm = () => {
-            const values = {};
-            const groups = getKeys(this.props.config.groups);
-            groups.map(groupKey => {
-                const group = this.props.config.groups[groupKey];
-                const keys = getKeys(group.configs);
-                if (!values[groupKey]) values[groupKey] = {};
-                keys.map(key => {
-                    let val = this.form.elements[`${groupKey}.${key}`].value;
-                    if (group.configs[key].type === 'checkbox') {
-                        val = val === 'on' ? 1 : 0;
-                    }
-                    values[groupKey][key] = val;
-                });
-            })
-            this.props.config.onSave(values);
-        };
-
-        this.resetForm = () => {
-            this.form.reset();
-        }
-
         this.onChange = (id, prop, config = {}) => {
             return (e) => {
                 let val = this.form.elements[id].value;
@@ -47,7 +25,6 @@ export class Form extends Component {
     }
 
     renderConfig(id, config, value, varName) {
-        
         switch (config.type) {
             case 'string':
                 return (
@@ -92,7 +69,6 @@ export class Form extends Component {
                     <input id={id} type="file" />
                 )
             case 'button':
-                if (config.if != null && !config.if) return (null);
                 const clickEvent = () => {
                     if (!config.click) return;
                     config.click(this.props.selected);
@@ -106,7 +82,6 @@ export class Form extends Component {
     renderConfigGroup(id, configs, values) {
         const configArray = Array.isArray(configs) ? configs : [configs];
 
-        
         return (
             <div class="pure-control-group">
                 {configArray.map((conf, i) => {
@@ -144,10 +119,6 @@ export class Form extends Component {
         const keys = getKeys(props.config.groups);
         return (<form class="pure-form pure-form-aligned" ref={ref => this.form = ref}>
             {keys.map(key => this.renderGroup(key, props.config.groups[key], props.selected))}
-            {/* <div>
-                <button type="button" onClick={this.saveForm}>save</button>
-                <button onClick={this.resetForm}>cancel</button>
-            </div> */}
         </form>)
     }
 }
