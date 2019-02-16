@@ -4,6 +4,7 @@ import {
     DevicesEditPage, 
     ControllersPage, 
     ControllerEditPage, 
+    ControllerNotificationsPage,
     ConfigAdvancedPage, 
     ConfigHardwarePage, 
     RebootPage, 
@@ -62,6 +63,7 @@ const menus = [
 
 const routes = [
     { title: 'Edit Controller', href:'controllers/edit', component: ControllerEditPage },
+    { title: 'Edit Notification', href:'controllers/notification', component: ControllerNotificationsPage },
     { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage },
     { title: 'Save to Flash', href:'tools/diff', component: DiffPage }
 ];

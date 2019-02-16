@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { settings } from '../lib/settings';
 import { protocols } from './controllers.edit';
+import { types } from './controllers.notifications';
 
 export class ControllersPage extends Component {
     render(props) {
@@ -22,12 +23,12 @@ export class ControllersPage extends Component {
             })}</div>
             <h3>Notifications</h3>
             <div>{notifications.map((n, i) => {
-                const editUrl = `#notifications/edit/${i}`;
+                const editUrl = `#controllers/notification/${i}`;
                 return (
                     <div class="device">
                         <span class="info">
                             {i+1}: {(n.enabled) ? (<b>&#x2713;</b>) : (<b>&#x2717;</b>)}
-                            &nbsp;&nbsp;[{n.type}] PORT:{n.settings.port} HOST:{n.settings.host}
+                            &nbsp;&nbsp;[{types.find(p => p.value === n.type).name}] PORT:{n.settings.port} HOST:{n.settings.host}
                             <a href={editUrl}>edit</a>
                         </span>
                     </div>

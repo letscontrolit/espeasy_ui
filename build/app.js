@@ -8495,6 +8495,10 @@ const routes = [{
   href: 'controllers/edit',
   component: _pages__WEBPACK_IMPORTED_MODULE_0__["ControllerEditPage"]
 }, {
+  title: 'Edit Notification',
+  href: 'controllers/notification',
+  component: _pages__WEBPACK_IMPORTED_MODULE_0__["ControllerNotificationsPage"]
+}, {
   title: 'Edit Device',
   href: 'devices/edit',
   component: _pages__WEBPACK_IMPORTED_MODULE_0__["DevicesEditPage"]
@@ -10117,6 +10121,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
 /* harmony import */ var _controllers_edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./controllers.edit */ "./src/pages/controllers.edit.js");
+/* harmony import */ var _controllers_notifications__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controllers.notifications */ "./src/pages/controllers.notifications.js");
+
 
 
 
@@ -10134,15 +10140,183 @@ class ControllersPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         href: editUrl
       }, "edit")));
     })), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("h3", null, "Notifications"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, notifications.map((n, i) => {
-      const editUrl = `#notifications/edit/${i}`;
+      const editUrl = `#controllers/notification/${i}`;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
       }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
         class: "info"
-      }, i + 1, ": ", n.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0[", n.type, "] PORT:", n.settings.port, " HOST:", n.settings.host, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
+      }, i + 1, ": ", n.enabled ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2713") : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, "\u2717"), "\xA0\xA0[", _controllers_notifications__WEBPACK_IMPORTED_MODULE_3__["types"].find(p => p.value === n.type).name, "] PORT:", n.settings.port, " HOST:", n.settings.host, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: editUrl
       }, "edit")));
     })));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/controllers.notifications.js":
+/*!************************************************!*\
+  !*** ./src/pages/controllers.notifications.js ***!
+  \************************************************/
+/*! exports provided: types, ControllerNotificationsPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "types", function() { return types; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ControllerNotificationsPage", function() { return ControllerNotificationsPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _lib_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/helpers */ "./src/lib/helpers.js");
+/* harmony import */ var _devices_defs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../devices/_defs */ "./src/devices/_defs.js");
+
+
+
+
+
+const types = [{
+  name: '- None -',
+  value: 0
+}, {
+  name: 'Email',
+  value: 1
+}, {
+  name: 'Buzzer',
+  value: 2
+}];
+const baseDefaults = {};
+const getDefaults = {
+  0: () => ({}),
+  1: () => ({// Email
+  }),
+  2: () => ({// Buzzer
+  })
+};
+
+const setDefaultConfig = (type, config) => {
+  const defaults = { ...baseDefaults,
+    ...getDefaults[type]()
+  };
+  Object.keys(defaults).forEach(key => {
+    const val = defaults[key];
+    Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_3__["set"])(config.settings, key, val);
+  });
+};
+
+const getFormConfig = type => {
+  let additionalFields = {};
+
+  switch (Number(type)) {
+    case 1:
+      // Email
+      additionalFields = {
+        domain: {
+          name: 'Domain',
+          type: 'string'
+        },
+        hostname: {
+          name: 'Hostname',
+          type: 'string'
+        },
+        port: {
+          name: 'Port',
+          type: 'number'
+        },
+        sender: {
+          name: 'Sender',
+          type: 'string'
+        },
+        receiver: {
+          name: 'Receiver',
+          type: 'string'
+        },
+        subject: {
+          name: 'Subject',
+          type: 'string'
+        },
+        user: {
+          name: 'Username',
+          type: 'string'
+        },
+        pass: {
+          name: 'Password',
+          type: 'string'
+        },
+        body: {
+          name: 'Body',
+          type: 'textarea'
+        }
+      };
+      break;
+
+    case 2:
+      // Buzzer
+      additionalFields = {
+        pin1: {
+          name: '1st GPIO',
+          type: 'select',
+          options: _devices_defs__WEBPACK_IMPORTED_MODULE_4__["pins"]
+        }
+      };
+      break;
+  }
+
+  return {
+    groups: {
+      settings: {
+        name: 'Notification Settings',
+        configs: {
+          type: {
+            name: 'Type',
+            type: 'select',
+            var: 'type',
+            options: types
+          },
+          enabled: {
+            name: 'Enabled',
+            type: 'checkbox',
+            var: 'enabled'
+          },
+          ...additionalFields
+        }
+      }
+    }
+  };
+}; // todo: changing protocol needs to update:
+// -- back to default (correct default)
+// -- field list 
+
+
+class ControllerNotificationsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get(`notifications[${props.params[0]}]`);
+    this.state = {
+      type: this.config.type
+    };
+  }
+
+  render(props) {
+    const formConfig = getFormConfig(this.state.type);
+
+    formConfig.groups.settings.configs.type.onChange = e => {
+      this.setState({
+        type: e.currentTarget.value
+      });
+      setDefaultConfig(e.currentTarget.value, this.config);
+    };
+
+    formConfig.onSave = values => {
+      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(`notifications[${props.params[0]}]`, values);
+      window.location.href = '#controllers';
+    };
+
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+      config: formConfig,
+      selected: this.config
+    });
   }
 
 }
@@ -10756,7 +10930,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, DevicesEditPage, DiffPage, RulesEditorPage, protocols, ControllerEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage, types, ControllerNotificationsPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10807,14 +10981,20 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ControllerEditPage", function() { return _controllers_edit__WEBPACK_IMPORTED_MODULE_13__["ControllerEditPage"]; });
 
-/* harmony import */ var _devices_edit__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./devices.edit */ "./src/pages/devices.edit.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DevicesEditPage", function() { return _devices_edit__WEBPACK_IMPORTED_MODULE_14__["DevicesEditPage"]; });
+/* harmony import */ var _controllers_notifications__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./controllers.notifications */ "./src/pages/controllers.notifications.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "types", function() { return _controllers_notifications__WEBPACK_IMPORTED_MODULE_14__["types"]; });
 
-/* harmony import */ var _diff__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./diff */ "./src/pages/diff.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return _diff__WEBPACK_IMPORTED_MODULE_15__["DiffPage"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ControllerNotificationsPage", function() { return _controllers_notifications__WEBPACK_IMPORTED_MODULE_14__["ControllerNotificationsPage"]; });
 
-/* harmony import */ var _rules_editor__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./rules.editor */ "./src/pages/rules.editor.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RulesEditorPage", function() { return _rules_editor__WEBPACK_IMPORTED_MODULE_16__["RulesEditorPage"]; });
+/* harmony import */ var _devices_edit__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./devices.edit */ "./src/pages/devices.edit.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DevicesEditPage", function() { return _devices_edit__WEBPACK_IMPORTED_MODULE_15__["DevicesEditPage"]; });
+
+/* harmony import */ var _diff__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./diff */ "./src/pages/diff.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DiffPage", function() { return _diff__WEBPACK_IMPORTED_MODULE_16__["DiffPage"]; });
+
+/* harmony import */ var _rules_editor__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./rules.editor */ "./src/pages/rules.editor.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RulesEditorPage", function() { return _rules_editor__WEBPACK_IMPORTED_MODULE_17__["RulesEditorPage"]; });
+
 
 
 
