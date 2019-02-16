@@ -8506,6 +8506,10 @@ const routes = [{
   title: 'Save to Flash',
   href: 'tools/diff',
   component: _pages__WEBPACK_IMPORTED_MODULE_0__["DiffPage"]
+}, {
+  title: 'Setup',
+  href: 'config/setup',
+  component: _pages__WEBPACK_IMPORTED_MODULE_0__["SetupPage"]
 }];
 const menu = new Menus();
 routes.forEach(menu.addRoute);
@@ -10930,7 +10934,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage, types, ControllerNotificationsPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10994,6 +10998,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _rules_editor__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./rules.editor */ "./src/pages/rules.editor.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RulesEditorPage", function() { return _rules_editor__WEBPACK_IMPORTED_MODULE_17__["RulesEditorPage"]; });
+
+/* harmony import */ var _setup__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./setup */ "./src/pages/setup.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SetupPage", function() { return _setup__WEBPACK_IMPORTED_MODULE_18__["SetupPage"]; });
+
 
 
 
@@ -11232,6 +11240,97 @@ class RulesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   async componentDidUpdate() {
     this.fetch();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/setup.js":
+/*!****************************!*\
+  !*** ./src/pages/setup.js ***!
+  \****************************/
+/*! exports provided: SetupPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SetupPage", function() { return SetupPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
+/* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
+/* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/loader */ "./src/lib/loader.js");
+
+
+
+
+const formConfig = {
+  groups: {
+    wifi: {
+      name: 'WiFi',
+      configs: {
+        ssid: {
+          name: 'SSID',
+          type: 'select',
+          options: [],
+          var: 'security[0].WifiSSID'
+        },
+        passwd: {
+          name: 'Password',
+          type: 'password',
+          var: 'security[0].WifiKey'
+        }
+      }
+    }
+  }
+};
+class SetupPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      devices: []
+    };
+    _lib_loader__WEBPACK_IMPORTED_MODULE_3__["loader"].show();
+
+    this.save = () => {
+      _lib_loader__WEBPACK_IMPORTED_MODULE_3__["loader"].show();
+      const data = new FormData();
+      data.append('ssid', this.config.security[0].WifiSSID);
+      data.append('pass', this.config.security[0].WifiKey);
+      fetch('/setup', {
+        method: 'POST',
+        data
+      }).then(() => {
+        setTimeout(() => {
+          _lib_loader__WEBPACK_IMPORTED_MODULE_3__["loader"].hide();
+          window.location.href = '/';
+        }, 5000);
+      });
+    };
+  }
+
+  render(props) {
+    formConfig.groups.wifi.configs.ssid.options = this.state.devices.map(device => ({
+      name: device.ssid,
+      value: device.ssd
+    }));
+    const config = _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get('config');
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+      config: formConfig,
+      selected: config
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+      type: "button",
+      onClick: this.save
+    }, "CONTINUE"));
+  }
+
+  componentDidMount() {
+    fetch('/wifiscanner').then(r => r.json()).then(r => {
+      this.setState({
+        devices: r
+      });
+      _lib_loader__WEBPACK_IMPORTED_MODULE_3__["loader"].hide();
+    });
   }
 
 }

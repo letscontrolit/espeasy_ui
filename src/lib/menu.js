@@ -16,7 +16,8 @@ import {
     FactoryResetPage, 
     DiscoverPage, 
     DiffPage, 
-    RulesEditorPage 
+    RulesEditorPage, 
+    SetupPage
 } from '../pages';
 
 import { saveConfig } from '../conf/config.dat';
@@ -65,7 +66,8 @@ const routes = [
     { title: 'Edit Controller', href:'controllers/edit', component: ControllerEditPage },
     { title: 'Edit Notification', href:'controllers/notification', component: ControllerNotificationsPage },
     { title: 'Edit Device', href:'devices/edit', component: DevicesEditPage },
-    { title: 'Save to Flash', href:'tools/diff', component: DiffPage }
+    { title: 'Save to Flash', href:'tools/diff', component: DiffPage },
+    { title: 'Setup', href: 'config/setup', component: SetupPage }
 ];
 
 const menu = new Menus();

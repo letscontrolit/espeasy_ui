@@ -16,3 +16,4 @@ export * from './controllers.notifications';
 export * from './devices.edit';
 export * from './diff';
 export * from './rules.editor';
+export * from './setup';
