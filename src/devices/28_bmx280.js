@@ -6,6 +6,16 @@ const i2c_address = [
 ]
 
 export const bmx280 = {
+    defaults: () => ({
+        ValueCount: 1,
+        SendDataOption: 1,
+        TimerOption: 1,
+        TimerOptional: 1,
+        GlobalSync: 1,
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Humidity',
+        'settings.values[2].name': 'Pressure',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

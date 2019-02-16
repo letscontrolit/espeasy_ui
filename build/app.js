@@ -5546,6 +5546,16 @@ const i2c_address = [{
   name: '0x77 (119) - (default)'
 }];
 const bmx280 = {
+  defaults: () => ({
+    ValueCount: 1,
+    SendDataOption: 1,
+    TimerOption: 1,
+    TimerOptional: 1,
+    GlobalSync: 1,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Humidity',
+    'settings.values[2].name': 'Pressure'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5683,6 +5693,15 @@ const i2c_address = [{
   name: '0x77 (119) - (default)'
 }];
 const bmp280 = {
+  defaults: () => ({
+    ValueCount: 1,
+    SendDataOption: 1,
+    TimerOption: 1,
+    TimerOptional: 1,
+    GlobalSync: 1,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Pressure'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5700,7 +5719,7 @@ const bmp280 = {
     }
   },
   data: true,
-  vals: 3
+  vals: 2
 };
 
 /***/ }),
@@ -6553,6 +6572,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const ds18b20 = {
+  defaults: () => ({
+    ValueCount: 1,
+    SendDataOption: 1,
+    TimerOption: 1,
+    TimerOptional: 1,
+    GlobalSync: 1,
+    'settings.values[0].name': 'Temperature'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6655,6 +6682,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const rotaryEncoder = {
+  defaults: () => ({
+    ValueCount: 1,
+    SendDataOption: 1,
+    TimerOption: 1,
+    TimerOptional: 1,
+    GlobalSync: 1
+  }),
   sensor: {
     name: 'Data Acquisition',
     configs: {
@@ -6675,6 +6709,16 @@ const rotaryEncoder = {
         type: 'select',
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
         var: 'gpio3'
+      },
+      limit_min: {
+        name: 'Limit - Min',
+        type: 'number',
+        var: 'configs_long[0]'
+      },
+      limit_max: {
+        name: 'Limit - Max',
+        type: 'number',
+        var: 'configs_long[1]'
       }
     }
   },
@@ -6760,6 +6804,13 @@ const ttp229 = {
     'gpio1': 1
   }),
   sensor: {
+    defaults: () => ({
+      ValueCount: 1,
+      SendDataOption: 1,
+      TimerOption: 1,
+      TimerOptional: 1,
+      GlobalSync: 1
+    }),
     name: 'Sensor',
     configs: {
       gpio1: {
@@ -6778,7 +6829,7 @@ const ttp229 = {
         name: 'ScanCode',
         type: 'checkbox',
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
-        var: 'configs[0]'
+        var: 'configs[1]'
       }
     }
   },
@@ -10633,7 +10684,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, RulesEditorPage, DiffPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
