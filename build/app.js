@@ -4269,46 +4269,8 @@ const bh1750 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -4346,46 +4308,6 @@ const pme = {
         type: 'select',
         options: mode,
         var: 'configs[0]'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
       }
     }
   }
@@ -4487,46 +4409,6 @@ const lcd2004 = {
         var: 'configs[2]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -4615,46 +4497,6 @@ const hcsr04 = {
         var: 'configs[5]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -4697,46 +4539,8 @@ const si7021 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 2
 };
 
 /***/ }),
@@ -4800,46 +4604,6 @@ const tls2561 = {
         var: 'configs[3]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -4866,46 +4630,6 @@ const pn532 = {
         type: 'select',
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
         var: 'gpio1'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
       }
     }
   }
@@ -4957,46 +4681,8 @@ const dust = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -5081,46 +4767,6 @@ const pcf8574 = {
         name: 'Use safe button',
         type: 'checkbox',
         var: 'configs_float[3]'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
       }
     }
   }
@@ -5385,46 +5031,6 @@ const ser2net = {
         var: 'configs[1]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -5491,7 +5097,9 @@ const levelControl = {
         var: 'configs_float[1]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -5660,46 +5268,6 @@ const oled1306 = {
         var: 'configs[2]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -5861,46 +5429,6 @@ const ads1115 = {
         var: 'configs_float[1]'
       }]
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -6058,46 +5586,6 @@ const ina219 = {
         var: 'configs[2]'
       }
     }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
   }
 };
 
@@ -6144,46 +5632,8 @@ const bmx280 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 3
 };
 
 /***/ }),
@@ -6314,46 +5764,8 @@ const bmp280 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 3
 };
 
 /***/ }),
@@ -6391,48 +5803,10 @@ const sht1x = {
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
         var: 'gpio2'
       }
-    },
-    data: {
-      name: 'Data Acquisition',
-      configs: {
-        send1: {
-          name: 'Send to Controller 1',
-          type: 'checkbox',
-          var: 'TaskDeviceSendData[0]'
-        },
-        send2: {
-          name: 'Send to Controller 2',
-          type: 'checkbox',
-          var: 'TaskDeviceSendData[1]'
-        },
-        send3: {
-          name: 'Send to Controller 3',
-          type: 'checkbox',
-          var: 'TaskDeviceSendData[2]'
-        },
-        idx1: {
-          name: 'IDX1',
-          type: 'number',
-          var: 'TaskDeviceID[0]'
-        },
-        idx2: {
-          name: 'IDX2',
-          type: 'number',
-          var: 'TaskDeviceID[1]'
-        },
-        idx3: {
-          name: 'IDX3',
-          type: 'number',
-          var: 'TaskDeviceID[2]'
-        },
-        interval: {
-          name: 'Interval',
-          type: 'number',
-          var: 'interval'
-        }
-      }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -6473,46 +5847,8 @@ const ms5611 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -6562,8 +5898,8 @@ const sensorModel = [{
   name: 'SENSOR_TYPE_WIND'
 }];
 const dummyDevice = {
-  data: {
-    name: 'Data Acquisition',
+  sensor: {
+    name: 'Sensor',
     configs: {
       switch_type: {
         name: 'Simulate Sensor Type',
@@ -6576,7 +5912,9 @@ const dummyDevice = {
         type: 'number'
       }
     }
-  }
+  },
+  data: true,
+  vals: 4
 };
 
 /***/ }),
@@ -6635,46 +5973,8 @@ const dht12 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 2
 };
 
 /***/ }),
@@ -6792,46 +6092,8 @@ const sh1106 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7030,46 +6292,8 @@ const genericPulse = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7368,46 +6592,8 @@ const mhz19 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7436,46 +6622,8 @@ const ds18b20 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7510,46 +6658,8 @@ const senseAir = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7584,46 +6694,8 @@ const sds011 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7664,46 +6736,8 @@ const rotaryEncoder = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7754,15 +6788,8 @@ const dht = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      interval: {
-        name: 'Interval',
-        type: 'number'
-      }
-    }
-  }
+  data: true,
+  vals: 2
 };
 
 /***/ }),
@@ -7806,46 +6833,8 @@ const ttp229 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -7886,46 +6875,8 @@ const bmp085 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 2
 };
 
 /***/ }),
@@ -7966,46 +6917,7 @@ const pcf8591 = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true
 };
 
 /***/ }),
@@ -8050,46 +6962,6 @@ const rfidWeigand = {
         type: 'select',
         options: weigandType,
         var: 'configs[0]'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
       }
     }
   }
@@ -8177,46 +7049,6 @@ const inputMcp = {
         name: 'Use safe button',
         type: 'checkbox',
         var: 'configs_float[3]'
-      }
-    }
-  },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
       }
     }
   }
@@ -11853,7 +10685,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DiffPage, RulesEditorPage, DevicesEditPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, DevicesEditPage, DiffPage, RulesEditorPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

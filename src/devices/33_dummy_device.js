@@ -14,11 +14,13 @@ const sensorModel = [
 ]
 
 export const dummyDevice = {
-    data: {
-        name: 'Data Acquisition',
+    sensor: {
+        name: 'Sensor',
         configs: {
             switch_type: { name: 'Simulate Sensor Type', type: 'select', options: sensorModel, var: 'configs[0]'  },
             interval: { name: 'Interval', type: 'number' },
         }
-    }
+    },
+    data: true,
+    vals: 4,
 }

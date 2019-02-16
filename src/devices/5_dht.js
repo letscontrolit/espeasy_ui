@@ -16,10 +16,6 @@ export const dht = {
             switch_type: { name: 'Sensor model', type: 'select', options: sensorModel, var: 'configs[0]'  },
         }
     },
-    data: {
-        name: 'Data Acquisition',
-        configs: {
-            interval: { name: 'Interval', type: 'number' },
-        }
-    }
+    data: true,
+    vals: 2,
 }

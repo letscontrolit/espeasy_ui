@@ -19,4 +19,6 @@ export const levelControl = {
             hysteresis: { name: 'Hysteresis', type: 'number', var: 'configs_float[1]' },
         }
     },
+    data: true,
+    vals: 1,
 }
