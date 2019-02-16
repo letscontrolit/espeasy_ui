@@ -10,7 +10,7 @@ export const analogInput = {
     advanced: {
         name: 'Two point calibration',
         configs: {
-            enabled: { name: 'Calibration Enabled', type: 'number', var: 'configs[3]'  },
+            enabled: { name: 'Calibration Enabled', type: 'checkbox', var: 'configs[3]'  },
             point1: [{ name: 'Point 1', type: 'number', var: 'configs_long[0]' }, { name: '=', type: 'number', var: 'configs_float[1]' }],
             point2: [{ name: 'Point 2', type: 'number', var: 'configs_long[1]' }, { name: '=', type: 'number', var: 'configs_float[1]' }],
         }

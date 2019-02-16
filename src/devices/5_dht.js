@@ -9,6 +9,13 @@ const sensorModel = [
 ]
 
 export const dht = {
+    defaults: () => ({
+        gpio1: 255,
+        interval: 60,
+        'configs[0]': 11,
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Humidity',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

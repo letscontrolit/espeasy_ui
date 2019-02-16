@@ -9,6 +9,11 @@ const sensorModel = [
 ]
 
 export const levelControl = {
+    defaults: () => ({
+        gpio1: 255,
+        interval: 0,
+        'settings.values[0].name': 'Output',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

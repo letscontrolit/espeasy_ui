@@ -4805,7 +4805,7 @@ const inputSwitch = {
     interval: 60,
     'configs_float[1]': 1000,
     'configs_float[2]': 1000,
-    'settings.values[0].name': 'Output'
+    'settings.values[0].name': 'Switch'
   }),
   sensor: {
     name: 'Sensor',
@@ -4901,52 +4901,8 @@ const inputSwitch = {
       }
     }
   },
-  data: {
-    name: 'Data Acquisition',
-    configs: {
-      send1: {
-        name: 'Send to Controller 1',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[0]',
-        if: 'controllers[0].enabled'
-      },
-      send2: {
-        name: 'Send to Controller 2',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[1]',
-        if: 'controllers[1].enabled'
-      },
-      send3: {
-        name: 'Send to Controller 3',
-        type: 'checkbox',
-        var: 'TaskDeviceSendData[2]',
-        if: 'controllers[2].enabled'
-      },
-      idx1: {
-        name: 'IDX1',
-        type: 'number',
-        var: 'TaskDeviceID[0]',
-        if: 'controllers[0].enabled'
-      },
-      idx2: {
-        name: 'IDX2',
-        type: 'number',
-        var: 'TaskDeviceID[1]',
-        if: 'controllers[1].enabled'
-      },
-      idx3: {
-        name: 'IDX3',
-        type: 'number',
-        var: 'TaskDeviceID[2]',
-        if: 'controllers[2].enabled'
-      },
-      interval: {
-        name: 'Interval',
-        type: 'number',
-        var: 'interval'
-      }
-    }
-  }
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -5065,6 +5021,11 @@ const sensorModel = [{
   name: 'Sonoff si7021'
 }];
 const levelControl = {
+  defaults: () => ({
+    gpio1: 255,
+    interval: 0,
+    'settings.values[0].name': 'Output'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5699,7 +5660,7 @@ const analogInput = {
     configs: {
       enabled: {
         name: 'Calibration Enabled',
-        type: 'number',
+        type: 'checkbox',
         var: 'configs[3]'
       },
       point1: [{
@@ -5898,6 +5859,13 @@ const sensorModel = [{
   name: 'SENSOR_TYPE_WIND'
 }];
 const dummyDevice = {
+  defaults: () => ({
+    interval: 0,
+    'settings.values[0].name': 'Dummy1',
+    'settings.values[1].name': 'Dummy1',
+    'settings.values[2].name': 'Dummy3',
+    'settings.values[3].name': 'Dummy4'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6771,6 +6739,13 @@ const sensorModel = [{
   name: 'Sonoff si7021'
 }];
 const dht = {
+  defaults: () => ({
+    gpio1: 255,
+    interval: 60,
+    'configs[0]': 11,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Humidity'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -10177,7 +10152,7 @@ const getFormConfig = type => {
       data: dataAcquisitionForm,
       values: {
         name: 'Values',
-        configs: { ...[...new Array(device.vals || 0)].reduce((acc, x, i) => {
+        configs: { ...[...new Array(device.fields.vals || 0)].reduce((acc, x, i) => {
             acc[`value${i}`] = [{
               name: `Name ${i + 1}`,
               var: `settings.values[${i}].name`,

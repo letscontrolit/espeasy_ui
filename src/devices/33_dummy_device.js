@@ -14,6 +14,13 @@ const sensorModel = [
 ]
 
 export const dummyDevice = {
+    defaults: () => ({
+        interval: 0,
+        'settings.values[0].name': 'Dummy1',
+        'settings.values[1].name': 'Dummy1',
+        'settings.values[2].name': 'Dummy3',
+        'settings.values[3].name': 'Dummy4',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
