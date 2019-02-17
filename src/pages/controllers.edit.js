@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { Form } from '../components/form';
 import { settings } from '../lib/settings';
 import { set } from '../lib/helpers';
+import { EspEaspP2PComponent } from '../components/espeasy_p2p';
 
 export const protocols = [
     { name: '- Standalone -', value: 0 },
@@ -88,6 +89,7 @@ const setDefaultConfig = (type, config) => {
 
 const getFormConfig = (type) => {
     let additionalFields = {};
+    let additionalGroups = {};
     switch (Number(type)) {
         case 2: // Domoticz MQTT
         case 5: // OpenHAB MQTT
@@ -110,9 +112,23 @@ const getFormConfig = (type) => {
         case 10: //'Generic UDP': 
             additionalFields = { ...baseFields, subscribe, publish };
             break;
-        case 0:
         case 13: //'ESPEasy P2P Networking':
+            additionalGroups = {
+                global: {
+                    name: 'Global Settings',
+                    configs: {
+                        port: { name: 'UDP Port', type: 'number', var: 'ROOT.config.espnetwork.port' }
+                    }
+                },
+                nodes: {
+                    name: 'Connected Nodes',
+                    configs: {
+                        nodes: { type: 'custom', component: EspEaspP2PComponent}
+                    }
+                } 
+            }
             break;
+        case 0:
         default:
             additionalFields = { ...baseFields };
     }
@@ -127,6 +143,7 @@ const getFormConfig = (type) => {
                     ...additionalFields
                 }
             },
+            ...additionalGroups
         },
     }
 }
@@ -151,10 +168,6 @@ export class ControllerEditPage extends Component {
             this.setState({ protocol: e.currentTarget.value });
             setDefaultConfig(e.currentTarget.value, this.config);
         };
-        formConfig.onSave = (values) => {
-            settings.set(`controllers[${props.params[0]}]`, values);
-            window.location.href='#controllers';
-        }
         
         return (
             <Form config={formConfig} selected={this.config} />

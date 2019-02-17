@@ -16,7 +16,11 @@ export class Form extends Component {
                 } else if (config.type === 'select') {
                     val = isNaN(val) ? val : parseInt(val);
                 }
-                set(this.props.selected, prop, val);
+                if (prop.startsWith('ROOT')) {
+                    settings.set(prop.replace('ROOT.', ''), val);
+                } else {
+                    set(this.props.selected, prop, val);
+                }
                 if (config.onChange) {
                     config.onChange(e);
                 }
@@ -87,10 +91,14 @@ export class Form extends Component {
                 {configArray.map((conf, i) => {
                     const varId = configArray.length > 1 ? `${id}.${i}` : id;
                     const varName = conf.var ? conf.var : varId;
-                    const val = get(values, varName, null);
+                    const val = varName.startsWith('ROOT') ? settings.get(varName.replace('ROOT.', '')) : get(values, varName, null);
 
                     if (conf.if) {
                         if (!get(settings.settings, conf.if, false)) return(null);
+                    }
+                    if (conf.type === 'custom') {
+                        const CustomComponent = conf.component;
+                        return (<CustomComponent conf={conf} values={values} />);
                     }
                     return [
                         (<label for={varId}>{conf.name}</label>),

@@ -3313,6 +3313,51 @@ load();
 
 /***/ }),
 
+/***/ "./src/components/espeasy_p2p/index.js":
+/*!*********************************************!*\
+  !*** ./src/components/espeasy_p2p/index.js ***!
+  \*********************************************/
+/*! exports provided: EspEaspP2PComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EspEaspP2PComponent", function() { return EspEaspP2PComponent; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+
+class EspEaspP2PComponent extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nodes: []
+    };
+
+    this.refresh = () => {
+      fetch('/node_list_json').then(res => res.json()).then(nodes => {
+        this.setState({
+          nodes
+        });
+      });
+    };
+  }
+
+  render(props) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("ul", null, this.state.nodes.map(node => {
+      return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("li", null, "Unit ", node.first, ": ", node.name, " [", node.ip, "]");
+    }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+      type: "button",
+      onClick: this.refresh
+    }, "REFRESH"));
+  }
+
+  componentDidMount() {
+    this.refresh();
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/components/form/index.js":
 /*!**************************************!*\
   !*** ./src/components/form/index.js ***!
@@ -3345,7 +3390,11 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           val = isNaN(val) ? val : parseInt(val);
         }
 
-        Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["set"])(this.props.selected, prop, val);
+        if (prop.startsWith('ROOT')) {
+          _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(prop.replace('ROOT.', ''), val);
+        } else {
+          Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["set"])(this.props.selected, prop, val);
+        }
 
         if (config.onChange) {
           config.onChange(e);
@@ -3472,10 +3521,18 @@ class Form extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, configArray.map((conf, i) => {
       const varId = configArray.length > 1 ? `${id}.${i}` : id;
       const varName = conf.var ? conf.var : varId;
-      const val = Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
+      const val = varName.startsWith('ROOT') ? _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].get(varName.replace('ROOT.', '')) : Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["get"])(values, varName, null);
 
       if (conf.if) {
         if (!Object(_lib_helpers__WEBPACK_IMPORTED_MODULE_1__["get"])(_lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].settings, conf.if, false)) return null;
+      }
+
+      if (conf.type === 'custom') {
+        const CustomComponent = conf.component;
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(CustomComponent, {
+          conf: conf,
+          values: values
+        });
       }
 
       return [Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
@@ -9025,7 +9082,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PLUGINS = ['http://localhost:8080/build/dash.js', 'flow.js'];
+const PLUGINS = ['http://localhost:8080/build/dash.js'];
 
 const dynamicallyLoadScript = url => {
   return new Promise(resolve => {
@@ -9320,19 +9377,6 @@ const formConfig = {
         },
         baudrate: {
           name: 'Baud Rate',
-          type: 'number'
-        }
-      }
-    },
-    espnetwork: {
-      name: 'Inter-ESPEasy Network',
-      configs: {
-        enabled: {
-          name: 'Enable',
-          type: 'checkbox'
-        },
-        port: {
-          name: 'Port',
           type: 'number'
         }
       }
@@ -9765,6 +9809,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/form */ "./src/components/form/index.js");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
 /* harmony import */ var _lib_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/helpers */ "./src/lib/helpers.js");
+/* harmony import */ var _components_espeasy_p2p__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/espeasy_p2p */ "./src/components/espeasy_p2p/index.js");
+
 
 
 
@@ -9974,6 +10020,7 @@ const setDefaultConfig = (type, config) => {
 
 const getFormConfig = type => {
   let additionalFields = {};
+  let additionalGroups = {};
 
   switch (Number(type)) {
     case 2: // Domoticz MQTT
@@ -10035,11 +10082,32 @@ const getFormConfig = type => {
       };
       break;
 
-    case 0:
     case 13:
       //'ESPEasy P2P Networking':
+      additionalGroups = {
+        global: {
+          name: 'Global Settings',
+          configs: {
+            port: {
+              name: 'UDP Port',
+              type: 'number',
+              var: 'ROOT.config.espnetwork.port'
+            }
+          }
+        },
+        nodes: {
+          name: 'Connected Nodes',
+          configs: {
+            nodes: {
+              type: 'custom',
+              component: _components_espeasy_p2p__WEBPACK_IMPORTED_MODULE_4__["EspEaspP2PComponent"]
+            }
+          }
+        }
+      };
       break;
 
+    case 0:
     default:
       additionalFields = { ...baseFields
       };
@@ -10063,7 +10131,8 @@ const getFormConfig = type => {
           },
           ...additionalFields
         }
-      }
+      },
+      ...additionalGroups
     }
   };
 }; // todo: changing protocol needs to update:
@@ -10088,11 +10157,6 @@ class ControllerEditPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"
         protocol: e.currentTarget.value
       });
       setDefaultConfig(e.currentTarget.value, this.config);
-    };
-
-    formConfig.onSave = values => {
-      _lib_settings__WEBPACK_IMPORTED_MODULE_2__["settings"].set(`controllers[${props.params[0]}]`, values);
-      window.location.href = '#controllers';
     };
 
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_components_form__WEBPACK_IMPORTED_MODULE_1__["Form"], {
@@ -10570,6 +10634,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
 /* harmony import */ var _conf_config_dat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../conf/config.dat */ "./src/conf/config.dat.js");
 /* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+/* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/loader */ "./src/lib/loader.js");
+
 
 
 
@@ -10613,6 +10679,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         return;
       }
 
+      _lib_loader__WEBPACK_IMPORTED_MODULE_4__["loader"].show();
       Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["storeFile"])('config.dat', this.data).then(() => {
         this.stage = 0;
         window.location.href = '#config/reboot';
@@ -10631,7 +10698,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
         type: "button",
         onClick: this.applyChanges
-      }, "APPLY"));
+      }, "APPLY (bytes: ", this.bytediffcount, ")"));
     }
 
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "byte diff: ", this.bytediffcount), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {

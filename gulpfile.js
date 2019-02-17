@@ -36,8 +36,18 @@ gulp.task('styles', function () {
       .pipe(gulp.dest('./build'))
   });
 
+  gulp.task('pages', function() {
+    return gulp.src(['./src/index.htm'])
+      .pipe(htmlmin({
+        collapseWhitespace: true,
+        removeComments: true
+      }))
+      .pipe(gzip())
+      .pipe(gulp.dest('./build/dev'));
+  });
+
 gulp.task('pagesinline', function() {
-    return gulp.src(['./src/index.inline.htm'])
+    return gulp.src(['./src/index.htm'])
       .pipe(htmlmin({
         collapseWhitespace: true,
         removeComments: true
@@ -51,6 +61,7 @@ gulp.task('pagesinline', function() {
 gulp.task('default', function () {
   runSequence(
     'styles',
+    'pages',
     'pagesinline'
   );
 });

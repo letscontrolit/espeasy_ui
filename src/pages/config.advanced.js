@@ -80,13 +80,6 @@ const formConfig = {
                 baudrate: { name: 'Baud Rate', type: 'number' },
             }
         },
-        espnetwork: {
-            name: 'Inter-ESPEasy Network',
-            configs: {
-                enabled: { name: 'Enable', type: 'checkbox' },
-                port: { name: 'Port', type: 'number' },
-            }
-        },
         experimental: {
             name: 'Experimental Settings',
             configs: {

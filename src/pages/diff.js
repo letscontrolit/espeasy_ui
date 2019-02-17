@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { settings } from '../lib/settings';
 import { saveConfig } from '../conf/config.dat';
 import { storeFile } from '../lib/espeasy';
+import { loader } from '../lib/loader';
 
 
 export class DiffPage extends Component {
@@ -42,6 +43,7 @@ export class DiffPage extends Component {
                 return;
             }
             
+            loader.show();
             storeFile('config.dat', this.data).then(() => {
                 this.stage = 0;
                 window.location.href='#config/reboot';
@@ -53,7 +55,7 @@ export class DiffPage extends Component {
 
     render(props) {
         if (this.bytediff && (this.stage === 1 /*|| this.bytediffcount*/)) {
-            return (<div><div dangerouslySetInnerHTML={{ __html: this.bytediff}}></div><button type="button" onClick={this.applyChanges}>APPLY</button></div>)
+            return (<div><div dangerouslySetInnerHTML={{ __html: this.bytediff}}></div><button type="button" onClick={this.applyChanges}>APPLY (bytes: {this.bytediffcount})</button></div>)
         }
         return (
             <div>
