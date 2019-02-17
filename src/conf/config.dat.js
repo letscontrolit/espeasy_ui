@@ -180,7 +180,6 @@ export const loadConfig = () => {
     
         const securityResponse = await fetch('security.dat').then(response => response.arrayBuffer());
         settings.config.security = [...Array(3)].map((x, i) => {
-            console.log(i);
              return parseConfig(securityResponse, SecuritySettings, 1024 * i);
         });
     
@@ -191,20 +190,6 @@ export const loadConfig = () => {
         console.log(conf.settings);
     });
 }
-
-const saveData = (function () {
-    const a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
-    return function (data, fileName) {
-        const blob = new Blob([new Uint8Array(data)]);
-        const url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
-}());
 
 let ii = 0;
 export const saveConfig = (save = true) => {
@@ -220,8 +205,8 @@ export const saveConfig = (save = true) => {
 
         [...Array(3)].map((x, i) => {
             return {
-                settings: writeConfig(buffer, settings.settings.controllers[i].settings, ControllerSettings, 1024*28 + 1024 * 2 * i),
-                extra: writeConfig(buffer, settings.settings.controllers[i].extra, ControllerSettings, 1024*29 + 1024 * 2 * i),
+                settings: writeConfig(buffer, settings.settings.controllers[i].settings, ControllerSettings, 1024*27 + 1024 * 2 * i),
+                extra: writeConfig(buffer, settings.settings.controllers[i].extra, ControllerSettings, 1024*28 + 1024 * 2 * i),
             };
         });
         if (save) saveData(buffer, 'config.dat');
@@ -242,3 +227,16 @@ export const saveConfig = (save = true) => {
     ii = (ii + 1) % 3;
 }
 
+const saveData = (function () {
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    return function (data, fileName) {
+        const blob = new Blob([new Uint8Array(data)]);
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+}());

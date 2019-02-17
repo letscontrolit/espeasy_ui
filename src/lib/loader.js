@@ -1,10 +1,6 @@
 class Loader {
     constructor() {
-        const loader = document.createElement('div');
-        loader.className = 'loader';
-        loader.innerHTML = 'loading';
-        document.body.appendChild(loader);
-        this.loader = loader;
+        this.loader = document.querySelector('.loading');
     }
 
     show() {

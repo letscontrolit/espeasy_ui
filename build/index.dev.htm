@@ -7,17 +7,21 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="http://localhost:8080/src/styles.css">
     <style>
-        body.loading {
-          height: 100vh;
+        .loading {
+          height: 0;
           margin: 0;
           padding: 0;
-          display: flex;
+          overflow: hidden;
           justify-content: center;
           align-items: center;
+          opacity: 0;
+          transition: opacity 0.5s ease-out;
+          background: rgba(0, 0, 0, 0.5);
+          position: fixed;
+          width: 100%;
         }
   
         .loadingspinner {
-          display: none;
           pointer-events: none;
           width: 2.5em;
           height: 2.5em;
@@ -28,8 +32,18 @@
           animation: loadingspin 1s linear infinite;
         }
   
-        body.loading .loadingspinner {
+        .loading .loadingspinner {
           display: block;
+        }
+
+        .loading.show {
+          display: flex;
+          opacity: 1;
+          height: 100vh;
+        }
+
+        .loading.hide {
+          opacity: 0;
         }
   
         @keyframes loadingspin {
@@ -39,8 +53,10 @@
         }
       </style>
     </head>
-    <body class="loading">
-      <div class="loadingspinner"></div>
+    <body>
+      <div class="loading show">
+          <div class="loadingspinner"></div>
+      </div>
     <script src="http://localhost:8080/build/app.js"></script> 
     <script src="http://localhost:35729/livereload.js"></script>
   </body>

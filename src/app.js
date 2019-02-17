@@ -79,7 +79,6 @@ class App extends Component {
 const load = async () => {
     await loadConfig();
     await loadPlugins();
-    document.body.classList.remove("loading");
     render(<App />, document.body);
 }
 

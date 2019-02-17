@@ -3306,7 +3306,6 @@ class App extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 const load = async () => {
   await Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_4__["loadConfig"])();
   await Object(_lib_plugins__WEBPACK_IMPORTED_MODULE_7__["loadPlugins"])();
-  document.body.classList.remove("loading");
   Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(App, null), document.body);
 };
 
@@ -4123,7 +4122,6 @@ const loadConfig = () => {
     });
     const securityResponse = await fetch('security.dat').then(response => response.arrayBuffer());
     settings.config.security = [...Array(3)].map((x, i) => {
-      console.log(i);
       return Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["parseConfig"])(securityResponse, SecuritySettings, 1024 * i);
     });
     return {
@@ -4136,21 +4134,6 @@ const loadConfig = () => {
     console.log(conf.settings);
   });
 };
-
-const saveData = function () {
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  return function (data, fileName) {
-    const blob = new Blob([new Uint8Array(data)]);
-    const url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-}();
-
 let ii = 0;
 const saveConfig = (save = true) => {
   if (ii === 0) {
@@ -4164,8 +4147,8 @@ const saveConfig = (save = true) => {
     });
     [...Array(3)].map((x, i) => {
       return {
-        settings: Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings.controllers[i].settings, ControllerSettings, 1024 * 28 + 1024 * 2 * i),
-        extra: Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings.controllers[i].extra, ControllerSettings, 1024 * 29 + 1024 * 2 * i)
+        settings: Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings.controllers[i].settings, ControllerSettings, 1024 * 27 + 1024 * 2 * i),
+        extra: Object(_lib_parser__WEBPACK_IMPORTED_MODULE_0__["writeConfig"])(buffer, _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].settings.controllers[i].extra, ControllerSettings, 1024 * 28 + 1024 * 2 * i)
       };
     });
     if (save) saveData(buffer, 'config.dat');else return buffer;
@@ -4185,6 +4168,20 @@ const saveConfig = (save = true) => {
 
   ii = (ii + 1) % 3;
 };
+
+const saveData = function () {
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  return function (data, fileName) {
+    const blob = new Blob([new Uint8Array(data)]);
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+}();
 
 /***/ }),
 
@@ -8362,11 +8359,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loader", function() { return loader; });
 class Loader {
   constructor() {
-    const loader = document.createElement('div');
-    loader.className = 'loader';
-    loader.innerHTML = 'loading';
-    document.body.appendChild(loader);
-    this.loader = loader;
+    this.loader = document.querySelector('.loading');
   }
 
   show() {
@@ -10587,6 +10580,23 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     this.diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
     this.stage = 0;
 
+    this.calculateByteDiff = () => {
+      this.data = Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_2__["saveConfig"])(false);
+      this.bytediffcount = 0;
+      this.bytediff = Array.from(new Uint8Array(this.data));
+      this.bytediff = this.bytediff.map((byte, i) => {
+        const binary = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].binary[i];
+
+        if (byte !== binary) {
+          this.bytediffcount++;
+          return `<b style='color:red'>${binary.toString(16)}:${byte.toString(16)}</b>`;
+        } else return `${byte.toString(16)}`;
+      });
+      this.bytediff = this.bytediff.join(' ');
+    };
+
+    this.calculateByteDiff();
+
     this.applyChanges = () => {
       if (this.stage === 0) {
         this.diff.map(d => {
@@ -10598,14 +10608,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         });
         _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].apply();
         this.diff = _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].diff();
-        this.data = Object(_conf_config_dat__WEBPACK_IMPORTED_MODULE_2__["saveConfig"])(false);
-        this.bytediff = Array.from(new Uint8Array(this.data));
-        this.bytediff = this.bytediff.map((byte, i) => {
-          if (byte !== _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].binary[i]) {
-            return `<b style='color:red'>${byte.toString(16)}</b>`;
-          } else return `${byte.toString(16)}`;
-        });
-        this.bytediff = this.bytediff.join(' ');
+        this.calculateByteDiff();
         this.stage = 1;
         return;
       }
@@ -10618,7 +10621,9 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   render(props) {
-    if (this.bytediff) {
+    if (this.bytediff && this.stage === 1
+    /*|| this.bytediffcount*/
+    ) {
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         dangerouslySetInnerHTML: {
           __html: this.bytediff
@@ -10629,7 +10634,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       }, "APPLY"));
     }
 
-    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "byte diff: ", this.bytediffcount), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
       ref: ref => this.form = ref
     }, this.diff.map(change => {
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, change.path), ": before: ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val1)), " now:", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("b", null, JSON.stringify(change.val2)), " ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
@@ -10640,7 +10645,7 @@ class DiffPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.applyChanges
-    }, "APPLY"));
+    }, "APPLY")));
   }
 
 }
@@ -11080,6 +11085,8 @@ class LoadPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RebootPage", function() { return RebootPage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/loader */ "./src/lib/loader.js");
+
 
 class RebootPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render(props) {
@@ -11087,9 +11094,12 @@ class RebootPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   componentDidMount() {
-    fetch('/reboot').then(() => {
+    _lib_loader__WEBPACK_IMPORTED_MODULE_1__["loader"].show();
+    fetch('/?cmd=reboot').then(() => {
       setTimeout(() => {
+        _lib_loader__WEBPACK_IMPORTED_MODULE_1__["loader"].hide();
         window.location.hash = '#devices';
+        window.location.reload();
       }, 5000);
     });
   }
