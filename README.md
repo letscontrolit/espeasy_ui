@@ -79,13 +79,13 @@ ID      Option object
 This is the list of `Option object` properties:
 - name: name of the option (as shown in form)
 - type: type of the option
-Possible types:
- - string: renders text box input
- - number: renders number input
- - select: renders dropdown. `options` property must be provided and must be an array of objects with property `name` and `value`
- - checkbox: renders checkbox
- - password: renders password input
- - button: renders button
+> Possible types:
+>  - string: renders text box input
+>  - number: renders number input
+>  - select: renders dropdown. `options` property must be provided and must be an array of objects with property `name` and `value`
+>  - checkbox: renders checkbox
+>  - password: renders password input
+>  - button: renders button
 - if: [optional] name of a variable that will be evaluated, if false the option will not show
 - var: [optional] name of the variable to read/write
 
