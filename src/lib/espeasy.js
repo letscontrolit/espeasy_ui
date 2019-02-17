@@ -238,7 +238,7 @@ export const storeFile = async (filename, data) => {
     formData.append('edit', 1);
     formData.append('file', file);
     
-    return await fetch('/upload', {
+    return await fetch('/upload_json', {
         method: 'post',
         body: formData,
     }).then(() => {

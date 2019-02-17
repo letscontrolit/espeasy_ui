@@ -17,7 +17,7 @@ export class FSPage extends Component {
     }
 
     fetch() {
-        fetch('/filelist').then(response => response.json()).then(fileList => {
+        fetch('/filelist_json').then(response => response.json()).then(fileList => {
             this.setState({ files: fileList });
         });
     }

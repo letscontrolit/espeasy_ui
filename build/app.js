@@ -7721,7 +7721,7 @@ const storeFile = async (filename, data) => {
   const formData = new FormData();
   formData.append('edit', 1);
   formData.append('file', file);
-  return await fetch('/upload', {
+  return await fetch('/upload_json', {
     method: 'post',
     body: formData
   }).then(() => {
@@ -10958,7 +10958,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   fetch() {
-    fetch('/filelist').then(response => response.json()).then(fileList => {
+    fetch('/filelist_json').then(response => response.json()).then(fileList => {
       this.setState({
         files: fileList
       });
