@@ -8,6 +8,10 @@ const eventTypes = [
 ]
 
 export const bmp085 = {
+    defaults: () => ({
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Pressure',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

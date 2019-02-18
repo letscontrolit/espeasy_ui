@@ -6,6 +6,9 @@ const mode = [
 ]
 
 export const pme = {
+    defaults: () => ({
+        'settings.values[0].name': 'Value',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -13,4 +16,6 @@ export const pme = {
             mode: { name: 'Port Type', type: 'select', options: mode, var: 'configs[0]'  },
         }
     },
+    data: true,
+    vals: 1
 }

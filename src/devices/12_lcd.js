@@ -20,17 +20,21 @@ const lcdCommand = [
 ]
 
 export const lcd2004 = {
+    defaults: () => ({
+        'configs[0]': 32,
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
             i2c_address: { name: 'I2C Address', type: 'select', options: i2c_address, var: 'configs[0]'  },
             size: { name: 'Display Size', type: 'select', options: displaySize, var: 'configs[1]'  },
-            line1: { name: 'Line 1', type: 'string', var: 'configs[2]'  },
-            line2: { name: 'Line 2', type: 'string', var: 'configs[2]'  },
-            line3: { name: 'Line 3', type: 'string', var: 'configs[2]'  },
-            line4: { name: 'Line 4', type: 'string', var: 'configs[2]'  },
-            button: { name: 'Display Button', type: 'select', options: pins, var: 'gpio1'  },
-            command: { name: 'LCD Command Mode', type: 'select', options: lcdCommand, var: 'configs[2]'  },
+            line1: { name: 'Line 1', type: 'string', /*var: 'configs[2]' */ },
+            line2: { name: 'Line 2', type: 'string', /*var: 'configs[2]' */  },
+            line3: { name: 'Line 3', type: 'string', /*var: 'configs[2]' */  },
+            line4: { name: 'Line 4', type: 'string', /*var: 'configs[2]' */  },
+            button: { name: 'Display Button', type: 'select', options: pins, var: 'gpio3'  },
+            timeout: { name: 'Display Timeout', type: 'number', var: 'configs[2]'  },
+            command: { name: 'LCD Command Mode', type: 'select', options: lcdCommand, var: 'configs[3]'  },
         }
     },
 }

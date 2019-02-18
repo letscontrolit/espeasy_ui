@@ -8,6 +8,10 @@ const eventTypes = [
 ]
 
 export const inputMcp = {
+    defaults: () => ({
+        gpio4: 0,
+        'settings.values[0].name': 'Switch',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -27,4 +31,6 @@ export const inputMcp = {
             safe_button: { name: 'Use safe button', type: 'checkbox', var: 'configs_float[3]' },
         }
     },
+    data: true,
+    vars: 1,
 }

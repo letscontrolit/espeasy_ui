@@ -4275,6 +4275,10 @@ const measurmentMode = [{
   name: 'RESOLUTION_AUTO_HIGH'
 }];
 const bh1750 = {
+  defaults: () => ({
+    'configs[0]': 35,
+    'settings.values[0].name': 'Lux'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4323,6 +4327,9 @@ const mode = [{
   name: 'Analog'
 }];
 const pme = {
+  defaults: () => ({
+    'settings.values[0].name': 'Value'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4338,7 +4345,9 @@ const pme = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -4389,6 +4398,9 @@ const lcdCommand = [{
   name: 'RESOLUTION_AUTO_HIGH'
 }];
 const lcd2004 = {
+  defaults: () => ({
+    'configs[0]': 32
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4406,35 +4418,44 @@ const lcd2004 = {
       },
       line1: {
         name: 'Line 1',
-        type: 'string',
-        var: 'configs[2]'
+        type: 'string'
+        /*var: 'configs[2]' */
+
       },
       line2: {
         name: 'Line 2',
-        type: 'string',
-        var: 'configs[2]'
+        type: 'string'
+        /*var: 'configs[2]' */
+
       },
       line3: {
         name: 'Line 3',
-        type: 'string',
-        var: 'configs[2]'
+        type: 'string'
+        /*var: 'configs[2]' */
+
       },
       line4: {
         name: 'Line 4',
-        type: 'string',
-        var: 'configs[2]'
+        type: 'string'
+        /*var: 'configs[2]' */
+
       },
       button: {
         name: 'Display Button',
         type: 'select',
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
-        var: 'gpio1'
+        var: 'gpio3'
+      },
+      timeout: {
+        name: 'Display Timeout',
+        type: 'number',
+        var: 'configs[2]'
       },
       command: {
         name: 'LCD Command Mode',
         type: 'select',
         options: lcdCommand,
-        var: 'configs[2]'
+        var: 'configs[3]'
       }
     }
   }
@@ -4476,6 +4497,11 @@ const filters = [{
   name: 'Median'
 }];
 const hcsr04 = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'Distance'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4525,7 +4551,9 @@ const hcsr04 = {
         var: 'configs[5]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -5683,6 +5711,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const analogInput = {
+  defaults: () => ({
+    'settings.values[0].name': 'Analog'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5708,7 +5739,7 @@ const analogInput = {
       }, {
         name: '=',
         type: 'number',
-        var: 'configs_float[1]'
+        var: 'configs_float[0]'
       }],
       point2: [{
         name: 'Point 2',
@@ -6280,6 +6311,12 @@ const counterTypes = [{
 }];
 const genericPulse = {
   sensor: {
+    defaults: () => ({
+      gpio1: 255,
+      'settings.values[0].name': 'Count',
+      'settings.values[1].name': 'Total',
+      'settings.values[2].name': 'Time'
+    }),
     name: 'Sensor',
     configs: {
       gpio: {
@@ -6308,7 +6345,7 @@ const genericPulse = {
     }
   },
   data: true,
-  vals: 1
+  vals: 3
 };
 
 /***/ }),
@@ -6627,11 +6664,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const ds18b20 = {
   defaults: () => ({
-    ValueCount: 1,
-    SendDataOption: 1,
-    TimerOption: 1,
-    TimerOptional: 1,
-    GlobalSync: 1,
+    gpio1: 255,
     'settings.values[0].name': 'Temperature'
   }),
   sensor: {
@@ -6919,6 +6952,10 @@ const eventTypes = [{
   name: 'Active on LOW and HIGH'
 }];
 const bmp085 = {
+  defaults: () => ({
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Pressure'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6947,20 +6984,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pcf8591", function() { return pcf8591; });
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
-const eventTypes = [{
-  value: 0,
-  name: 'Disabled'
-}, {
-  value: 1,
-  name: 'Active on LOW'
-}, {
-  value: 2,
-  name: 'Active on HIGH'
-}, {
-  value: 3,
-  name: 'Active on LOW and HIGH'
-}];
 const pcf8591 = {
+  defaults: () => ({
+    'settings.values[0].name': 'Analog'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6971,7 +6998,8 @@ const pcf8591 = {
       }
     }
   },
-  data: true
+  data: true,
+  vars: 1
 };
 
 /***/ }),
@@ -6996,6 +7024,11 @@ const weigandType = [{
   name: '34 Bits'
 }];
 const rfidWeigand = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'Tag'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -7018,7 +7051,9 @@ const rfidWeigand = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  data: true,
+  vars: 1
 };
 
 /***/ }),
@@ -7049,6 +7084,10 @@ const eventTypes = [{
   name: 'Active on LOW and HIGH'
 }];
 const inputMcp = {
+  defaults: () => ({
+    gpio4: 0,
+    'settings.values[0].name': 'Switch'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -7105,7 +7144,9 @@ const inputMcp = {
         var: 'configs_float[3]'
       }
     }
-  }
+  },
+  data: true,
+  vars: 1
 };
 
 /***/ }),
@@ -10512,6 +10553,10 @@ const getFormConfig = type => {
               name: `Formula ${i + 1}`,
               var: `settings.values[${i}].formula`,
               type: 'string'
+            }, {
+              name: `Decimals ${i + 1}`,
+              var: `extra.decimals[${i}]`,
+              type: 'number'
             }];
             return acc;
           }, {})

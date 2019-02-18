@@ -6,6 +6,11 @@ const weigandType = [
 ]
 
 export const rfidWeigand = {
+    defaults: () => ({
+        gpio1: 255,
+        gpio2: 255,
+        'settings.values[0].name': 'Tag',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -14,4 +19,6 @@ export const rfidWeigand = {
             type: { name: 'Weigand Type', type: 'select', options: weigandType, var: 'configs[0]'  },
         }
     },
+    data: true,
+    vars: 1
 }

@@ -16,6 +16,11 @@ const filters = [
 ]
 
 export const hcsr04 = {
+    defaults: () => ({
+        gpio1: 255,
+        gpio2: 255,
+        'settings.values[0].name': 'Distance',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -29,4 +34,6 @@ export const hcsr04 = {
             filter_size: { name: 'Filter Size', type: 'number', var: 'configs[5]'  },
         }
     },
+    data: true,
+    vals: 1,
 }

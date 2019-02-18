@@ -1,13 +1,10 @@
 import { pins } from './_defs';
 
-const eventTypes = [
-    { value: 0, name: 'Disabled' }, 
-    { value: 1, name: 'Active on LOW' }, 
-    { value: 2, name: 'Active on HIGH' }, 
-    { value: 3, name: 'Active on LOW and HIGH' }, 
-]
 
 export const pcf8591 = {
+    defaults: () => ({
+        'settings.values[0].name': 'Analog',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -15,4 +12,5 @@ export const pcf8591 = {
         }
     },
     data: true,
+    vars: 1
 }

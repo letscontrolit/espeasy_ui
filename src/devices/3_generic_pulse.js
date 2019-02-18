@@ -16,6 +16,12 @@ const counterTypes = [
 
 export const genericPulse = {
     sensor: {
+        defaults: () => ({
+            gpio1: 255,
+            'settings.values[0].name': 'Count',
+            'settings.values[1].name': 'Total',
+            'settings.values[2].name': 'Time',
+        }),
         name: 'Sensor',
         configs: {
             gpio: { name: 'GPIO', type: 'select', options: pins, var: 'gpio1' },
@@ -25,5 +31,5 @@ export const genericPulse = {
         }
     },
     data: true,
-    vals: 1,
+    vals: 3,
 }

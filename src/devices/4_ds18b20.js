@@ -2,11 +2,7 @@ import { pins } from './_defs';
 
 export const ds18b20 = {
     defaults: () => ({
-        ValueCount: 1,
-        SendDataOption: 1,
-        TimerOption: 1,
-        TimerOptional: 1,
-        GlobalSync: 1,
+        gpio1: 255,
         'settings.values[0].name': 'Temperature',
     }),
     sensor: {

@@ -13,6 +13,10 @@ const measurmentMode = [
 ]
 
 export const bh1750 = {
+    defaults: () => ({
+        'configs[0]': 35,
+        'settings.values[0].name': 'Lux',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

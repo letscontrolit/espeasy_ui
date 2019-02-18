@@ -42,7 +42,11 @@ const getFormConfig = (type) => {
                 name: 'Values',
                 configs: {
                     ...[...new Array(device.fields.vals || 0)].reduce((acc, x, i) => {
-                        acc[`value${i}`] = [{ name: `Name ${i+1}`, var: `settings.values[${i}].name`, type: 'string' }, { name: `Formula ${i+1}`, var: `settings.values[${i}].formula`, type: 'string' }];
+                        acc[`value${i}`] = [
+                            { name: `Name ${i+1}`, var: `settings.values[${i}].name`, type: 'string' }, 
+                            { name: `Formula ${i+1}`, var: `settings.values[${i}].formula`, type: 'string' },
+                            { name: `Decimals ${i+1}`, var: `extra.decimals[${i}]`, type: 'number' }
+                        ];
                         return acc;
                     }, {})
                 }
