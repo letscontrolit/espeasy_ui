@@ -3,11 +3,11 @@ import { pins } from './_defs';
 
 export const rotaryEncoder = {
     defaults: () => ({
-        ValueCount: 1,
-        SendDataOption: 1,
-        TimerOption: 1,
-        TimerOptional: 1,
-        GlobalSync: 1,
+        gpio1: 255,
+        gpio2: 255,
+        gpio3: 255,
+        'configs_long[1]': 100,
+        'settings.values[0].name': 'Counter',
     }),
     sensor: {
         name: 'Data Acquisition',

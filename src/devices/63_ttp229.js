@@ -7,11 +7,9 @@ export const ttp229 = {
     }),
     sensor: {
         defaults: () => ({
-            ValueCount: 1,
-            SendDataOption: 1,
-            TimerOption: 1,
-            TimerOptional: 1,
-            GlobalSync: 1,
+            gpio1: 255,
+            gpio2: 255,
+            'settings.values[0].name': 'ScanCode',
         }),
         name: 'Sensor',
         configs: {

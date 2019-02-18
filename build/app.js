@@ -6811,6 +6811,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const senseAir = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'CO2'
+  }),
   sensor: {
     name: 'Data Acquisition',
     configs: {
@@ -6847,6 +6852,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const sds011 = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'PM2.5',
+    'settings.values[1].name': 'PM10'
+  }),
   sensor: {
     name: 'Data Acquisition',
     configs: {
@@ -6865,7 +6876,7 @@ const sds011 = {
     }
   },
   data: true,
-  vals: 1
+  vals: 2
 };
 
 /***/ }),
@@ -6884,11 +6895,11 @@ __webpack_require__.r(__webpack_exports__);
 
 const rotaryEncoder = {
   defaults: () => ({
-    ValueCount: 1,
-    SendDataOption: 1,
-    TimerOption: 1,
-    TimerOptional: 1,
-    GlobalSync: 1
+    gpio1: 255,
+    gpio2: 255,
+    gpio3: 255,
+    'configs_long[1]': 100,
+    'settings.values[0].name': 'Counter'
   }),
   sensor: {
     name: 'Data Acquisition',
@@ -7006,11 +7017,9 @@ const ttp229 = {
   }),
   sensor: {
     defaults: () => ({
-      ValueCount: 1,
-      SendDataOption: 1,
-      TimerOption: 1,
-      TimerOptional: 1,
-      GlobalSync: 1
+      gpio1: 255,
+      gpio2: 255,
+      'settings.values[0].name': 'ScanCode'
     }),
     name: 'Sensor',
     configs: {
