@@ -7438,7 +7438,7 @@ const devices = [{
 /*!****************************!*\
   !*** ./src/lib/espeasy.js ***!
   \****************************/
-/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, storeFile, deleteFile, storeDashboardConfig, loadDashboardConfig, storeRuleConfig, loadRuleConfig, storeRule, default */
+/*! exports provided: getJsonStat, loadDevices, getConfigNodes, getVariables, getDashboardConfigNodes, fetchProgress, storeFile, deleteFile, storeDashboardConfig, loadDashboardConfig, storeRuleConfig, loadRuleConfig, storeRule, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7448,6 +7448,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfigNodes", function() { return getConfigNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDashboardConfigNodes", function() { return getDashboardConfigNodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchProgress", function() { return fetchProgress; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeFile", function() { return storeFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteFile", function() { return deleteFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "storeDashboardConfig", function() { return storeDashboardConfig; });
@@ -7715,16 +7716,31 @@ const getDashboardConfigNodes = async url => {
     vars
   };
 };
-const storeFile = async (filename, data) => {
+const fetchProgress = (url, opts = {}) => {
+  return new Promise((res, rej) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open(opts.method || 'get', url);
+
+    for (var k in opts.headers || {}) xhr.setRequestHeader(k, opts.headers[k]);
+
+    xhr.onload = e => res(e.target.responseText);
+
+    xhr.onerror = rej;
+    if (xhr.upload && opts.onProgress) xhr.upload.onprogress = opts.onProgress; // event.loaded / event.total * 100 ; //event.lengthComputable
+
+    xhr.send(opts.body);
+  });
+};
+const storeFile = async (filename, data, onProgress) => {
   _loader__WEBPACK_IMPORTED_MODULE_1__["loader"].show();
   const file = data ? new File([new Blob([data])], filename) : filename;
   const formData = new FormData();
   formData.append('edit', 1);
   formData.append('file', file);
-  return await fetch('/upload_json', {
+  return await fetchProgress('/upload_json', {
     method: 'post',
     body: formData
-  }).then(() => {
+  }, onProgress).then(() => {
     _loader__WEBPACK_IMPORTED_MODULE_1__["loader"].hide();
     mini_toastr__WEBPACK_IMPORTED_MODULE_0__["default"].success('Successfully saved to flash!', '', 5000);
   }, e => {
@@ -10990,7 +11006,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       const url = `/${file.fileName}`;
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("tr", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: url
-      }, file.fileName)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, file.size), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+      }, file.fileName)), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, file.size), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("td", null, file.fileName.endsWith('.dat') ? null : Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
         type: "button",
         onClick: this.deleteFile,
         "data-name": file.fileName
@@ -11010,7 +11026,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage, UpdatePage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11566,19 +11582,32 @@ class SysVarsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdatePage", function() { return UpdatePage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
 
 class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
+    this.state = {
+      progress: 0
+    };
 
     this.saveForm = () => {
       const data = new FormData();
       data.append('file', this.file.files[0]);
       data.append('user', 'hubot');
-      fetch('/update', {
+      Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_1__["fetchProgress"])('/update', {
         method: 'POST',
-        body: data
-      }).then(() => {});
+        body: data,
+        onProgress: e => {
+          const perc = 100 * e.loaded / e.total;
+          this.setState({
+            progress: perc
+          });
+        }
+      }).then(() => {
+        window.location.href = '#tools/reboot';
+      });
     };
   }
 
@@ -11597,7 +11626,7 @@ class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
       type: "button",
       onClick: this.saveForm
-    }, "upload")));
+    }, "upload"), this.state.progress ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null, " ", Math.round(this.state.progress), "%") : null));
   }
 
 }

@@ -51,7 +51,9 @@ export class FSPage extends Component {
                             <td><a href={url}>{file.fileName}</a></td>
                             <td>{file.size}</td>
                             <td>
-                                <button type="button" onClick={this.deleteFile} data-name={file.fileName}>X</button>
+                                { file.fileName.endsWith('.dat') ? (null) :
+                                (<button type="button" onClick={this.deleteFile} data-name={file.fileName}>X</button>)
+                                }
                             </td>
                         </tr>
                             ); })}

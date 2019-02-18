@@ -231,17 +231,31 @@ export const getDashboardConfigNodes = async (url) => {
     return { nodes, vars };
 }
 
-export const storeFile = async (filename, data) => {
+export const fetchProgress = (url, opts={}) => {
+    return new Promise( (res, rej)=>{
+        var xhr = new XMLHttpRequest();
+        xhr.open(opts.method || 'get', url);
+        for (var k in opts.headers||{})
+            xhr.setRequestHeader(k, opts.headers[k]);
+        xhr.onload = e => res(e.target.responseText);
+        xhr.onerror = rej;
+        if (xhr.upload && opts.onProgress)
+            xhr.upload.onprogress = opts.onProgress; // event.loaded / event.total * 100 ; //event.lengthComputable
+        xhr.send(opts.body);
+    });
+}
+
+export const storeFile = async (filename, data, onProgress) => {
     loader.show();
     const file = data ? new File([new Blob([data])], filename) : filename;
     const formData = new FormData();
     formData.append('edit', 1);
     formData.append('file', file);
     
-    return await fetch('/upload_json', {
+    return await fetchProgress('/upload_json', {
         method: 'post',
         body: formData,
-    }).then(() => {
+    }, onProgress).then(() => {
         loader.hide();
         miniToastr.success('Successfully saved to flash!', '', 5000);
     }, e => {

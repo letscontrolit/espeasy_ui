@@ -1,19 +1,26 @@
 import { h, Component } from 'preact';
+import { fetchProgress } from '../lib/espeasy';
 
 export class UpdatePage extends Component {
     constructor(props) {
         super(props);
+
+        this.state = { progress: 0 }
 
         this.saveForm = () => {
             const data = new FormData()
             data.append('file', this.file.files[0])
             data.append('user', 'hubot')
     
-            fetch('/update', {
+            fetchProgress('/update', {
                 method: 'POST',
-                body: data
+                body: data,
+                onProgress: (e) => {
+                    const perc = 100 * e.loaded / e.total;
+                    this.setState({ progress: perc });
+                }
             }).then(() => {
-    
+                window.location.href = '#tools/reboot';
             });
         }
     }
@@ -27,6 +34,7 @@ export class UpdatePage extends Component {
                 </label>
                 <input id="file" type="file" ref={ref => this.file = ref} />
                 <button type="button" onClick={this.saveForm}>upload</button>
+                { (this.state.progress) ? (<span> {Math.round(this.state.progress)}%</span>) : (null) }
             </div>
         </form>
         )
