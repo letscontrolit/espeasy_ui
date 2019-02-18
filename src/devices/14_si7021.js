@@ -9,6 +9,11 @@ const resolution = [
 ]
 
 export const si7021 = {
+    defaults: () => ({
+        interval: 60,
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Humidity',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

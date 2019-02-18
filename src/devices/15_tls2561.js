@@ -13,6 +13,12 @@ const measurmentMode = [
 ]
 
 export const tls2561 = {
+    defaults: () => ({
+        'configs[0]': 57,
+        'settings.values[0].name': 'Lux',
+        'settings.values[1].name': 'Infrared',
+        'settings.values[2].name': 'Broadband',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -22,4 +28,6 @@ export const tls2561 = {
             gain: { name: 'Enable 16x gain', type: 'checkbox', var: 'configs[3]'  },
         }
     },
+    data: true,
+    vals: 3
 }

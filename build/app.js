@@ -4584,6 +4584,11 @@ const resolution = [{
   name: 'Temp 11 bits, RH 11 bits'
 }];
 const si7021 = {
+  defaults: () => ({
+    interval: 60,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Humidity'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4634,6 +4639,12 @@ const measurmentMode = [{
   name: '402 ms'
 }];
 const tls2561 = {
+  defaults: () => ({
+    'configs[0]': 57,
+    'settings.values[0].name': 'Lux',
+    'settings.values[1].name': 'Infrared',
+    'settings.values[2].name': 'Broadband'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4660,7 +4671,9 @@ const tls2561 = {
         var: 'configs[3]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 3
 };
 
 /***/ }),
@@ -4678,6 +4691,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const pn532 = {
+  defaults: () => ({
+    gpio1: 255,
+    'settings.values[0].name': 'Tag'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4688,7 +4705,9 @@ const pn532 = {
         var: 'gpio1'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -4726,6 +4745,10 @@ const measurmentMode = [{
   name: 'RESOLUTION_AUTO_HIGH'
 }];
 const dust = {
+  defaults: () => ({
+    gpio1: 255,
+    'settings.values[0].name': 'Dust'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4769,6 +4792,10 @@ const eventTypes = [{
   name: 'Active on LOW and HIGH'
 }];
 const pcf8574 = {
+  defaults: () => ({
+    gpio4: 0,
+    'settings.values[0].name': 'Switch'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -4825,7 +4852,9 @@ const pcf8574 = {
         var: 'configs_float[3]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -4975,7 +5004,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ser2net", function() { return ser2net; });
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
-const parity = [{
+const serialConfig = [{
   value: 0,
   name: 'No Parity'
 }, {
@@ -4996,45 +5025,38 @@ const eventProcessing = [{
   name: 'RFLink'
 }];
 const ser2net = {
+  defaults: () => ({
+    gpio1: 255
+  }),
   sensor: {
     name: 'Settings',
     configs: {
       port: {
         name: 'TCP Port',
         type: 'number',
-        var: 'configs_float[0]'
+        var: 'extra.plugin_config_long[0]'
       },
       baudrate: {
         name: 'Baudrate',
         type: 'number',
-        var: 'configs_float[0]'
+        var: 'extra.plugin_config_long[1]'
       },
-      data_bits: {
+      serial_config: {
         name: 'Data Bits',
-        type: 'number',
-        var: 'configs_float[0]'
-      },
-      parity: {
-        name: 'Parity',
         type: 'select',
-        options: parity,
-        var: 'configs[0]'
-      },
-      stop_bits: {
-        name: 'Stop Bits',
-        type: 'number',
-        var: 'configs_float[0]'
+        options: serialConfig,
+        var: 'configs[2]'
       },
       reset_after_boot: {
         name: 'Reset target after boot',
         type: 'select',
         options: _defs__WEBPACK_IMPORTED_MODULE_0__["pins"],
-        var: 'configs[1]'
+        var: 'gpio1'
       },
       timeout: {
         name: 'RX Receive Timeout',
         type: 'number',
-        var: 'configs_float[0]'
+        var: 'configs[0]'
       },
       event_processing: {
         name: 'Event Processing',
@@ -5079,7 +5101,6 @@ const sensorModel = [{
 const levelControl = {
   defaults: () => ({
     gpio1: 255,
-    interval: 0,
     'settings.values[0].name': 'Output'
   }),
   sensor: {
@@ -5142,6 +5163,12 @@ const i2c_address = [...Array(32)].map((v, i) => ({
   name: `0x${(i + 64).toString(16)} (${i + 64})`
 }));
 const pca9685 = {
+  defaults: () => ({
+    gpio1: 255,
+    'configs_float[0]': 1500,
+    'configs_float[1]': 4095,
+    'settings.values[0].name': 'Output'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5160,11 +5187,15 @@ const pca9685 = {
       frequency: {
         name: 'Frequency (23 - 1500)',
         type: 'number',
+        min: 23,
+        max: 1500,
         var: 'configs_float[0]'
       },
       range: {
         name: 'Range (1-10000)',
         type: 'number',
+        min: 1,
+        max: 10000,
         var: 'configs_float[1]'
       }
     }

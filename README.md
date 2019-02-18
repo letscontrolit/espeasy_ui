@@ -99,6 +99,8 @@ List of commonly used variables and their arduino code counterpart:
 - `configs[i]`: `PCONFIG(i)`
 - `configs_long[i]`: `PCONFIG_LONG(i)`
 - `configs_float[i]`: `PCONFIG_FLOAT(i)`
+- `extra.plugin_config[i]`: `ExtraTaskSettings.TaskDevicePluginConfig[i]`
+- `extra.plugin_config_long[i]`: `ExtraTaskSettings.TaskDevicePluginConfigLong[i]`
 
 
 4) now that your file is complete, you need to import it in `index.js` (in `/src/devices/` folder)

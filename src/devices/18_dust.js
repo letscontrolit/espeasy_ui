@@ -13,6 +13,10 @@ const measurmentMode = [
 ]
 
 export const dust = {
+    defaults: () => ({
+        gpio1: 255,
+        'settings.values[0].name': 'Dust',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
