@@ -1,6 +1,9 @@
 import { pins, getTasks, getTaskValues } from './_defs';
 
 export const neopixelClock = {
+    defaults: () => ({
+        gpio1: 255,
+    }),
     sensor: {
         name: 'Actuator',
         configs: {

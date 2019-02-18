@@ -6228,8 +6228,14 @@ const sh1106 = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mqttImport", function() { return mqttImport; });
 const mqttImport = {
-  data: {
-    name: 'Data Acquisition',
+  defaults: () => ({
+    'settings.values[0].name': 'Value1',
+    'settings.values[1].name': 'Value2',
+    'settings.values[2].name': 'Value3',
+    'settings.values[3].name': 'Value4'
+  }),
+  settings: {
+    name: 'Data Settings',
     configs: {
       switch_type: {
         name: 'MQTT Topic 1',
@@ -6252,7 +6258,8 @@ const mqttImport = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  vars: 4
 };
 
 /***/ }),
@@ -6277,6 +6284,9 @@ const type = [{
   name: 'GRBW'
 }];
 const neopixelBasic = {
+  defaults: () => ({
+    gpio1: 255
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6323,6 +6333,10 @@ const type = [{
   name: 'MAX 31855'
 }];
 const thermocouple = {
+  defaults: () => ({
+    gpio1: 255,
+    'settings.values[0].name': 'Temperature'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6339,7 +6353,9 @@ const thermocouple = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -6436,6 +6452,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const neopixelClock = {
+  defaults: () => ({
+    gpio1: 255
+  }),
   sensor: {
     name: 'Actuator',
     configs: {
@@ -6485,6 +6504,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const neopixelCandle = {
+  defaults: () => ({
+    gpio1: 255,
+    'configs[0]': 11,
+    'settings.values[0].name': 'Color',
+    'settings.values[1].name': 'Brightness',
+    'settings.values[2].name': 'Type'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6495,7 +6521,9 @@ const neopixelCandle = {
         var: 'gpio1'
       }
     }
-  }
+  },
+  data: true,
+  vals: 3
 };
 
 /***/ }),
@@ -6523,6 +6551,10 @@ const type = [{
   name: 'On'
 }];
 const clock = {
+  defaults: () => ({
+    gpio1: 255,
+    'settings.values[0].name': 'Output'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6613,7 +6645,9 @@ const clock = {
         var: 'configs[1]'
       }]
     }
-  }
+  },
+  data: true,
+  vals: 1
 };
 
 /***/ }),
@@ -6700,6 +6734,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const mhz19 = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'PPM',
+    'settings.values[1].name': 'Temperature',
+    'settings.values[2].name': 'U'
+  }),
   sensor: {
     name: 'Data Acquisition',
     configs: {
@@ -6718,7 +6759,7 @@ const mhz19 = {
     }
   },
   data: true,
-  vals: 1
+  vals: 3
 };
 
 /***/ }),

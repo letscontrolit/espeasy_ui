@@ -6,6 +6,10 @@ const type = [
 ]
 
 export const thermocouple = {
+    defaults: () => ({
+        gpio1: 255,
+        'settings.values[0].name': 'Temperature',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -13,4 +17,6 @@ export const thermocouple = {
             type: { name: 'Adapter IC', type: 'select', options: type, var: 'configs[0]'  },
         }
     },
+    data: true,
+    vals: 1
 }

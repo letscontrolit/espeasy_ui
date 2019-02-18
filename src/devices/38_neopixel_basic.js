@@ -6,6 +6,9 @@ const type = [
 ]
 
 export const neopixelBasic = {
+    defaults: () => ({
+        gpio1: 255,
+    }),
     sensor: {
         name: 'Sensor',
         configs: {

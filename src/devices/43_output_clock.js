@@ -7,6 +7,10 @@ const type = [
 ]
 
 export const clock = {
+    defaults: () => ({
+        gpio1: 255,
+        'settings.values[0].name': 'Output',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -21,4 +25,6 @@ export const clock = {
             event8: [{ name: 'Day, Time 1', type: 'string', var: 'configs[0]' }, { name: '', type: 'select', options: type, var: 'configs[1]'  }],
         }
     },
+    data: true,
+    vals: 1
 }
