@@ -5339,6 +5339,10 @@ const options = [{
   name: 'Ambient Temperature'
 }];
 const mlx90614 = {
+  defaults: () => ({
+    gpio4: 0,
+    'settings.values[0].name': 'Temperature'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5354,7 +5358,9 @@ const mlx90614 = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  data: true,
+  vars: 1
 };
 
 /***/ }),
@@ -5427,6 +5433,10 @@ const multiplexerOptions = [{
   name: 'AIN3 - GND (Single-Ended)'
 }];
 const ads1115 = {
+  defaults: () => ({
+    'configs[0]': 72,
+    'settings.values[0].name': 'Analog'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5477,7 +5487,9 @@ const ads1115 = {
         var: 'configs_float[1]'
       }]
     }
-  }
+  },
+  data: true,
+  vars: 1
 };
 
 /***/ }),
@@ -5530,6 +5542,13 @@ const indicator = [{
   name: 'None'
 }];
 const systemInfo = {
+  defaults: () => ({
+    gpio4: 0,
+    'settings.values[0].name': 'Uptime',
+    'settings.values[1].name': 'Uptime',
+    'settings.values[2].name': 'Uptime',
+    'settings.values[3].name': 'Uptime'
+  }),
   sensor: {
     name: 'Settings',
     configs: {
@@ -5558,7 +5577,9 @@ const systemInfo = {
         var: 'configs_long[3]'
       }
     }
-  }
+  },
+  data: true,
+  vars: 4
 };
 
 /***/ }),
@@ -5612,6 +5633,12 @@ const i2c_address = [{
   name: '0x45 (69)'
 }];
 const ina219 = {
+  defaults: () => ({
+    'configs[0]': 64,
+    'settings.values[0].name': 'Voltage',
+    'settings.values[1].name': 'Current',
+    'settings.values[2].name': 'Power'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5634,7 +5661,9 @@ const ina219 = {
         var: 'configs[2]'
       }
     }
-  }
+  },
+  data: true,
+  vals: 3
 };
 
 /***/ }),
@@ -5660,11 +5689,7 @@ const i2c_address = [{
 }];
 const bmx280 = {
   defaults: () => ({
-    ValueCount: 1,
-    SendDataOption: 1,
-    TimerOption: 1,
-    TimerOptional: 1,
-    GlobalSync: 1,
+    'configs[0]': 118,
     'settings.values[0].name': 'Temperature',
     'settings.values[1].name': 'Humidity',
     'settings.values[2].name': 'Pressure'
@@ -5709,6 +5734,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const mqttDomoticz = {
+  defaults: () => ({
+    gpio1: 255,
+    'settings.values[0].name': 'Output'
+  }),
   sensor: {
     name: 'Actuator',
     configs: {
@@ -5724,7 +5753,8 @@ const mqttDomoticz = {
         var: 'configs[0]'
       }
     }
-  }
+  },
+  vals: 1
 };
 
 /***/ }),
@@ -5810,11 +5840,7 @@ const i2c_address = [{
 }];
 const bmp280 = {
   defaults: () => ({
-    ValueCount: 1,
-    SendDataOption: 1,
-    TimerOption: 1,
-    TimerOptional: 1,
-    GlobalSync: 1,
+    'configs[0]': 118,
     'settings.values[0].name': 'Temperature',
     'settings.values[1].name': 'Pressure'
   }),
@@ -5853,6 +5879,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _defs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_defs */ "./src/devices/_defs.js");
 
 const sht1x = {
+  defaults: () => ({
+    gpio1: 255,
+    gpio2: 255,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Humidity'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5876,7 +5908,7 @@ const sht1x = {
     }
   },
   data: true,
-  vals: 1
+  vals: 2
 };
 
 /***/ }),
@@ -5901,6 +5933,11 @@ const i2c_address = [{
   name: '0x77 (119) - (default)'
 }];
 const ms5611 = {
+  defaults: () => ({
+    'configs[0]': 119,
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Pressure'
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -5918,7 +5955,7 @@ const ms5611 = {
     }
   },
   data: true,
-  vals: 1
+  vals: 2
 };
 
 /***/ }),
@@ -6041,6 +6078,10 @@ const sensorModel = [{
   name: 'SENSOR_TYPE_WIND'
 }];
 const dht12 = {
+  defaults: () => ({
+    'settings.values[0].name': 'Temperature',
+    'settings.values[1].name': 'Humidity'
+  }),
   data: {
     name: 'Data Acquisition',
     configs: {
@@ -6089,6 +6130,9 @@ const displaySize = [{
   name: 'RESOLUTION_AUTO_HIGH'
 }];
 const sh1106 = {
+  defaults: () => ({
+    'configs[0]': 35
+  }),
   sensor: {
     name: 'Sensor',
     configs: {
@@ -6168,9 +6212,7 @@ const sh1106 = {
         var: 'configs[2]'
       }
     }
-  },
-  data: true,
-  vals: 1
+  }
 };
 
 /***/ }),

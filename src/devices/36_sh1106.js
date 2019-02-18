@@ -13,6 +13,9 @@ const displaySize = [
 ]
 
 export const sh1106 = {
+    defaults: () => ({
+        'configs[0]': 35,
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -32,6 +35,4 @@ export const sh1106 = {
             timeout: { name: 'Display Timeout', type: 'number', var: 'configs[2]'  },
         }
     },
-    data: true,
-    vals: 1,
 }

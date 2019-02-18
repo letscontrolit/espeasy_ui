@@ -4,6 +4,10 @@ const options = [
 ]
 
 export const mlx90614 = {
+    defaults: () => ({
+        gpio4: 0,
+        'settings.values[0].name': 'Temperature',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -11,4 +15,6 @@ export const mlx90614 = {
             option: { name: 'Option', type: 'select', options: options, var: 'configs[0]'  },
         }
     },
+    data: true,
+    vars: 1
 }

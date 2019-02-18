@@ -7,6 +7,11 @@ const i2c_address = [
 
 
 export const ms5611 = {
+    defaults: () => ({
+        'configs[0]': 119,
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Pressure',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -15,5 +20,5 @@ export const ms5611 = {
         }
     },
     data: true,
-    vals: 1,
+    vals: 2,
 }

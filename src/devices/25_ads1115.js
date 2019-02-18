@@ -28,6 +28,10 @@ const multiplexerOptions = [
 
 
 export const ads1115 = {
+    defaults: () => ({
+        'configs[0]': 72,
+        'settings.values[0].name': 'Analog',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -44,4 +48,6 @@ export const ads1115 = {
             point2: [{ name: 'Point 2', type: 'number', var: 'configs_long[1]' }, { name: '=', type: 'number', var: 'configs_float[1]' }],
         }
     },
+    data: true,
+    vars: 1,
 }

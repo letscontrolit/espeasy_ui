@@ -14,6 +14,13 @@ const indicator = [
 ]
 
 export const systemInfo = {
+    defaults: () => ({
+        gpio4: 0,
+        'settings.values[0].name': 'Uptime',
+        'settings.values[1].name': 'Uptime',
+        'settings.values[2].name': 'Uptime',
+        'settings.values[3].name': 'Uptime',
+    }),
     sensor: {
         name: 'Settings',
         configs: {
@@ -23,4 +30,6 @@ export const systemInfo = {
             indicator1: { name: 'Indicator 4', type: 'select', options: indicator, var: 'configs_long[3]' },
         }
     },
+    data: true,
+    vars: 4,
 }

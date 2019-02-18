@@ -14,6 +14,10 @@ const sensorModel = [
 ]
 
 export const dht12 = {
+    defaults: () => ({
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Humidity',
+    }),
     data: {
         name: 'Data Acquisition',
         configs: {

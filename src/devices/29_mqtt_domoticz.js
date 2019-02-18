@@ -1,6 +1,10 @@
 import { pins, getTasks, getTaskValues } from './_defs';
 
 export const mqttDomoticz = {
+    defaults: () => ({
+        gpio1: 255,
+        'settings.values[0].name': 'Output',
+    }),
     sensor: {
         name: 'Actuator',
         configs: {
@@ -8,4 +12,5 @@ export const mqttDomoticz = {
             idx: { name: 'IDX', type: 'number', var: 'configs[0]' },
         }
     },
+    vals: 1
 }

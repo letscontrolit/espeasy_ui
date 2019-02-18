@@ -21,6 +21,12 @@ const i2c_address = [
 ]
 
 export const ina219 = {
+    defaults: () => ({
+        'configs[0]': 64,
+        'settings.values[0].name': 'Voltage',
+        'settings.values[1].name': 'Current',
+        'settings.values[2].name': 'Power',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -29,4 +35,6 @@ export const ina219 = {
             check_value: { name: 'Measurment Type', type: 'select', options: measurmentType, var: 'configs[2]'  },
         }
     },
+    data: true,
+    vals: 3,
 }

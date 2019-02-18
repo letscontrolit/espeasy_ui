@@ -1,6 +1,12 @@
 import { pins, getTasks, getTaskValues } from './_defs';
 
 export const sht1x = {
+    defaults: () => ({
+        gpio1: 255,
+        gpio2: 255,
+        'settings.values[0].name': 'Temperature',
+        'settings.values[1].name': 'Humidity',
+    }),
     sensor: {
         name: 'Sensor',
         configs: {
@@ -10,5 +16,5 @@ export const sht1x = {
         },
     },
     data: true,
-    vals: 1,
+    vals: 2,
 }
