@@ -8531,6 +8531,10 @@ const menus = [{
     href: 'tools/discover',
     component: _pages__WEBPACK_IMPORTED_MODULE_0__["DiscoverPage"]
   }, {
+    title: 'Info',
+    href: 'tools/sysinfo',
+    component: _pages__WEBPACK_IMPORTED_MODULE_0__["SysVarsPage"]
+  }, {
     title: 'Update',
     href: 'tools/update',
     component: _pages__WEBPACK_IMPORTED_MODULE_0__["UpdatePage"]
@@ -11006,7 +11010,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11073,6 +11077,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _setup__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./setup */ "./src/pages/setup.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SetupPage", function() { return _setup__WEBPACK_IMPORTED_MODULE_18__["SetupPage"]; });
+
+/* harmony import */ var _tools_sysvars__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./tools.sysvars */ "./src/pages/tools.sysvars.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SysVarsPage", function() { return _tools_sysvars__WEBPACK_IMPORTED_MODULE_19__["SysVarsPage"]; });
+
 
 
 
@@ -11475,6 +11483,72 @@ class ToolsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   componentWillUnmount() {
     if (this.interval) clearInterval(this.interval);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/pages/tools.sysvars.js":
+/*!************************************!*\
+  !*** ./src/pages/tools.sysvars.js ***!
+  \************************************/
+/*! exports provided: SysVarsPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SysVarsPage", function() { return SysVarsPage; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+
+class SysVarsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      device: props.params[0],
+      vars: {}
+    };
+
+    this.saveForm = () => {
+      storeFile(this.file.files[0]);
+    };
+
+    this.deleteFile = e => {
+      const fileName = e.currentTarget.dataset.name;
+      deleteFile(fileName).then(() => this.fetch());
+    };
+  }
+
+  fetch() {
+    fetch(`/sysinfo_json`).then(response => response.json()).then(vars => {
+      this.setState({
+        vars
+      });
+    });
+  }
+
+  render(props) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("form", {
+      class: "pure-form pure-form-aligned"
+    }, Object.keys(this.state.vars).map(v => {
+      const value = this.state.vars[v];
+      return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("fieldset", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", null, v), Object.keys(value).map((v1, i) => {
+        const value1 = value[v1];
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+          class: "pure-control-group"
+        }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
+          class: "pure-checkbox"
+        }, "$", vi), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+          readOnly: true,
+          type: "text",
+          value: value1
+        }));
+      }));
+    }));
+  }
+
+  componentDidMount() {
+    this.fetch();
   }
 
 }

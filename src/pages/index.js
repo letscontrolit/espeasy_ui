@@ -17,3 +17,4 @@ export * from './devices.edit';
 export * from './diff';
 export * from './rules.editor';
 export * from './setup';
+export * from './tools.sysvars';

@@ -17,7 +17,8 @@ import {
     DiscoverPage, 
     DiffPage, 
     RulesEditorPage, 
-    SetupPage
+    SetupPage,
+    SysVarsPage
 } from '../pages';
 
 import { saveConfig } from '../conf/config.dat';
@@ -57,6 +58,7 @@ const menus = [
     ] },
     { title: 'Tools', href: 'tools', component: ToolsPage, children: [
         { title: 'Discover', href: 'tools/discover', component: DiscoverPage },
+        { title: 'Info', href: 'tools/sysinfo', component: SysVarsPage },
         { title: 'Update', href: 'tools/update', component: UpdatePage },
         { title: 'Filesystem', href: 'tools/fs', component: FSPage },
     ] },
