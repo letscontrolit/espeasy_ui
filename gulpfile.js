@@ -67,6 +67,7 @@ gulp.task('pagesinline', function() {
 gulp.task('default', function () {
   runSequence(
     'styles',
+    'scripts',
     'pages',
     'pagesinline'
   );
