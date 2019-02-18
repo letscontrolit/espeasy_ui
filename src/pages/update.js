@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { fetchProgress } from '../lib/espeasy';
+import { loader } from '../lib/loader';
 
 export class UpdatePage extends Component {
     constructor(props) {
@@ -8,6 +9,7 @@ export class UpdatePage extends Component {
         this.state = { progress: 0 }
 
         this.saveForm = () => {
+            loader.show();
             const data = new FormData()
             data.append('file', this.file.files[0])
             data.append('user', 'hubot')
@@ -20,7 +22,7 @@ export class UpdatePage extends Component {
                     this.setState({ progress: perc });
                 }
             }).then(() => {
-                window.location.href = '#tools/reboot';
+                window.location.href = '#config/reboot';
             });
         }
     }

@@ -4,16 +4,6 @@ export class SysVarsPage extends Component {
     constructor(props) {
         super(props);
         this.state = { device: props.params[0], vars: {} };
-
-
-        this.saveForm = () => {
-            storeFile(this.file.files[0]);
-        }
-
-        this.deleteFile = e => {
-            const fileName = e.currentTarget.dataset.name;
-            deleteFile(fileName).then(() => (this.fetch()));
-        }
     }
 
     fetch() {
@@ -36,7 +26,7 @@ export class SysVarsPage extends Component {
                                 const value1 = value[v1];
                                 return (
                                     <div class="pure-control-group">
-                                        <label class="pure-checkbox">${vi}</label>
+                                        <label class="pure-checkbox">{v1}</label>
                                         <input readOnly={true} type="text" value={value1} />
                                     </div>
                                 )

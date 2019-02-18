@@ -11026,7 +11026,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage, UpdatePage */
+/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11524,15 +11524,6 @@ class SysVarsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       device: props.params[0],
       vars: {}
     };
-
-    this.saveForm = () => {
-      storeFile(this.file.files[0]);
-    };
-
-    this.deleteFile = e => {
-      const fileName = e.currentTarget.dataset.name;
-      deleteFile(fileName).then(() => this.fetch());
-    };
   }
 
   fetch() {
@@ -11554,7 +11545,7 @@ class SysVarsPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           class: "pure-control-group"
         }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("label", {
           class: "pure-checkbox"
-        }, "$", vi), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+        }, v1), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
           readOnly: true,
           type: "text",
           value: value1
@@ -11583,6 +11574,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdatePage", function() { return UpdatePage; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+/* harmony import */ var _lib_loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/loader */ "./src/lib/loader.js");
+
 
 
 class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
@@ -11593,6 +11586,7 @@ class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     };
 
     this.saveForm = () => {
+      _lib_loader__WEBPACK_IMPORTED_MODULE_2__["loader"].show();
       const data = new FormData();
       data.append('file', this.file.files[0]);
       data.append('user', 'hubot');
@@ -11606,7 +11600,7 @@ class UpdatePage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
           });
         }
       }).then(() => {
-        window.location.href = '#tools/reboot';
+        window.location.href = '#config/reboot';
       });
     };
   }
