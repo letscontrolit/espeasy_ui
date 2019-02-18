@@ -1,13 +1,16 @@
 import { h, Component } from 'preact';
 import { deleteFile, storeFile } from '../lib/espeasy';
+import { loader } from '../lib/loader';
 
 export class FSPage extends Component {
     constructor(props) {
         super(props);
         this.state = { files: [] }
 
-        this.saveForm = () => {
-            storeFile(this.file.files[0]);
+        this.saveForm = async () => {
+            loader.show();
+            await storeFile(this.file.files[0]);
+            await fetch();
         }
 
         this.deleteFile = e => {
@@ -23,6 +26,7 @@ export class FSPage extends Component {
     }
 
     render(props) {
+        loader.hide();
         return (
             <div>
                 <form class="pure-form pure-form-aligned">

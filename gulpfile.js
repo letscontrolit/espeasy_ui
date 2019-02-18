@@ -36,6 +36,12 @@ gulp.task('styles', function () {
       .pipe(gulp.dest('./build'))
   });
 
+  gulp.task('scripts', function () {
+    return gulp.src('./build/dash.js')
+      .pipe(gzip())
+      .pipe(gulp.dest('./build'))
+  });
+
   gulp.task('pages', function() {
     return gulp.src(['./src/index.htm'])
       .pipe(htmlmin({

@@ -4,7 +4,7 @@ import { loader } from './loader';
 import { menu } from './menu';
 
 const PLUGINS = [
-    'http://localhost:8080/build/dash.js'
+    '/dash.js.gz'
 ];
 
 const dynamicallyLoadScript = (url) => {
