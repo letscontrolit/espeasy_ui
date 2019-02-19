@@ -22,6 +22,13 @@ import {
 } from '../pages';
 
 import { saveConfig } from '../conf/config.dat';
+import { deleteFile } from './espeasy';
+
+const oldUI = () => {
+    deleteFile('index.htm.gz').then(() => {
+        window.location.href = '/';
+    });
+}
 
 class Menus {
     constructor() {
@@ -61,6 +68,7 @@ const menus = [
         { title: 'Info', href: 'tools/sysinfo', component: SysVarsPage },
         { title: 'Update', href: 'tools/update', component: UpdatePage },
         { title: 'Filesystem', href: 'tools/fs', component: FSPage },
+        { title: 'Back to old UI', href: 'tools/oldui', action: oldUI },
     ] },
 ];
 
