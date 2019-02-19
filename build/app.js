@@ -10779,12 +10779,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 /* harmony import */ var _lib_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/settings */ "./src/lib/settings.js");
 /* harmony import */ var _devices__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../devices */ "./src/devices/index.js");
+/* harmony import */ var _lib_espeasy__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/espeasy */ "./src/lib/espeasy.js");
+
 
 
 
 class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
+    this.state = {
+      devices: []
+    };
 
     this.handleEnableToggle = e => {
       _lib_settings__WEBPACK_IMPORTED_MODULE_1__["settings"].set(e.currentTarget.dataset.prop, e.currentTarget.checked ? 1 : 0);
@@ -10799,9 +10804,11 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       const device = _devices__WEBPACK_IMPORTED_MODULE_2__["devices"].find(d => d.value === task.device);
       const deviceType = device ? device.name : '--unknown--';
       const enabledProp = `tasks[${i}].enabled`;
+      const deviceLive = this.state.devices.find(device => device.TaskNumber == i);
+      const vals = deviceLive ? deviceLive.TaskValues : [];
       return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "device"
-      }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
+      }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "info"
       }, i + 1, ": ", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
         type: "checkbox",
@@ -10810,10 +10817,31 @@ class DevicesPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         onChange: this.handleEnableToggle
       }), "\xA0\xA0", task.settings.name, " [", deviceType, "] ", task.gpio1 !== 255 ? `GPIO:${task.gpio1}` : '', Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", {
         href: editUrl
-      }, "edit")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", {
+      }, "edit")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
         class: "vars"
-      }));
+      }, vals.map(v => {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("span", null, v.Name, ": ", v.Value, " ");
+      })));
     }));
+  }
+
+  fetchDevices() {
+    Object(_lib_espeasy__WEBPACK_IMPORTED_MODULE_3__["loadDevices"])().then(devices => {
+      this.setState({
+        devices
+      });
+      if (!this.shutdown) setTimeout(() => {
+        this.fetchDevices();
+      }, 1000);
+    });
+  }
+
+  componentDidMount() {
+    this.fetchDevices();
+  }
+
+  componentWillMount() {
+    this.shutdown = true;
   }
 
 }
@@ -11211,7 +11239,7 @@ class FSPage extends preact__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!****************************!*\
   !*** ./src/pages/index.js ***!
   \****************************/
-/*! exports provided: ControllersPage, DevicesPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage */
+/*! exports provided: ControllersPage, ConfigPage, ConfigAdvancedPage, pins, ConfigHardwarePage, RebootPage, LoadPage, UpdatePage, RulesPage, ToolsPage, FSPage, FactoryResetPage, DiscoverPage, protocols, ControllerEditPage, types, ControllerNotificationsPage, DevicesEditPage, DiffPage, RulesEditorPage, SetupPage, SysVarsPage, DevicesPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
