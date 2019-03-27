@@ -108,3 +108,127 @@ you will need to add a line like this `import { yourPluginName } from './103_you
 before the last line insert something like `{ name: 'My Plugin Name', value: 103, fields: yourPluginName },`, where name is the name as shown in UI, value is your plugin id number and for fields pass the imported object.
 
 5) save all files and from project root run `npm run build`, which will build new files for you in `/build` folder. Its time to test!
+
+
+### project structure:
+
+`/src/index.html` index html file, should not require any changes
+`/src/app.js` main entry file, loads configs, plugins and handles navigation
+`/src/plugins` plugins directory, currently there is only dashboard plugin there. plugins are not part of the main bundle (they get build into separate .js file and loaded on runtime)
+`/src/pages` all core pages (plugins can add more)
+`/src/lib` different library functions
+`/src/lib/node_definitions.js` definitions of all 'nodes' for automation editor
+`/src/devices` definition of all devices (tasks)
+`/src/conf/config.dat.js` definition of espeasy config file (for parsing/writing)
+`/src/components/espeasy_p2p` component for handling espeasy p2p network
+`/src/components/floweditor` drag and drop editor component used for rule editor
+`/src/components/form` form component
+`/src/components/menu` menu component
+`/src/components/page` page component
+
+### adding a new page
+
+create a new file inside `/src/pages`, lets call it `testpage.js`, paste this into it:
+
+```
+import { h, Component } from 'preact';
+
+export class TestPage extends Component {
+    render(props) {
+        return (
+            <h1>hello world</h1>
+        );
+    }
+}
+```
+
+We are using preact, which is lightweight version of react for our rendering framework. To create a new page we create a new class which extends from Component.
+
+For minimal implementation we have to define at least the render method, which needs to return JSX. (that html wrapped inside js). Our test page just writes out hello world.
+
+We should also add our page to `src/pages/index.js`:
+
+`export * from './testpage';`
+
+Next we are going to add a menu entry to access our page. Open `src/lib/menu.js`, you will see the pages being imported on the top, and menu definitions a bit down:
+
+```
+const menus = [
+    { title: 'Devices', href: 'devices', component: DevicesPage, children: [] },
+    { title: 'Controllers', href: 'controllers', component: ControllersPage, children: [] },
+    { title: 'Automation', href: 'rules', component: RulesEditorPage, class: 'full', children: [] },
+    { title: 'Config', href: 'config', component: ConfigPage, children: [
+        { title: 'Hardware', href: 'config/hardware', component: ConfigHardwarePage },
+        { title: 'Advanced', href: 'config/advanced', component: ConfigAdvancedPage },
+        { title: 'Rules', href: 'config/rules', component: RulesPage },
+        { title: 'Save', href: 'config/save', action: saveConfig },
+        { title: 'Load', href: 'config/load', component: LoadPage },
+        { title: 'Reboot', href: 'config/reboot', component: RebootPage },
+        { title: 'Factory Reset', href: 'config/factory', component: FactoryResetPage },
+    ] },
+    { title: 'Tools', href: 'tools', component: ToolsPage, children: [
+        { title: 'Discover', href: 'tools/discover', component: DiscoverPage },
+        { title: 'Info', href: 'tools/sysinfo', component: SysVarsPage },
+        { title: 'Update', href: 'tools/update', component: UpdatePage },
+        { title: 'Filesystem', href: 'tools/fs', component: FSPage },
+        { title: 'Back to old UI', href: 'tools/oldui', action: oldUI },
+    ] },
+];
+```
+
+we are going to add our menu as the first item there:
+
+```
+const menus = [
+    { title: 'Test Page', href: 'test', component: TestPage, children: [] },
+    { title: 'Devices', href: 'devices', component: DevicesPage, children: [] },
+    { title: 'Controllers', href: 'controllers', component: ControllersPage, children: [] },
+    { title: 'Automation', href: 'rules', component: RulesEditorPage, class: 'full', children: [] },
+    { title: 'Config', href: 'config', component: ConfigPage, children: [
+        { title: 'Hardware', href: 'config/hardware', component: ConfigHardwarePage },
+        { title: 'Advanced', href: 'config/advanced', component: ConfigAdvancedPage },
+        { title: 'Rules', href: 'config/rules', component: RulesPage },
+        { title: 'Save', href: 'config/save', action: saveConfig },
+        { title: 'Load', href: 'config/load', component: LoadPage },
+        { title: 'Reboot', href: 'config/reboot', component: RebootPage },
+        { title: 'Factory Reset', href: 'config/factory', component: FactoryResetPage },
+    ] },
+    { title: 'Tools', href: 'tools', component: ToolsPage, children: [
+        { title: 'Discover', href: 'tools/discover', component: DiscoverPage },
+        { title: 'Info', href: 'tools/sysinfo', component: SysVarsPage },
+        { title: 'Update', href: 'tools/update', component: UpdatePage },
+        { title: 'Filesystem', href: 'tools/fs', component: FSPage },
+        { title: 'Back to old UI', href: 'tools/oldui', action: oldUI },
+    ] },
+];
+```
+
+and don't forget to add import for TestPage on the top.
+
+each entry has the following properties:
+`title`: name of the menu as shown to the user
+`href`: url of the menu (as seen in navigation bar)
+`component`: your page component that we created in previous step
+`children`: array of submenus, allows nesting menus
+
+this is it, you should have your test page show up in espeasy.
+
+### provided libs
+
+`settings` (`/src/lib/settings`) gives you access to espeasy configuration
+- `settings.get(prop)` gets specified prop from settings
+- `settings.set(prop, val)` sets specified prop to value
+
+`loader` (`/src/lib/loader`) allows you to show/hide loader on async actions
+- `loader.show()`
+- `loader.hide()`
+
+### automation editor
+
+### automation editor node definitions
+
+### config file parser
+
+### form component
+
+### writting a plugin
