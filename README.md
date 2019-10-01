@@ -232,3 +232,13 @@ this is it, you should have your test page show up in espeasy.
 ### form component
 
 ### writting a plugin
+
+### parsing espeasy config.dat file
+
+[look here](src/conf/README.md)
+
+### maintaining
+
+1) setup your development environment as described under `developing`
+2) to upgrade dependencies to latest versions run `yarn upgrade`
+3) c
