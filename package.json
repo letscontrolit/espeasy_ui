@@ -27,7 +27,7 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-inline-source": "^4.0.0",
     "gulp-uglify": "^2.0.0",
-    "gulp-uglify-es": "^1.0.4",
+    "gulp-uglify-es": "^3.0.0",
     "gulp-url-prefixer": "0.0.6",
     "gulp-util": "^3.0.8",
     "http-server": "^0.11.1",
