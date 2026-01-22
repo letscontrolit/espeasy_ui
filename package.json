@@ -39,7 +39,7 @@
     "webpack-livereload-plugin": "^2.2.0"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mini-toastr": "^0.8.1",
     "preact": "^8.4.2"
   }
